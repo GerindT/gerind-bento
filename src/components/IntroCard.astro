@@ -46,12 +46,12 @@ import Tooltip from "./Tooltip/index";
             </Button>
           </a>
 
-          <Tooltip client:visible>
-            <Button aria-label="easter egg btn">
+          <div id="changeGifBtn">
+            <Button aria-label="change gif">
               <Icon name="ri:emotion-laugh-line" class="h-6" />
               <span class="sr-only" data-umami-event="Easter egg button">Easter egg button</span>
             </Button>
-          </Tooltip>
+          </div>
         </div>
       </div>
     </div>
@@ -59,8 +59,30 @@ import Tooltip from "./Tooltip/index";
       width="300"
       height="300"
       src="/gif_me.gif"
+      id="profileGif"
       class="w-auto max-h-[300px] select-none absolute right-[-50px] bottom-[-20px] z-[-1] opacity-50 md:opacity-100 md:relative md:right-auto md:bottom-auto md:z-auto pointer-events-none"
       alt="memoji of gianmarco"
     />
   </div>
 </Card>
+
+<script>
+  const gifs = [
+    "/gif_me.gif",
+    "/gif_psy.gif",
+    "/gif_tot.gif",
+    "/gif_kirby.gif",
+    // Add your gif URLs here
+  ];
+
+  const changeGifBtn = document.getElementById("changeGifBtn");
+  const profileGif = document.getElementById("profileGif");
+  let currentGifIndex = 0;
+
+  changeGifBtn?.addEventListener("click", () => {
+    currentGifIndex = (currentGifIndex + 1) % gifs.length;
+    if (profileGif) {
+      (profileGif as HTMLImageElement).src = gifs[currentGifIndex];
+    }
+  });
+</script>

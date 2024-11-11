@@ -4,6 +4,7 @@ title: "Hello, World"
 description: "Welcome to my portfolio blog, where I share my journey in programming, web development, and more."
 pubDate: 11-11-2024
 category: "intro"
+priority: 1
 ---
 
 # Hello, World! 🌍
