@@ -1,0 +1,42 @@
+---
+import { getCurrentTimeInItaly, formatTimeTo12H } from "../lib/helpers";
+import Card from "./Card/index.astro";
+---
+
+<script>
+  import { onCleanup, onMount } from "solid-js";
+  import { formatTimeTo12H, getCurrentTimeInItaly } from "../lib/helpers";
+
+  let interval: ReturnType<typeof setInterval>;
+
+  function updateClock() {
+    const timeDisplay = document.getElementById("timeDisplay");
+    const now = getCurrentTimeInItaly();
+
+    if (timeDisplay) {
+      timeDisplay.textContent = formatTimeTo12H(now);
+      timeDisplay.setAttribute("datetime", now.toISOString());
+    }
+  }
+
+  onMount(() => {
+    updateClock();
+    interval = setInterval(updateClock, 60_000);
+  });
+
+  onCleanup(() => {
+    clearInterval(interval);
+  });
+</script>
+
+<Card colSpan="lg:col-span-1" rowSpan="md:row-span-1">
+  <div class="flex text-2xl items-center justify-center h-full font-serif">
+    <time
+      datetime=""
+      id="timeDisplay"
+      class="whitespace-nowrap flex items-center"
+    >
+      {formatTimeTo12H(getCurrentTimeInItaly())}
+    </time>
+  </div>
+</Card>

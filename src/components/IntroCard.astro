@@ -1,0 +1,66 @@
+---
+import Card from "./Card/index.astro";
+import Button from "./Button.astro";
+import { LINKS } from "../lib/constants";
+import { Icon } from "astro-icon/components";
+import Tooltip from "./Tooltip/index";
+---
+
+<Card colSpan="md:col-span-3" rowSpan="md:row-span-4">
+  <div class="flex w-full h-full">
+    <div class="flex flex-col justify-between md:max-h-[300px] gap-4">
+      <div class="flex flex-col h-full">
+        <h6 class="text-sm font-light m-0 text-darkslate-300">welcome</h6>
+
+        <p class="sr-only">
+          👋 I'm Gerind Tershana a young web-developer. I have worked with the MERN full-stack and also React Native for app development. I am curious to try new technologies and work with them to make new projects in
+          the future. I hope you enjoy this portfolio site and the below projects I have done in the past.
+        </p>
+        <p aria-hidden="true" class="m-0 font-light text-md">
+          <span>
+            👋 I'm <b class="font-bold">Gerind Tershana</b>, a curious web developer exploring the MERN stack and React Native. Excited to dive into new tech and bring creative projects to life—hope you enjoy exploring
+            my work below!
+          </span>
+          <br />
+          <span class="block mt-2"> Feel free to reach out to me if you have any projects in mind, or just to say hello. </span>
+        </p>
+      </div>
+      <div class="flex flex-col lg:flex-row gap-2 lg:gap-4">
+        <div class="flex gap-2 lg:gap-4">
+          <a href={LINKS.github} aria-label="github profile" target="_blank">
+            <Button aria-label="github profile">
+              <Icon name="ri:github-fill" class="h-6" />
+              <span class="sr-only" data-umami-event="github button">GitHub Profile</span>
+            </Button>
+          </a>
+          <a href={LINKS.linkedin} aria-label="linkedin profile" target="_blank">
+            <Button aria-label="linkedin profile">
+              <Icon name="ri:linkedin-box-fill" class="h-6" />
+              <span class="sr-only" data-umami-event="linkedin button">Linkedin Profile</span>
+            </Button>
+          </a>
+          <a href={LINKS.gmail} aria-label="email address" target="_blank">
+            <Button aria-label="email address">
+              <Icon name="ri:mail-fill" class="h-6" />
+              <span class="sr-only" data-umami-event="email button">Email Address</span>
+            </Button>
+          </a>
+
+          <Tooltip client:visible>
+            <Button aria-label="easter egg btn">
+              <Icon name="ri:emotion-laugh-line" class="h-6" />
+              <span class="sr-only" data-umami-event="Easter egg button">Easter egg button</span>
+            </Button>
+          </Tooltip>
+        </div>
+      </div>
+    </div>
+    <img
+      width="300"
+      height="300"
+      src="/gif_me.gif"
+      class="w-auto max-h-[300px] select-none absolute right-[-50px] bottom-[-20px] z-[-1] opacity-50 md:opacity-100 md:relative md:right-auto md:bottom-auto md:z-auto pointer-events-none"
+      alt="memoji of gianmarco"
+    />
+  </div>
+</Card>

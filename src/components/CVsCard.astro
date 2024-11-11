@@ -1,0 +1,36 @@
+---
+import Card from "./Card/index.astro";
+import { Icon } from "astro-icon/components";
+---
+
+<Card colSpan="md:col-span-1" rowSpan="md:row-span-2" title="">
+  <div class="flex flex-col h-full justify-between">
+    <h2>My Vite</h2>
+
+    <div class="flex flex-col items-start md:items-center">
+      <div class="flex flex-col gap-2">
+        <p class="text-xs text-neutral-300">Download my CV in your preferred language:</p>
+
+        <div class="flex justify-start md:justify-center gap-8">
+          <!-- English CV -->
+          <a href="/CV-Gerind Tershana-English.pdf" download class="flex flex-col items-center gap-2 hover:scale-110 transition-transform cursor-pointer group">
+            <div class="bg-neutral-800 p-2 rounded-xl group-hover:bg-neutral-700 transition-colors flex flex-col items-center">
+              <Icon name="mdi:file-document-outline" class="w-4 h-4 text-neutral-100" />
+              <span class="text-xs font-medium mt-1">English</span>
+            </div>
+          </a>
+
+          <!-- Albanian CV -->
+          <a href="/CV-Gerind Tershana-Albanian.pdf" download class="flex flex-col items-center gap-2 hover:scale-110 transition-transform cursor-pointer group">
+            <div class="bg-neutral-800 p-2 rounded-xl group-hover:bg-neutral-700 transition-colors flex flex-col items-center">
+              <Icon name="mdi:file-document-outline" class="w-4 h-4 text-neutral-100" />
+              <span class="text-xs font-medium mt-1">Albanian</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-xs text-neutral-400 mt-2 text-left md:text-center">Last updated: November 2024</p>
+  </div>
+</Card>
