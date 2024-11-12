@@ -1,0 +1,137 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const projects = [
+  {
+    img: "/illustrations/reSearch.png",
+    alt: "reSearch",
+    github: "https://github.com/GerindT/reSearch",
+    site: "https://re-search.netlify.app",
+    class: "object-cover",
+    title: "reSearch",
+    year: "2024",
+  },
+  {
+    img: "/illustrations/mycredit.png",
+    alt: "mycredit",
+    github: "#",
+    site: "https://mycred.it/",
+    class: "object-contain border-1 border-dashed border-neutral-600",
+    title: "MyCredit",
+    year: "2024",
+  },
+  {
+    img: "/illustrations/flori.png",
+    alt: "flori",
+    github: "https://github.com/GerindT/florianHiso",
+    site: "https://florian-hiso.netlify.app",
+    class: "object-cover",
+    title: "Florian Hiso",
+    year: "2024",
+  },
+  {
+    img: "/illustrations/webscraping.png",
+    alt: "webscraping",
+    github: "https://github.com/GerindT/webScraping",
+    site: "https://scamless-frontend.netlify.app",
+    class: "object-cover",
+    title: "Web Scraping",
+    year: "2024",
+  },
+  {
+    img: "/illustrations/rollbet.png",
+    alt: "rollbet",
+    github: "#",
+    site: "#",
+    class: "object-contain border-1 border-dashed border-neutral-600",
+    title: "Rollbet",
+    year: "2024",
+  },
+  {
+    img: "/illustrations/offRoad.png",
+    alt: "offRoad",
+    github: "https://github.com/GerindT/offroad",
+    site: "https://rollbet.gg",
+    class: "object-cover",
+    title: "Off Road",
+    year: "2021",
+  },
+  {
+    img: "/illustrations/reactColor.png",
+    alt: "reactColor",
+    github: "https://github.com/GerindT/react-color",
+    site: "https://react-cl.netlify.app",
+    class: "object-contain border-1 border-dashed border-neutral-600",
+    title: "React Color",
+    year: "2021",
+  },
+  {
+    img: "/illustrations/sose.png",
+    alt: "soseAl",
+    github: "#",
+    site: "https://sose-al.netlify.app",
+    class: "object-contain border-1 border-dashed border-neutral-600",
+    title: "Sose Al",
+    year: "Comming Soon",
+  },
+];
+---
+
+<script>
+  import { timeline, type TimelineDefinition } from "motion";
+  import { loaderAnimation } from "../lib/constants";
+
+  timeline([loaderAnimation] as TimelineDefinition);
+</script>
+
+<Layout title="Gerind Tershana - Projects" description="A collection of some of my projects">
+  <div class="flex flex-col justify-center items-center just p-4 pt-40">
+    <a href="/" class="fixed top-10 left-10 text-white bg-neutral-900 hover:bg-neutral-800 w-fit px-4 py-2 border-1 border-solid border-neutral-600 rounded-lg">Back</a>
+    <p class="text-white mb-10">here you can see some of the projects I have done throught the years.</p>
+
+    <div class="w-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {
+        projects.map((project) => (
+          <div class="group perspective">
+            <div class="flex justify-between items-center text-gray-300 mb-2">
+              <span>{project.title}</span>
+              <span class="text-sm text-gray-400">{project.year}</span>
+            </div>
+            <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
+              <img src={project.img} class={`w-80 h-90 rounded-md ${project.class}`} alt={project.alt} />
+              <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center p-4">
+                <a href={project.site} class="text-white hover:text-blue-400 flex items-center">
+                  <Icon name="bx:link" class="h-5 w-5 mr-1" />
+                  Check it out
+                </a>
+                {project.github !== "#" && (
+                  <a href={project.github} class="text-white hover:text-blue-400 flex items-center">
+                    <Icon name="ri:github-fill" class="h-5 w-5 mr-1" />
+                    Check it out on Github
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        ))
+      }
+      <div>
+        <div class="flex justify-between items-center text-gray-300 mb-2">
+          <span>AI Albania</span>
+          <span class="text-sm text-gray-400">Comming Soon</span>
+        </div>
+        <iframe src="https://aialbania.org" class="w-80 h-90 rounded-md object-cover" title="aialbania"></iframe>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .perspective {
+    perspective: 1000px;
+  }
+  .rotate-y-12 {
+    transform: rotateY(12deg);
+  }
+</style>
