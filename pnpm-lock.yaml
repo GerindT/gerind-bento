@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@astrojs/netlify':
         specifier: ^5.5.1
-        version: 5.5.1(astro@4.14.2(rollup@4.18.0)(typescript@5.3.3))
+        version: 5.5.1(astro@4.14.2(@types/node@17.0.45)(rollup@4.18.0)(typescript@5.3.3))
       '@astrojs/rss':
         specifier: ^4.0.7
         version: 4.0.7
@@ -19,10 +19,13 @@ importers:
         version: 3.1.6
       '@astrojs/solid-js':
         specifier: ^4.4.1
-        version: 4.4.1(solid-js@1.8.21)(vite@5.4.0)
+        version: 4.4.1(solid-js@1.8.21)(vite@5.4.0(@types/node@17.0.45))
       '@astrojs/svelte':
         specifier: ^5.7.0
-        version: 5.7.0(astro@4.14.2(rollup@4.18.0)(typescript@5.3.3))(svelte@4.2.18)(typescript@5.3.3)(vite@5.4.0)
+        version: 5.7.0(astro@4.14.2(@types/node@17.0.45)(rollup@4.18.0)(typescript@5.3.3))(svelte@4.2.18)(typescript@5.3.3)(vite@5.4.0(@types/node@17.0.45))
+      '@iconify-json/bx':
+        specifier: ^1.2.1
+        version: 1.2.1
       '@iconify-json/logos':
         specifier: ^1.2.3
         version: 1.2.3
@@ -32,12 +35,15 @@ importers:
       '@iconify-json/ri':
         specifier: ^1.1.22
         version: 1.1.22
+      '@iconify-json/solar':
+        specifier: ^1.2.1
+        version: 1.2.1
       '@rive-app/canvas':
         specifier: ^2.19.8
         version: 2.19.8
       astro:
         specifier: ^4.14.2
-        version: 4.14.2(rollup@4.18.0)(typescript@5.3.3)
+        version: 4.14.2(@types/node@17.0.45)(rollup@4.18.0)(typescript@5.3.3)
       astro-icon:
         specifier: ^1.1.0
         version: 1.1.0
@@ -80,7 +86,7 @@ importers:
         version: 7.4.3
       '@unocss/astro':
         specifier: ^0.62.2
-        version: 0.62.2(rollup@4.18.0)(vite@5.4.0)
+        version: 0.62.2(rollup@4.18.0)(vite@5.4.0(@types/node@17.0.45))
       '@unocss/postcss':
         specifier: ^0.62.2
         version: 0.62.2(postcss@8.4.41)
@@ -95,7 +101,7 @@ importers:
         version: 14.1.0
       unocss:
         specifier: ^0.62.2
-        version: 0.62.2(postcss@8.4.41)(rollup@4.18.0)(vite@5.4.0)
+        version: 0.62.2(postcss@8.4.41)(rollup@4.18.0)(vite@5.4.0(@types/node@17.0.45))
 
 packages:
 
@@ -820,6 +826,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@iconify-json/bx@1.2.1':
+    resolution: {integrity: sha512-FQCpVnEqCRZmyzpJ5Ba31ff8b2lDLhjRuV8ZC0Cw4HsV/IgXoyW9CGH4vI0P7UGeTXHIj3iSDNwIpOoCpPqXVg==}
+
   '@iconify-json/logos@1.2.3':
     resolution: {integrity: sha512-JLHS5hgZP1b55EONAWNeqBUuriRfRNKWXK4cqYx0PpVaJfIIMiiMxFfvoQiX/bkE9XgkLhcKmDUqL3LXPdXPwQ==}
 
@@ -828,6 +837,9 @@ packages:
 
   '@iconify-json/ri@1.1.22':
     resolution: {integrity: sha512-Pi0I54CFXYSfWlm4xIAGqyDvtibNEpSSyQvHrSrfxFgZgDtFum9tbtYmaTKK0wJWWzYzF3XIpIJTC9/KVYX3SQ==}
+
+  '@iconify-json/solar@1.2.1':
+    resolution: {integrity: sha512-LA3WZ7HOi5O/sEc2M+BcQNJYNFDnUKP+ZldmNf8kwndnCuFMo+fukt6tSu4BqYRsRgp/Ku4xnys1JGBDi+QtCQ==}
 
   '@iconify/tools@3.0.7':
     resolution: {integrity: sha512-DxfhFLMnooS34dHelpGUnnYrxLZHs0czC1CgrBhAbuL8ddVzBb2VEQm8kh9qGh7A34qeXAB5iSHH3A72rAaFrg==}
@@ -3410,13 +3422,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/netlify@5.5.1(astro@4.14.2(rollup@4.18.0)(typescript@5.3.3))':
+  '@astrojs/netlify@5.5.1(astro@4.14.2(@types/node@17.0.45)(rollup@4.18.0)(typescript@5.3.3))':
     dependencies:
       '@astrojs/internal-helpers': 0.4.1
       '@astrojs/underscore-redirects': 0.3.4
       '@netlify/functions': 2.8.1
       '@vercel/nft': 0.27.3
-      astro: 4.14.2(rollup@4.18.0)(typescript@5.3.3)
+      astro: 4.14.2(@types/node@17.0.45)(rollup@4.18.0)(typescript@5.3.3)
       esbuild: 0.22.0
     transitivePeerDependencies:
       - encoding
@@ -3437,19 +3449,19 @@ snapshots:
       stream-replace-string: 2.0.0
       zod: 3.23.8
 
-  '@astrojs/solid-js@4.4.1(solid-js@1.8.21)(vite@5.4.0)':
+  '@astrojs/solid-js@4.4.1(solid-js@1.8.21)(vite@5.4.0(@types/node@17.0.45))':
     dependencies:
       solid-js: 1.8.21
-      vite-plugin-solid: 2.10.2(solid-js@1.8.21)(vite@5.4.0)
+      vite-plugin-solid: 2.10.2(solid-js@1.8.21)(vite@5.4.0(@types/node@17.0.45))
     transitivePeerDependencies:
       - '@testing-library/jest-dom'
       - supports-color
       - vite
 
-  '@astrojs/svelte@5.7.0(astro@4.14.2(rollup@4.18.0)(typescript@5.3.3))(svelte@4.2.18)(typescript@5.3.3)(vite@5.4.0)':
+  '@astrojs/svelte@5.7.0(astro@4.14.2(@types/node@17.0.45)(rollup@4.18.0)(typescript@5.3.3))(svelte@4.2.18)(typescript@5.3.3)(vite@5.4.0(@types/node@17.0.45))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@4.2.18)(vite@5.4.0)
-      astro: 4.14.2(rollup@4.18.0)(typescript@5.3.3)
+      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@4.2.18)(vite@5.4.0(@types/node@17.0.45))
+      astro: 4.14.2(@types/node@17.0.45)(rollup@4.18.0)(typescript@5.3.3)
       svelte: 4.2.18
       svelte2tsx: 0.7.13(svelte@4.2.18)(typescript@5.3.3)
       typescript: 5.3.3
@@ -4048,6 +4060,10 @@ snapshots:
   '@esbuild/win32-x64@0.23.0':
     optional: true
 
+  '@iconify-json/bx@1.2.1':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify-json/logos@1.2.3':
     dependencies:
       '@iconify/types': 2.0.0
@@ -4057,6 +4073,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/ri@1.1.22':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/solar@1.2.1':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -4338,26 +4358,26 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
 
-  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.4.0))(svelte@4.2.18)(vite@5.4.0)':
+  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.4.0(@types/node@17.0.45)))(svelte@4.2.18)(vite@5.4.0(@types/node@17.0.45))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@4.2.18)(vite@5.4.0)
+      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@4.2.18)(vite@5.4.0(@types/node@17.0.45))
       debug: 4.3.5
       svelte: 4.2.18
-      vite: 5.4.0
+      vite: 5.4.0(@types/node@17.0.45)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.4.0)':
+  '@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.4.0(@types/node@17.0.45))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.4.0))(svelte@4.2.18)(vite@5.4.0)
+      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.4.0(@types/node@17.0.45)))(svelte@4.2.18)(vite@5.4.0(@types/node@17.0.45))
       debug: 4.3.5
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.10
       svelte: 4.2.18
       svelte-hmr: 0.16.0(svelte@4.2.18)
-      vite: 5.4.0
-      vitefu: 0.2.5(vite@5.4.0)
+      vite: 5.4.0(@types/node@17.0.45)
+      vitefu: 0.2.5(vite@5.4.0(@types/node@17.0.45))
     transitivePeerDependencies:
       - supports-color
 
@@ -4549,13 +4569,13 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@unocss/astro@0.62.2(rollup@4.18.0)(vite@5.4.0)':
+  '@unocss/astro@0.62.2(rollup@4.18.0)(vite@5.4.0(@types/node@17.0.45))':
     dependencies:
       '@unocss/core': 0.62.2
       '@unocss/reset': 0.62.2
-      '@unocss/vite': 0.62.2(rollup@4.18.0)(vite@5.4.0)
+      '@unocss/vite': 0.62.2(rollup@4.18.0)(vite@5.4.0(@types/node@17.0.45))
     optionalDependencies:
-      vite: 5.4.0
+      vite: 5.4.0(@types/node@17.0.45)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -4692,7 +4712,7 @@ snapshots:
     dependencies:
       '@unocss/core': 0.62.2
 
-  '@unocss/vite@0.62.2(rollup@4.18.0)(vite@5.4.0)':
+  '@unocss/vite@0.62.2(rollup@4.18.0)(vite@5.4.0(@types/node@17.0.45))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@rollup/pluginutils': 5.1.0(rollup@4.18.0)
@@ -4704,7 +4724,7 @@ snapshots:
       chokidar: 3.6.0
       magic-string: 0.30.11
       tinyglobby: 0.2.2
-      vite: 5.4.0
+      vite: 5.4.0(@types/node@17.0.45)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -4796,7 +4816,7 @@ snapshots:
       valid-filename: 4.0.0
       zod: 3.22.4
 
-  astro@4.14.2(rollup@4.18.0)(typescript@5.3.3):
+  astro@4.14.2(@types/node@17.0.45)(rollup@4.18.0)(typescript@5.3.3):
     dependencies:
       '@astrojs/compiler': 2.10.3
       '@astrojs/internal-helpers': 0.4.1
@@ -4857,8 +4877,8 @@ snapshots:
       tsconfck: 3.1.1(typescript@5.3.3)
       unist-util-visit: 5.0.0
       vfile: 6.0.2
-      vite: 5.4.0
-      vitefu: 0.2.5(vite@5.4.0)
+      vite: 5.4.0(@types/node@17.0.45)
+      vitefu: 0.2.5(vite@5.4.0(@types/node@17.0.45))
       which-pm: 3.0.0
       xxhash-wasm: 1.0.2
       yargs-parser: 21.1.1
@@ -6972,9 +6992,9 @@ snapshots:
       unist-util-is: 6.0.0
       unist-util-visit-parents: 6.0.1
 
-  unocss@0.62.2(postcss@8.4.41)(rollup@4.18.0)(vite@5.4.0):
+  unocss@0.62.2(postcss@8.4.41)(rollup@4.18.0)(vite@5.4.0(@types/node@17.0.45)):
     dependencies:
-      '@unocss/astro': 0.62.2(rollup@4.18.0)(vite@5.4.0)
+      '@unocss/astro': 0.62.2(rollup@4.18.0)(vite@5.4.0(@types/node@17.0.45))
       '@unocss/cli': 0.62.2(rollup@4.18.0)
       '@unocss/core': 0.62.2
       '@unocss/extractor-arbitrary-variants': 0.62.2
@@ -6993,9 +7013,9 @@ snapshots:
       '@unocss/transformer-compile-class': 0.62.2
       '@unocss/transformer-directives': 0.62.2
       '@unocss/transformer-variant-group': 0.62.2
-      '@unocss/vite': 0.62.2(rollup@4.18.0)(vite@5.4.0)
+      '@unocss/vite': 0.62.2(rollup@4.18.0)(vite@5.4.0(@types/node@17.0.45))
     optionalDependencies:
-      vite: 5.4.0
+      vite: 5.4.0(@types/node@17.0.45)
     transitivePeerDependencies:
       - postcss
       - rollup
@@ -7039,7 +7059,7 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-plugin-solid@2.10.2(solid-js@1.8.21)(vite@5.4.0):
+  vite-plugin-solid@2.10.2(solid-js@1.8.21)(vite@5.4.0(@types/node@17.0.45)):
     dependencies:
       '@babel/core': 7.24.9
       '@types/babel__core': 7.20.5
@@ -7047,22 +7067,23 @@ snapshots:
       merge-anything: 5.1.7
       solid-js: 1.8.21
       solid-refresh: 0.6.3(solid-js@1.8.21)
-      vite: 5.4.0
-      vitefu: 0.2.5(vite@5.4.0)
+      vite: 5.4.0(@types/node@17.0.45)
+      vitefu: 0.2.5(vite@5.4.0(@types/node@17.0.45))
     transitivePeerDependencies:
       - supports-color
 
-  vite@5.4.0:
+  vite@5.4.0(@types/node@17.0.45):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.41
       rollup: 4.18.0
     optionalDependencies:
+      '@types/node': 17.0.45
       fsevents: 2.3.3
 
-  vitefu@0.2.5(vite@5.4.0):
+  vitefu@0.2.5(vite@5.4.0(@types/node@17.0.45)):
     optionalDependencies:
-      vite: 5.4.0
+      vite: 5.4.0(@types/node@17.0.45)
 
   web-namespaces@2.0.1: {}
 

@@ -24,6 +24,8 @@ export default defineConfig({
       include: {
         logos: ["*"], // This includes all icons from the logos set
         mdi: ["file-document-outline"],
+        bx: ["*"],
+        solar: ["*"],
       },
     }),
     svelte(),
