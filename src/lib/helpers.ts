@@ -11,14 +11,17 @@ export function getCurrentTimeInItaly(): Date {
 }
 
 export function formatTimeTo12H(date: Date): string {
+  // First ensure we have a valid date
+  const validDate = date instanceof Date && !isNaN(date.getTime()) ? date : new Date();
+
   const options: Intl.DateTimeFormatOptions = {
     hour: "numeric",
     minute: "2-digit",
-    hour12: true, // Use 12-hour format with AM/PM
+    hour12: true,
     timeZone: "Europe/Rome",
   };
 
-  return new Intl.DateTimeFormat("en-US", options).format(date);
+  return new Intl.DateTimeFormat("en-US", options).format(validDate);
 }
 
 export function formatDate(date: Date): string {
