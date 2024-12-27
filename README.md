@@ -1,4 +1,4 @@
-# 🚀 Bento Portofolio
+# Bento Portofolio
 
 A modern, minimalist portfolio and blog site built to showcase my projects and share my journey in tech.
 
