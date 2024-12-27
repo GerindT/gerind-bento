@@ -1,6 +1,106 @@
 ---
+import { link, linkVertical } from "d3";
 import BasicLayout from "../layouts/BasicLayout.astro";
 import { Icon } from "astro-icon/components";
+
+const manga = [
+  {
+    img: "/illustrations/horimiya.jpg",
+    alt: "Horimiya",
+    title: "Horimiya",
+    link: "https://mangadex.org/title/a25e46ec-30f7-4db6-89df-cacbc1d9a900/horimiya",
+  },
+  {
+    img: "/illustrations/1000yen.jpg",
+    alt: "I Sold My Life for 10,000 Yen per Year.",
+    title: "I Sold My Life for 10,000 Yen per Year.",
+    link: "https://mangadex.org/title/9e03b2ca-5191-44a6-88b6-c0cd49d06b51/i-sold-my-life-for-10-000-yen-per-year?tab=art",
+  },
+  {
+    img: "/illustrations/this-witch-of-mine.jpg",
+    alt: "This Witch of Mine",
+    title: "This Witch of Mine",
+    link: "https://mangadex.org/title/23a2a55e-aa51-4c4b-8f8e-dd91b4b654e8/this-witch-of-mine",
+  },
+  {
+    img: "/illustrations/tokyo-ghoul.jpg",
+    alt: "Tokyo Ghoul",
+    title: "Tokyo Ghoul",
+    link: "https://mangadex.org/title/6a1d1cb1-ecd5-40d9-89ff-9d88e40b136b/tokyo-ghoul",
+  },
+  {
+    img: "/illustrations/the-climber.jpg",
+    alt: "Kokou no Hito",
+    title: "Kokou no Hito",
+    link: "https://mangadex.org/title/bb8310e4-6050-4a43-984e-f7bbdfce23b1/kokou-no-hito",
+  },
+];
+
+const movies = [
+  {
+    img: "/illustrations/parasite.webp",
+    alt: "Parasite",
+    title: "Parasite",
+    link: "https://www.imdb.com/title/tt6751668/",
+  },
+  {
+    img: "/illustrations/dead-poet.webp",
+    alt: "Dead  Poets Society",
+    title: "Dead  Poets Society",
+    link: "https://www.imdb.com/title/tt0097165/",
+  },
+  {
+    img: "/illustrations/lalala.webp",
+    alt: "La La Land",
+    title: "La La Land",
+    link: "https://www.imdb.com/title/tt3783958/",
+  },
+  {
+    img: "/illustrations/lord-of-the-rings.webp",
+    alt: "Lord of the Rings: The Fellowship of the Ring",
+    title: "Lord of the Rings: The Fellowship of the Ring",
+    link: "https://www.imdb.com/title/tt0120737/",
+  },
+  {
+    img: "/illustrations/interstellar.webp",
+    alt: "Interstellar",
+    title: "Interstellar",
+    link: "https://www.imdb.com/title/tt0816692/",
+  },
+];
+
+const books = [
+  {
+    img: "/illustrations/murakami.jpg",
+    alt: "Norwegian Wood",
+    title: "Norwegian Wood",
+    link: "https://www.goodreads.com/book/show/11297.Norwegian_Wood?ref=nav_sb_ss_1_4",
+  },
+  {
+    img: "/illustrations/danger.jpg",
+    alt: "The Dangers of Smoking in Bed",
+    title: "The Dangers of Smoking in Bed",
+    link: "https://www.goodreads.com/book/show/53215250-the-dangers-of-smoking-in-bed?ref=nav_sb_ss_1_14",
+  },
+  {
+    img: "/illustrations/harry.jpg",
+    alt: "Harry Potter and the Order of the Phoenix",
+    title: "Harry Potter and the Order of the Phoenix",
+    link: "https://www.goodreads.com/book/show/2.Harry_Potter_and_the_Order_of_the_Phoenix?ref=nav_sb_ss_1_9",
+  },
+  {
+    img: "/illustrations/inferno.jpg",
+    alt: "Inferno",
+    title: "Inferno",
+    link: "https://www.goodreads.com/book/show/17212231-inferno?ref=nav_sb_ss_1_8",
+  },
+  {
+    img: "/illustrations/kafka.jpg",
+    alt: "Letter to His Father",
+    title: "Letter to His Father",
+    link: "https://www.goodreads.com/book/show/187569.Letter_to_His_Father?from_search=true&from_srp=true&qid=OyejJ7KRb1&rank=1",
+  },
+];
 ---
 
 <script>
@@ -17,23 +117,16 @@ import { Icon } from "astro-icon/components";
     <!-- Books Section -->
     <section>
       <h2 class="text-3xl font-bold text-white mb-8">Books</h2>
-      <div class="grid grid-cols-5 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
         {
-          [1, 2, 3, 4, 5].map(() => (
+          books.map((b) => (
             <div class="group perspective">
               <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e" alt="Book" class="w-full h-72 object-cover rounded-lg" />
-                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center p-4">
-                  <span class="text-white text-lg font-semibold mb-2">Book Title</span>
-                  <div class="flex text-yellow-400 mb-2">
-                    <Icon name="solar:star-outline" class="h-5 w-5" />
-                    <Icon name="solar:star-outline" class="h-5 w-5" />
-                    <Icon name="solar:star-outline" class="h-5 w-5" />
-                    <Icon name="solar:star-outline" class="h-5 w-5" />
-                    <Icon name="solar:star-outline" class="h-5 w-5" />
-                  </div>
-                  <p class="text-white text-sm italic mb-2">"An amazing journey through words"</p>
-                  <a href="#" class="text-white hover:text-blue-400 flex items-center">
+                <img src={b.img} alt={b.alt} class="w-full h-full object-cover rounded-lg" />
+
+                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-white text-lg font-semibold mb-2 px-4">{b.title}</span>
+                  <a href={b.link} class="text-white hover:text-blue-400 flex items-center">
                     <Icon name="bx:link" class="h-5 w-5 mr-1" />
                     Read More
                   </a>
@@ -48,15 +141,19 @@ import { Icon } from "astro-icon/components";
     <!-- Movies Section -->
     <section>
       <h2 class="text-3xl font-bold text-white mb-8">Movies</h2>
-      <div class="grid grid-cols-5 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
         {
-          [1, 2, 3, 4, 5].map(() => (
+          movies.map((m) => (
             <div class="group perspective">
               <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1" alt="Movie" class="w-full h-72 object-cover rounded-lg" />
+                <img src={m.img} alt={m.alt} class="w-full h-full object-cover rounded-lg" />
 
-                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                  <span class="text-white text-lg font-semibold">Movie Title</span>
+                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-white text-lg font-semibold mb-2 px-4">{m.title}</span>
+                  <a href={m.link} class="text-white hover:text-blue-400 flex items-center">
+                    <Icon name="bx:link" class="h-5 w-5 mr-1" />
+                    Read More
+                  </a>
                 </div>
               </div>
             </div>
@@ -68,15 +165,19 @@ import { Icon } from "astro-icon/components";
     <!-- Manga Section -->
     <section>
       <h2 class="text-3xl font-bold text-white mb-8">Manga</h2>
-      <div class="grid grid-cols-5 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
         {
-          [1, 2, 3, 4, 5].map(() => (
+          manga.map((m) => (
             <div class="group perspective">
               <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src="https://images.unsplash.com/photo-1613376023733-0a73315d9b06" alt="Manga" class="w-full h-72 object-cover rounded-lg" />
+                <img src={m.img} alt={m.alt} class="w-full h-full object-cover rounded-lg" />
 
-                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                  <span class="text-white text-lg font-semibold">Manga Title</span>
+                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-white text-lg font-semibold mb-2 px-4">{m.title}</span>
+                  <a href={m.link} class="text-white hover:text-blue-400 flex items-center">
+                    <Icon name="bx:link" class="h-5 w-5 mr-1" />
+                    Read More
+                  </a>
                 </div>
               </div>
             </div>
@@ -88,7 +189,7 @@ import { Icon } from "astro-icon/components";
     <!-- Anime Section -->
     <section>
       <h2 class="text-3xl font-bold text-white mb-8">Anime</h2>
-      <div class="grid grid-cols-5 gap-6">
+      <!-- <div class="grid grid-cols-5 gap-6">
         {
           [1, 2, 3, 4, 5].map(() => (
             <div class="group perspective">
@@ -102,13 +203,16 @@ import { Icon } from "astro-icon/components";
             </div>
           ))
         }
+      </div> -->
+      <div class="flex items-center justify-center p-8 rounded-lg">
+        <p class="text-2xl text-gray-500 font-semibold">Coming Soon</p>
       </div>
     </section>
 
     <!-- Music Section -->
     <section>
       <h2 class="text-3xl font-bold text-white mb-8">Music</h2>
-      <div class="grid grid-cols-5 gap-6">
+      <!-- <div class="grid grid-cols-5 gap-6">
         {
           [1, 2, 3, 4, 5].map(() => (
             <div class="group perspective">
@@ -122,6 +226,9 @@ import { Icon } from "astro-icon/components";
             </div>
           ))
         }
+      </div> -->
+      <div class="flex items-center justify-center p-8 rounded-lg">
+        <p class="text-2xl text-gray-500 font-semibold">Coming Soon</p>
       </div>
     </section>
   </div>
