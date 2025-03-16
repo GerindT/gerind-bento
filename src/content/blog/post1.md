@@ -25,5 +25,5 @@ Thank you for joining me here! I hope this blog serves as both a portfolio and a
 
 ![Exciting start!](https://swisscognitive.ch/wp-content/uploads/2019/10/giphy.gif)
 
-Happy coding!  
+Happy coding! 👨‍💻  
 \- Gerind Tershana
