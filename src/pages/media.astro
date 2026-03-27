@@ -1,5 +1,4 @@
 ---
-import { link, linkVertical } from "d3";
 import BasicLayout from "../layouts/BasicLayout.astro";
 import { Icon } from "astro-icon/components";
 
@@ -111,7 +110,7 @@ const books = [
 </script>
 
 <BasicLayout title="Gerind Tershana - Media Collection" description="My personal collection of books, movies, manga, anime and music" page="media">
-  <a href="/" class="text-white absolute bg-neutral-900 hover:bg-neutral-800 top-4 left-4 px-4 py-2 border-1 border-solid border-neutral-600 rounded-lg">Back</a>
+  <a href="/" aria-label="Back to homepage" class="text-white absolute bg-neutral-900 hover:bg-neutral-800 top-4 left-4 px-4 py-2 border-1 border-solid border-neutral-600 rounded-lg">Back</a>
 
   <div class="container mx-auto px-4 py-16 space-y-8">
     <!-- Books Section -->
@@ -122,11 +121,11 @@ const books = [
           books.map((b) => (
             <div class="group perspective">
               <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src={b.img} alt={b.alt} class="w-full h-full object-cover rounded-lg" />
+                <img src={b.img} alt={b.alt} class="w-full h-full object-cover rounded-lg" loading="lazy" decoding="async" width="320" height="384" />
 
                 <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center">
                   <span class="text-white text-lg font-semibold mb-2 px-4">{b.title}</span>
-                  <a href={b.link} class="text-white hover:text-blue-400 flex items-center">
+                  <a href={b.link} target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 flex items-center">
                     <Icon name="bx:link" class="h-5 w-5 mr-1" />
                     Read More
                   </a>
@@ -146,11 +145,11 @@ const books = [
           movies.map((m) => (
             <div class="group perspective">
               <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src={m.img} alt={m.alt} class="w-full h-full object-cover rounded-lg" />
+                <img src={m.img} alt={m.alt} class="w-full h-full object-cover rounded-lg" loading="lazy" decoding="async" width="320" height="384" />
 
                 <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center">
                   <span class="text-white text-lg font-semibold mb-2 px-4">{m.title}</span>
-                  <a href={m.link} class="text-white hover:text-blue-400 flex items-center">
+                  <a href={m.link} target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 flex items-center">
                     <Icon name="bx:link" class="h-5 w-5 mr-1" />
                     Read More
                   </a>
@@ -170,11 +169,11 @@ const books = [
           manga.map((m) => (
             <div class="group perspective">
               <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src={m.img} alt={m.alt} class="w-full h-full object-cover rounded-lg" />
+                <img src={m.img} alt={m.alt} class="w-full h-full object-cover rounded-lg" loading="lazy" decoding="async" width="320" height="384" />
 
                 <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center">
                   <span class="text-white text-lg font-semibold mb-2 px-4">{m.title}</span>
-                  <a href={m.link} class="text-white hover:text-blue-400 flex items-center">
+                  <a href={m.link} target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 flex items-center">
                     <Icon name="bx:link" class="h-5 w-5 mr-1" />
                     Read More
                   </a>

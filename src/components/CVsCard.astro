@@ -3,7 +3,7 @@ import Card from "./Card/index.astro";
 import { Icon } from "astro-icon/components";
 ---
 
-<Card colSpan="md:col-span-1" rowSpan="md:row-span-2" title="">
+<Card colSpan="md:col-span-1" rowSpan="md:row-span-2" title="CV Downloads">
   <div class="flex flex-col h-full justify-between">
     <h2>My Vite</h2>
 
@@ -13,7 +13,7 @@ import { Icon } from "astro-icon/components";
 
         <div class="flex justify-start md:justify-center gap-8">
           <!-- English CV -->
-          <a href="/CV-Gerind Tershana-English.pdf" download class="flex flex-col items-center gap-2 hover:scale-110 transition-transform cursor-pointer group">
+          <a href="/CV_Gerind_Tershana_English.pdf" download aria-label="Download CV in English" class="flex flex-col items-center gap-2 hover:scale-110 transition-transform cursor-pointer group">
             <div class="bg-neutral-800 p-2 rounded-xl group-hover:bg-neutral-700 transition-colors flex flex-col items-center">
               <Icon name="mdi:file-document-outline" class="w-4 h-4 text-neutral-100" />
               <span class="text-xs font-medium mt-1">English</span>
@@ -21,7 +21,7 @@ import { Icon } from "astro-icon/components";
           </a>
 
           <!-- Albanian CV -->
-          <a href="/CV-Gerind Tershana-Albanian.pdf" download class="flex flex-col items-center gap-2 hover:scale-110 transition-transform cursor-pointer group">
+          <a href="/CV_Gerind_Tershana_Albanian.pdf" download aria-label="Download CV in Albanian" class="flex flex-col items-center gap-2 hover:scale-110 transition-transform cursor-pointer group">
             <div class="bg-neutral-800 p-2 rounded-xl group-hover:bg-neutral-700 transition-colors flex flex-col items-center">
               <Icon name="mdi:file-document-outline" class="w-4 h-4 text-neutral-100" />
               <span class="text-xs font-medium mt-1">Albanian</span>
