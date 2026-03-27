@@ -17,7 +17,9 @@ interface Props {
 }
 
 const { title, description, page, slug, frontmatter } = Astro.props;
-const image = page === "media" ? `${Astro.url.origin}/globe_preview.webp"` : `${Astro.url.origin}/og-image.png`;
+const siteUrl = Astro.site ?? Astro.url.origin;
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+const image = page === "media" ? new URL("/globe_preview.webp", siteUrl).toString() : new URL("/og-image.png", siteUrl).toString();
 
 const schema = {
   "@context": "http://schema.org",
@@ -61,8 +63,13 @@ const schema = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url.origin} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={image || "https://gerindtershana.netlify.app/overview.png"} />
+    <meta property="og:site_name" content="Gerind Tershana" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image || "https://gerindtershana.netlify.app/overview.png"} />
 
     <link rel="preconnect" href="https://cdn.fontshare.com" />
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />

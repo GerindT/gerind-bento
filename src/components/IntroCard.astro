@@ -12,14 +12,11 @@ import { Icon } from "astro-icon/components";
       <div class="flex flex-col h-full">
         <h6 class="text-sm font-light m-0 text-darkslate-300">welcome</h6>
 
-        <p class="sr-only">
-          👋 I'm Gerind Tershana a young web-developer. I have worked with the MERN full-stack and also React Native for app development. I am curious to try new technologies and work with them to make new projects in
-          the future. I hope you enjoy this portfolio site and the below projects I have done in the past.
-        </p>
+        <p class="sr-only">👋 I'm Gerind Tershana, a Software Engineer with 4+ years of experience building scalable end-to-end web applications, high-concurrency APIs, and reliable CI/CD-driven delivery workflows.</p>
         <p aria-hidden="true" class="m-0 font-light text-md">
           <span>
-            👋 I'm <b class="font-bold">Gerind Tershana</b>, a curious web developer exploring the MERN stack and React Native. Excited to dive into new tech and bring creative projects to life—hope you enjoy exploring
-            my work below!
+            👋 I'm <b class="font-bold">Gerind Tershana</b>, a Software Engineer with 4+ years of experience building scalable end-to-end web applications, high-concurrency APIs, and reliable CI/CD-driven delivery
+            workflows.
           </span>
           <br />
           <span class="block mt-2"> Feel free to reach out to me if you have any projects in mind, or just to say hello. </span>
@@ -27,19 +24,19 @@ import { Icon } from "astro-icon/components";
       </div>
       <div class="flex flex-col lg:flex-row gap-2 lg:gap-4">
         <div class="flex gap-2 lg:gap-4">
-          <a href={LINKS.github} aria-label="github profile" target="_blank">
+          <a href={LINKS.github} aria-label="github profile" target="_blank" rel="noopener noreferrer">
             <Button aria-label="github profile">
               <Icon name="ri:github-fill" class="h-6" />
               <span class="sr-only">GitHub Profile</span>
             </Button>
           </a>
-          <a href={LINKS.linkedin} aria-label="linkedin profile" target="_blank">
+          <a href={LINKS.linkedin} aria-label="linkedin profile" target="_blank" rel="noopener noreferrer">
             <Button aria-label="linkedin profile">
               <Icon name="ri:linkedin-box-fill" class="h-6" />
               <span class="sr-only">Linkedin Profile</span>
             </Button>
           </a>
-          <a href={LINKS.gmail} aria-label="email address" target="_blank">
+          <a href={LINKS.gmail} aria-label="email address" target="_blank" rel="noopener noreferrer">
             <Button aria-label="email address">
               <Icon name="ri:mail-fill" class="h-6" />
               <span class="sr-only">Email Address</span>
@@ -59,6 +56,9 @@ import { Icon } from "astro-icon/components";
       width="300"
       height="300"
       src="/gif_me.gif"
+      alt="Animated portrait of Gerind Tershana"
+      loading="eager"
+      decoding="async"
       id="profileGif"
       class="w-auto max-h-[300px] select-none absolute right-[-50px] bottom-[-20px] z-[-1] opacity-50 md:opacity-100 md:relative md:right-auto md:bottom-auto md:z-auto pointer-events-none"
     />

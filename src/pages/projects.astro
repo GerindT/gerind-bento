@@ -2,80 +2,207 @@
 import Layout from "../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
 
-const projects = [
+const statusClasses = {
+  live: "bg-green-500/20 text-green-200 border border-green-400/40",
+  concept: "bg-violet-500/20 text-violet-200 border border-violet-400/40",
+  dev_only: "bg-amber-500/20 text-amber-200 border border-amber-400/40",
+  private: "bg-slate-500/25 text-slate-200 border border-slate-400/40",
+} as const;
+
+const statusLabels = {
+  live: "Live",
+  concept: "Concept",
+  dev_only: "Dev only",
+  private: "Private",
+} as const;
+
+type ProjectStatus = keyof typeof statusClasses;
+
+const techIcons = {
+  vue: { label: "Vue", icon: "logos:vue" },
+  react: { label: "React", icon: "logos:react" },
+  nuxt: { label: "Nuxt", icon: "logos:nuxt-icon" },
+  golang: { label: "Golang", icon: "logos:go" },
+  laravel: { label: "Laravel", icon: "logos:laravel" },
+  php: { label: "PHP", icon: "logos:php" },
+  nodejs: { label: "Node.js", icon: "logos:nodejs-icon" },
+  mysql: { label: "MySQL", icon: "logos:mysql" },
+  mongodb: { label: "MongoDB", icon: "logos:mongodb-icon" },
+  postgresql: { label: "PostgreSQL", icon: "logos:postgresql" },
+  supabase: { label: "Supabase", icon: "logos:supabase-icon" },
+  redis: { label: "Redis", icon: "logos:redis" },
+  python: { label: "Python", icon: "logos:python" },
+  vectordb: { label: "Vector DB", icon: "ri:database-2-line" },
+  k8s: { label: "K8s", icon: "logos:kubernetes" },
+} as const;
+
+type TechStack = keyof typeof techIcons;
+
+type Project = {
+  img: string;
+  alt: string;
+  github: string;
+  site: string;
+  embedAsIframe?: boolean;
+  class: string;
+  title: string;
+  year: string;
+  statuses: ProjectStatus[];
+  stacks: TechStack[];
+};
+
+const projects: Project[] = [
   {
-    img: "/illustrations/reSearch.webp",
+    img: "/illustrations/projects/reSearch.webp",
     alt: "reSearch",
     github: "https://github.com/GerindT/reSearch",
     site: "https://re-search.netlify.app",
     class: "object-cover",
     title: "reSearch",
     year: "2024",
+    statuses: ["live"],
+    stacks: ["react", "php", "mysql"],
   },
   {
-    img: "/illustrations/mycredit.webp",
+    img: "/illustrations/projects/mycredit.webp",
     alt: "mycredit",
     github: "#",
     site: "https://mycred.it/",
     class: "object-contain border-1 border-dashed border-neutral-600",
     title: "MyCredit",
     year: "2024",
+    statuses: ["private", "live"],
+    stacks: ["laravel", "redis", "golang", "vue", "mysql"],
   },
   {
-    img: "/illustrations/flori.webp",
+    img: "/illustrations/projects/flori.webp",
     alt: "flori",
     github: "https://github.com/GerindT/florianHiso",
     site: "https://florian-hiso.netlify.app",
     class: "object-cover",
-    title: "Florian Hiso",
+    title: "Florian Hiso (Personal page)",
     year: "2024",
+    statuses: ["live"],
+    stacks: ["supabase", "react"],
   },
   {
-    img: "/illustrations/webscraping.webp",
+    img: "/illustrations/projects/webscraping.webp",
     alt: "webscraping",
     github: "https://github.com/GerindT/webScraping",
     site: "https://scamless-frontend.netlify.app",
     class: "object-cover",
-    title: "Web Scraping",
+    title: "Web Scrapping",
     year: "2024",
+    statuses: ["live"],
+    stacks: ["nodejs", "react", "python"],
   },
   {
-    img: "/illustrations/rollbet.webp",
+    img: "/illustrations/projects/rollbet.webp",
     alt: "rollbet",
     github: "#",
-    site: "#",
+    site: "https://rollbet.gg/",
     class: "object-contain border-1 border-dashed border-neutral-600",
     title: "Rollbet",
     year: "2024",
+    statuses: ["private"],
+    stacks: ["vue", "golang", "redis"],
   },
   {
-    img: "/illustrations/offRoad.webp",
+    img: "/illustrations/projects/offRoad.webp",
     alt: "offRoad",
     github: "https://github.com/GerindT/offroad",
     site: "https://rollbet.gg",
     class: "object-cover",
     title: "Off Road",
     year: "2021",
+    statuses: ["live"],
+    stacks: ["mongodb", "nodejs"],
   },
   {
-    img: "/illustrations/reactColor.webp",
-    alt: "reactColor",
-    github: "https://github.com/GerindT/react-color",
-    site: "https://react-cl.netlify.app",
-    class: "object-contain border-1 border-dashed border-neutral-600",
-    title: "React Color",
-    year: "2021",
-  },
-  {
-    img: "/illustrations/sose.webp",
+    img: "/illustrations/projects/sose.webp",
     alt: "soseAl",
     github: "#",
     site: "https://sose-al.netlify.app",
     class: "object-contain border-1 border-dashed border-neutral-600",
     title: "Sose Al",
-    year: "Comming Soon",
+    year: "2024",
+    statuses: ["concept"],
+    stacks: ["python", "nodejs", "vectordb", "react", "mysql"],
+  },
+  {
+    img: "/illustrations/projects/ai_albania.webp",
+    alt: "AI Albania",
+    github: "#",
+    site: "https://aialbania.org",
+    class: "object-cover",
+    title: "AI Albania",
+    year: "2025",
+    statuses: ["live", "private"],
+    stacks: ["vue"],
+  },
+  {
+    img: "/illustrations/projects/007-drop.png",
+    alt: "Project placeholder 01",
+    github: "https://github.com/GerindT/007-drop",
+    site: "https://007-drop.vercel.app/",
+    embedAsIframe: true,
+    class: "object-cover",
+    title: "007-drop",
+    year: "2026",
+    statuses: ["live"],
+    stacks: ["nuxt", "supabase"],
+  },
+  {
+    img: "/illustrations/projects/pixel-party.png",
+    alt: "Project placeholder 02",
+    github: "https://github.com/GerindT/pixel-party",
+    site: "https://pixel-party-tau.vercel.app/",
+    embedAsIframe: true,
+    class: "object-cover",
+    title: "Pixel Party",
+    year: "2026",
+    statuses: ["live"],
+    stacks: ["nuxt", "supabase"],
+  },
+  {
+    img: "/illustrations/projects/photo_2025-01-10_13-18-28.jpg",
+    alt: "Project placeholder 04",
+    github: "#",
+    site: "https://audire.vercel.app/",
+    embedAsIframe: true,
+    class: "object-cover",
+    title: "Audire",
+    year: "2026",
+    statuses: ["concept", "private"],
+    stacks: ["python", "nuxt"],
+  },
+  {
+    img: "/illustrations/projects/photo_2025-01-10_13-18-28.jpg",
+    alt: "Project placeholder 05",
+    github: "#",
+    site: "https://muse-x.al/",
+    embedAsIframe: true,
+    class: "object-cover",
+    title: "Muse-x",
+    year: "2026",
+    statuses: ["live", "private"],
+    stacks: ["nuxt", "golang", "mysql"],
+  },
+  {
+    img: "/illustrations/projects/photo_2025-01-10_13-18-28.jpg",
+    alt: "Project placeholder 06",
+    github: "https://github.com/GerindT/GoFlight",
+    site: "https://go-flight.vercel.app/",
+    embedAsIframe: true,
+    class: "object-cover",
+    title: "Goflight",
+    year: "2026",
+    statuses: ["live"],
+    stacks: ["golang", "vue", "redis", "k8s"],
   },
 ];
+
+const sortedProjects = [...projects].sort((a, b) => Number(b.year) - Number(a.year));
 ---
 
 <script>
@@ -86,45 +213,69 @@ const projects = [
 </script>
 
 <Layout title="Gerind Tershana - Projects" description="A collection of some of my projects">
-  <div class="flex flex-col justify-center items-center just p-4 pt-40">
-    <a href="/" class="fixed top-10 left-10 text-white bg-neutral-900 hover:bg-neutral-800 w-fit px-4 py-2 border-1 border-solid border-neutral-600 rounded-lg">Back</a>
-    <p class="text-white mb-10">here you can see some of the projects I have done throught the years.</p>
+  <main class="flex flex-col justify-center items-center just p-4 pt-40">
+    <a href="/" aria-label="Back to homepage" class="fixed top-10 left-10 text-white bg-neutral-900 hover:bg-neutral-800 w-fit px-4 py-2 border-1 border-solid border-neutral-600 rounded-lg">Back</a>
+    <h1 class="text-white text-3xl md:text-4xl font-bold mb-4">Projects</h1>
+    <p class="text-white mb-10">Here are some of the projects I have built throughout the years.</p>
 
-    <div class="w-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <section aria-label="Project list" class="w-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {
-        projects.map((project) => (
-          <div class="group perspective">
-            <div class="flex justify-between items-center text-gray-300 mb-2">
-              <span>{project.title}</span>
+        sortedProjects.map((project) => (
+          <article class="group perspective">
+            <div class="flex justify-between items-center text-gray-300 mb-2 gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="truncate">{project.title}</span>
+              </div>
               <span class="text-sm text-gray-400">{project.year}</span>
             </div>
             <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-              <img src={project.img} class={`w-80 h-90 rounded-md ${project.class}`} alt={project.alt} />
+              {project.embedAsIframe ? (
+                <iframe src={project.site} title={project.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" class="w-80 h-90 rounded-md border border-neutral-700 bg-neutral-900" />
+              ) : (
+                <img src={project.img} class={`w-80 h-90 rounded-md ${project.class}`} alt={project.alt} loading="lazy" decoding="async" width="320" height="360" />
+              )}
+              <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1 max-w-[70%]">
+                {project.statuses.map((status) => (
+                  <span class={`text-[11px] px-2 py-0.5 rounded-full whitespace-nowrap backdrop-blur-sm ${statusClasses[status]}`}>{statusLabels[status]}</span>
+                ))}
+              </div>
+              <div class="absolute top-2 right-2 z-10 flex gap-1.5 rounded-md border border-white/20 bg-black/40 p-1.5 backdrop-blur-sm">
+                {project.stacks.map((stack) => (
+                  <span title={techIcons[stack].label} aria-label={techIcons[stack].label}>
+                    <Icon name={techIcons[stack].icon} class="h-4 w-4" />
+                  </span>
+                ))}
+              </div>
               <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center p-4">
-                <a href={project.site} class="text-white hover:text-blue-400 flex items-center">
-                  <Icon name="bx:link" class="h-5 w-5 mr-1" />
-                  Check it out
-                </a>
+                {project.site !== "#" && (
+                  <a
+                    href={project.site}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="w-full max-w-56 mb-3 text-white bg-black/70 border border-white/70 hover:bg-black hover:border-blue-300 hover:text-blue-100 font-semibold rounded-md px-3 py-2 flex items-center justify-center transition-colors"
+                  >
+                    <Icon name="bx:link" class="h-5 w-5 mr-1.5" />
+                    Check it out
+                  </a>
+                )}
                 {project.github !== "#" && (
-                  <a href={project.github} class="text-white hover:text-blue-400 flex items-center">
-                    <Icon name="ri:github-fill" class="h-5 w-5 mr-1" />
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="w-full max-w-56 text-white bg-black/70 border border-white/70 hover:bg-black hover:border-blue-300 hover:text-blue-100 font-semibold rounded-md px-3 py-2 flex items-center justify-center transition-colors"
+                  >
+                    <Icon name="ri:github-fill" class="h-5 w-5 mr-1.5" />
                     Check it out on Github
                   </a>
                 )}
               </div>
             </div>
-          </div>
+          </article>
         ))
       }
-      <div>
-        <div class="flex justify-between items-center text-gray-300 mb-2">
-          <span>AI Albania</span>
-          <span class="text-sm text-gray-400">Comming Soon</span>
-        </div>
-        <iframe src="https://aialbania.org" class="w-80 h-90 rounded-md object-cover" title="aialbania"></iframe>
-      </div>
-    </div>
-  </div>
+    </section>
+  </main>
 </Layout>
 
 <style>
