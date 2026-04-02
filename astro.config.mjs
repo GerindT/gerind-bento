@@ -16,7 +16,7 @@ export default defineConfig({
   integrations: [
     sitemap(),
     robotsTxt({
-      sitemap: ["https://gerindtershana.netlify.app/sitemap-index.xml", "https://gerindtershana.netlify.app/sitemap-0.xml"],
+      sitemap: ["https://gerindtershana.netlify.app/sitemap-index.xml"],
     }),
     solidJs(),
     UnoCSS({ injectReset: true }),
