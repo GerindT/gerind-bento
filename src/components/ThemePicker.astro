@@ -1,0 +1,154 @@
+---
+const themes = [
+  { id: "default", label: "Red", color: "#e4112a" },
+  { id: "yellow", label: "Yellow", color: "#ffd400" },
+  { id: "blue", label: "Blue", color: "#1f6bff" },
+  { id: "purple", label: "Purple", color: "#8b3cf7" },
+  { id: "green", label: "Green", color: "#1fbf78" },
+  { id: "white", label: "White", color: "#f4f4f7" },
+];
+---
+
+<details class="theme" id="theme-picker">
+  <summary aria-label="Appearance settings">
+    <span class="theme__dot" aria-hidden="true"></span>
+    <span class="theme__label">Style</span>
+  </summary>
+  <div class="theme__panel">
+    <p>Accent</p>
+    <div class="theme__swatches">
+      {themes.map((t) => <button type="button" class="swatch" style={`--c:${t.color}`} data-theme-id={t.id} aria-label={`${t.label} accent`} aria-pressed="false" />)}
+    </div>
+    <p>Mode</p>
+    <div class="theme__row">
+      <button type="button" class="seg" data-mode-id="dark" aria-pressed="true">Dark</button>
+      <button type="button" class="seg" data-mode-id="light" aria-pressed="false">Light</button>
+    </div>
+    <p>Menu sound</p>
+    <div class="theme__row">
+      <button type="button" class="seg" data-sound-id="off" aria-pressed="true">Off</button>
+      <button type="button" class="seg" data-sound-id="on" aria-pressed="false">On</button>
+    </div>
+  </div>
+</details>
+
+<script>
+  const root = document.documentElement;
+  const picker = document.getElementById("theme-picker") as HTMLDetailsElement | null;
+  const swatches = Array.from(document.querySelectorAll<HTMLButtonElement>(".swatch"));
+  const modeBtns = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-mode-id]"));
+  const soundBtns = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-sound-id]"));
+  const themeIds = swatches.map((s) => s.dataset.themeId ?? "default");
+
+  const get = (key: string, fallback: string) => {
+    try {
+      return (localStorage.getItem(key) || fallback).replace("-theme", "");
+    } catch {
+      return fallback;
+    }
+  };
+  const set = (key: string, value: string) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch {}
+  };
+
+  // ---- accent ----
+  let theme = get("theme", "default");
+  const applyTheme = (id: string) => {
+    theme = id;
+    if (id === "default") delete root.dataset.theme;
+    else root.dataset.theme = id;
+    swatches.forEach((s) => s.setAttribute("aria-pressed", String(s.dataset.themeId === id)));
+  };
+  applyTheme(theme);
+  swatches.forEach((s) =>
+    s.addEventListener("click", () => {
+      applyTheme(s.dataset.themeId ?? "default");
+      set("theme", theme);
+    })
+  );
+
+  // ---- light / dark ----
+  let mode = get("mode", "dark");
+  const applyMode = (m: string) => {
+    mode = m;
+    if (m === "light") root.dataset.mode = "light";
+    else delete root.dataset.mode;
+    modeBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.modeId === m)));
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", m === "light" ? "#f4f4f7" : "#0a0a0d");
+  };
+  applyMode(mode);
+  modeBtns.forEach((b) =>
+    b.addEventListener("click", () => {
+      applyMode(b.dataset.modeId ?? "dark");
+      set("mode", mode);
+    })
+  );
+
+  // ---- sound: tiny synthesised ticks, off unless the visitor opts in ----
+  let sound = get("sound", "off") === "on";
+  let ctx: AudioContext | null = null;
+  const beep = (freq: number, ms: number, vol = 0.04, when = 0) => {
+    if (!sound) return;
+    try {
+      ctx ??= new AudioContext();
+      const t = ctx.currentTime + when;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(vol, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + ms / 1000);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + ms / 1000);
+    } catch {}
+  };
+  (window as any).sfx = {
+    tick: () => beep(1200, 40),
+    confirm: () => {
+      beep(700, 60);
+      beep(1050, 90, 0.04, 0.06);
+    },
+  };
+  const applySound = (on: boolean) => {
+    sound = on;
+    soundBtns.forEach((b) => b.setAttribute("aria-pressed", String((b.dataset.soundId === "on") === on)));
+  };
+  applySound(sound);
+  soundBtns.forEach((b) =>
+    b.addEventListener("click", () => {
+      applySound(b.dataset.soundId === "on");
+      set("sound", sound ? "on" : "off");
+      (window as any).sfx.confirm();
+    })
+  );
+
+  // ---- keyboard hooks (see Shortcuts.astro) ----
+  document.addEventListener("site:cycle-theme", () => {
+    const next = themeIds[(themeIds.indexOf(theme) + 1) % themeIds.length];
+    applyTheme(next);
+    set("theme", next);
+  });
+  document.addEventListener("site:toggle-mode", () => {
+    applyMode(mode === "light" ? "dark" : "light");
+    set("mode", mode);
+  });
+  document.addEventListener("site:toggle-sound", () => {
+    applySound(!sound);
+    set("sound", sound ? "on" : "off");
+    (window as any).sfx.confirm();
+  });
+
+  // Close the panel on Escape or an outside click.
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && picker?.open) {
+      picker.open = false;
+      picker.querySelector("summary")?.focus();
+    }
+  });
+  document.addEventListener("click", (e) => {
+    if (picker?.open && !picker.contains(e.target as Node)) picker.open = false;
+  });
+</script>

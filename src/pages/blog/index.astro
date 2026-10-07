@@ -1,29 +1,33 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import PostRow from "../../components/Blog/PostRow.astro";
+import { formatDate } from "../../lib/helpers";
 
-const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))?.sort(
-  (blogEntryA: CollectionEntry<"blog">, blogEntryB: CollectionEntry<"blog">) => (blogEntryB.data.pubDate || new Date()).getTime() - (blogEntryA.data.pubDate || new Date()).getTime()
-);
+const posts = (await getCollection("blog")).sort((a, b) => (b.data.pubDate?.getTime() ?? 0) - (a.data.pubDate?.getTime() ?? 0));
 ---
 
-<script>
-  import { timeline, type TimelineDefinition } from "motion";
-  import { loaderAnimation } from "../../lib/constants";
-
-  const sequence = [loaderAnimation];
-
-  timeline(sequence as TimelineDefinition);
-</script>
-
-<Layout title="Gerind Tershana - Blog" description="Software developer with a strong focus on building stable and scalable systems">
-  <main class="w-screen h-screen flex flex-col justify-start items-start max-w-3xl mx-auto p-8">
-    <a href="/" class="text-white bg-neutral-900 hover:bg-neutral-800 px-4 py-2 mb-8 border-1 border-solid border-neutral-600 rounded-lg">Back</a>
-    <h1 class="text-4xl font-bold mb-4 text-neutral-100">Posts</h1>
-    <ul class="w-full">
-      {posts?.map((post) => <PostRow title={post.data.title || "No title"} date={post.data.pubDate || new Date()} url={post.slug} />)}
+<Layout
+  title="Blog — Gerind Tershana"
+  description="Notes from Gerind Tershana on programming, web development and the projects behind the portfolio."
+  page="blog"
+>
+  <main id="main" class="page wrap">
+    <header class="page__head">
+      <h1 class="page__title slam">Blog</h1>
+      <p class="page__lede slam" style="--i:1">Notes on programming, web development and what I'm building.</p>
+    </header>
+    <ul class="posts" role="list">
+      {
+        posts.map((post) => (
+          <li>
+            <a class="post-row" href={`/blog/${post.slug}/`}>
+              <h2>{post.data.title}</h2>
+              {post.data.pubDate && <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>}
+              {post.data.description && <p>{post.data.description}</p>}
+            </a>
+          </li>
+        ))
+      }
     </ul>
   </main>
 </Layout>

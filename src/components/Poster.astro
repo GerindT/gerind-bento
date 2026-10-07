@@ -1,0 +1,68 @@
+---
+import { Icon } from "astro-icon/components";
+import { statusLabels, techIcons, type Project } from "../lib/projects";
+
+interface Props {
+  project: Project;
+  /** Hide stack and links (compact variant for the home page). */
+  compact?: boolean;
+}
+
+const { project, compact = false } = Astro.props;
+const href = project.site ?? project.github;
+---
+
+<article class="poster">
+  <div class:list={["poster__art", { "poster__art--contain": project.contain, "poster__art--type": !project.img }]}>
+    {
+      project.img ? (
+        <img src={project.img} alt={project.alt} loading="lazy" decoding="async" width="480" height="600" />
+      ) : (
+        <span class="poster__initial" aria-hidden="true">
+          {project.title.charAt(0)}
+        </span>
+      )
+    }
+    <span class="poster__year">{project.year}</span>
+  </div>
+  <div class="poster__body">
+    <h3 class="poster__title">{project.title}</h3>
+    <ul class="chips" aria-label="Status">
+      {project.statuses.map((s) => <li class:list={["chip", { "chip--live": s === "live" }]}>{statusLabels[s]}</li>)}
+    </ul>
+    {!compact && project.blurb && <p class="poster__note">{project.blurb}</p>}
+    {
+      !compact && (
+        <ul class="stack" aria-label="Built with">
+          {project.stacks.map((s) => (
+            <li>
+              <Icon name={techIcons[s].icon} aria-hidden="true" />
+              {techIcons[s].label}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    <div class="poster__links">
+      {
+        project.site && (
+          <a class:list={["textlink", { "textlink--stretch": compact }]} href={project.site} target="_blank" rel="noopener noreferrer">
+            Visit site
+            <Icon name="ri:arrow-right-up-line" aria-hidden="true" />
+            <span class="sr-only"> — {project.title} (opens in new tab)</span>
+          </a>
+        )
+      }
+      {
+        !compact && project.github && (
+          <a class="textlink" href={project.github} target="_blank" rel="noopener noreferrer">
+            Source
+            <Icon name="ri:github-fill" aria-hidden="true" />
+            <span class="sr-only"> — {project.title} on GitHub (opens in new tab)</span>
+          </a>
+        )
+      }
+      {!project.site && !project.github && <p class="poster__note">Private — no public link.</p>}
+    </div>
+  </div>
+</article>

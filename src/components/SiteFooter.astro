@@ -1,0 +1,23 @@
+---
+import { Icon } from "astro-icon/components";
+import { LINKS } from "../lib/constants";
+import { hasPhotos } from "../lib/photos";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>© {year} Gerind Tershana · Built with <a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a>.</p>
+    <nav aria-label="Footer" style="display:flex;flex-wrap:wrap;gap:0.25rem 1.5rem">
+      <a href="/projects">Projects</a>
+      <a href="/blog">Blog</a>
+      {hasPhotos && <a href="/photos">Photos</a>}
+      <a href="/media">Media</a>
+      <a href="/rss.xml">RSS</a>
+      <button type="button" class="linkbtn" data-open-keys>Shortcuts (?)</button>
+      <a href={LINKS.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>

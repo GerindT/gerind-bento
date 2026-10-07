@@ -1,0 +1,21 @@
+---
+import ThemePicker from "./ThemePicker.astro";
+import { hasPhotos } from "../lib/photos";
+
+interface Props {
+  current?: "home" | "projects" | "blog" | "media" | "photos";
+}
+const { current } = Astro.props;
+---
+
+<header class="site-header">
+  <a class="brand" href="/" aria-label="Gerind T. — Gerind Tershana, home">Gerind T.</a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="/projects" aria-current={current === "projects" ? "page" : undefined}>Projects</a>
+    <a class="nav-extra" href="/blog" aria-current={current === "blog" ? "page" : undefined}>Blog</a>
+    {hasPhotos && <a class="nav-extra" href="/photos" aria-current={current === "photos" ? "page" : undefined}>Photos</a>}
+    <a class="nav-extra" href="/media" aria-current={current === "media" ? "page" : undefined}>Media</a>
+    <a href="/#contact">Contact</a>
+    <ThemePicker />
+  </nav>
+</header>

@@ -1,97 +1,77 @@
-import { onMount } from "solid-js";
+import { onCleanup, onMount } from "solid-js";
 import * as d3 from "d3";
 import worldData from "../lib/world.json";
+import { visitedCountries } from "../lib/places";
 
-type Props = {
-  isStatic?: boolean;
-};
-
-const GlobeComponent = ({ isStatic }: Props) => {
+const GlobeComponent = () => {
   let mapContainer: HTMLDivElement | undefined;
-
-  const visitedCountries = [
-    "France",
-    "China",
-    "Italy",
-    "Sri Lanka",
-    "Turkey",
-    "Greece",
-    "Malta",
-    "Hungary",
-    "Portugal",
-    "Morocco",
-    "Greece",
-    "Spain",
-    "Netherlands",
-    "Belgium",
-  ];
 
   onMount(() => {
     if (!mapContainer) return;
 
-    const width = mapContainer.clientWidth;
-    const height = 500;
-    const sensitivity = 75;
+    const width = mapContainer.clientWidth || 480;
+    const size = Math.min(width, 520);
+    const radius = size / 2 - 6;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    let projection = d3
+    const projection = d3
       .geoOrthographic()
-      .scale(250)
-      .center([0, 0])
-      .rotate([0, -30])
-      .translate([width / 2, height / 2]);
+      .scale(radius)
+      .rotate([-10, -30])
+      .translate([width / 2, size / 2]);
+    const pathGenerator = d3.geoPath().projection(projection);
 
-    const initialScale = projection.scale();
-    let pathGenerator = d3.geoPath().projection(projection);
-
-    let svg = d3
+    const svg = d3
       .select(mapContainer)
       .append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", size)
+      .attr("viewBox", `0 0 ${width} ${size}`)
+      .attr("role", "img")
+      .attr("aria-label", `Globe highlighting ${visitedCountries.length} countries Gerind has visited`);
 
     svg
       .append("circle")
-      .attr("fill", "#EEE")
-      .attr("stroke", "#000")
-      .attr("stroke-width", "0.2")
       .attr("cx", width / 2)
-      .attr("cy", height / 2)
-      .attr("r", initialScale);
+      .attr("cy", size / 2)
+      .attr("r", radius)
+      .style("fill", "var(--ink-2)")
+      .style("stroke", "var(--paper)")
+      .style("stroke-width", 3);
 
-    let map = svg.append("g");
-
-    map
+    const paths = svg
       .append("g")
-      .attr("class", "countries")
       .selectAll("path")
-      .data(worldData.features)
+      .data((worldData as any).features)
       .enter()
       .append("path")
-      .attr("d", (d: any) => pathGenerator(d as any))
-      .attr("fill", (d: { properties: { name: string } }) =>
-        visitedCountries.includes(d.properties.name)
-          ? "var(--primary-500)"
-          : "white"
-      )
-      .style("stroke", "black")
-      .style("stroke-width", 0.3)
-      .style("opacity", 0.8);
+      .attr("d", (d: any) => pathGenerator(d) as string)
+      .style("fill", (d: any) => (visitedCountries.includes(d.properties.name) ? "var(--accent)" : "var(--ink-3)"))
+      .style("stroke", "var(--ink)")
+      .style("stroke-width", 0.4);
 
-    d3.timer(() => {
-      const rotate = projection.rotate();
-      const k = sensitivity / projection.scale();
-      if (!isStatic) {
-        projection.rotate([rotate[0] - 1 * k, rotate[1]]);
-      }
-      svg.selectAll("path").attr("d", (d: any) => pathGenerator(d as any));
-    }, 200);
+    const redraw = () => paths.attr("d", (d: any) => pathGenerator(d) as string);
+
+    if (reduceMotion) return;
+
+    let visible = true;
+    const observer = new IntersectionObserver(([entry]) => (visible = entry.isIntersecting));
+    observer.observe(mapContainer);
+
+    const timer = d3.timer(() => {
+      if (!visible || document.hidden) return;
+      const [x, y] = projection.rotate();
+      projection.rotate([x + 0.35, y]);
+      redraw();
+    });
+
+    onCleanup(() => {
+      timer.stop();
+      observer.disconnect();
+    });
   });
 
-  return (
-    <div class="flex flex-col text-white justify-center items-center w-full h-full">
-      <div class="w-full" ref={mapContainer}></div>
-    </div>
-  );
+  return <div ref={mapContainer} style={{ width: "100%" }} />;
 };
 
 export default GlobeComponent;
