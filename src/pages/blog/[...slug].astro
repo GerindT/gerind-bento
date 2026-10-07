@@ -1,129 +1,59 @@
 ---
 import { getCollection } from "astro:content";
-
-export const prerender = true;
+import Layout from "../../layouts/Layout.astro";
+import { formatDate } from "../../lib/helpers";
+import { SITE } from "../../lib/constants";
 
 export async function getStaticPaths() {
-  return (await getCollection("blog")).map(({ slug }) => ({
-    params: { slug },
+  return (await getCollection("blog")).map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
   }));
 }
 
-const { slug } = Astro.params;
+const { entry } = Astro.props;
+const { Content, remarkPluginFrontmatter } = await entry.render();
+const { title, description, pubDate } = entry.data;
+const url = `${SITE.url}/blog/${entry.slug}/`;
 
-if (slug === undefined) {
-  throw new Error("slug is missing");
-}
-
-const posts = (await getCollection("blog")).sort(
-  (blogEntryA, blogEntryB) =>
-    (blogEntryB.data.pubDate || new Date()).getTime() -
-    (blogEntryA.data.pubDate || new Date()).getTime()
-);
-
-const entry = posts.find((entry) => entry.slug === slug);
-if (entry === undefined) {
-  return Astro.redirect("/404");
-}
-
-const { Content } = await entry.render();
+const jsonLd = [
+  {
+    "@type": "BlogPosting",
+    "@id": `${url}#post`,
+    headline: title,
+    description,
+    url,
+    ...(pubDate ? { datePublished: pubDate.toISOString(), dateModified: pubDate.toISOString() } : {}),
+    author: { "@id": `${SITE.url}/#person` },
+    publisher: { "@id": `${SITE.url}/#person` },
+    mainEntityOfPage: url,
+    image: `${SITE.url}/og.png`,
+    inLanguage: "en",
+  },
+];
 ---
 
-<Content />
-
-<style is:global>
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-
-  h1 {
-    font-size: 32px;
-  }
-
-  h2 {
-    font-size: 28px;
-  }
-
-  h3 {
-    font-size: 24px;
-  }
-
-  h4 {
-    font-size: 20px;
-  }
-
-  h5 {
-    font-size: 18px;
-  }
-
-  h6 {
-    font-size: 16px;
-  }
-
-  p {
-    margin: 0 0 10px 0;
-  }
-
-  a {
-    color: #1a0dab;
-    text-decoration: none;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
-  ul,
-  ol {
-    margin-left: 20px;
-    margin-bottom: 10px;
-  }
-
-  blockquote {
-    margin: 20px 0;
-    padding-left: 15px;
-    border-left: 5px solid #ccc;
-  }
-
-  pre,
-  code {
-    font-family: "Courier New", monospace;
-    background-color: #f4f4f4;
-    border-radius: 5px;
-  }
-
-  pre {
-    padding: 10px;
-    overflow-x: auto;
-  }
-
-  code {
-    padding: 2px 4px;
-    font-size: 90%;
-    color: #d63384;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-
-  th,
-  td {
-    text-align: left;
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-  }
-</style>
+<Layout
+  title={`${title} — Gerind Tershana`}
+  description={description ?? SITE.tagline}
+  page="blog"
+  type="article"
+  publishedTime={pubDate?.toISOString()}
+  jsonLd={jsonLd}
+>
+  <main id="main" class="page wrap">
+    <article class="article">
+      <header class="page__head">
+        <h1 class="page__title slam" style="font-size:clamp(2.4rem,8vw,4.5rem)">{title}</h1>
+        <div class="article__meta">
+          {pubDate && <time class="chip" datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>}
+          {remarkPluginFrontmatter.minutesRead && <span class="chip">{remarkPluginFrontmatter.minutesRead}</span>}
+        </div>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+      <p style="margin-top:3rem"><a class="textlink" href="/blog">← All posts</a></p>
+    </article>
+  </main>
+</Layout>

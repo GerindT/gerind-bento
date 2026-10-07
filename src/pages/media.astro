@@ -1,243 +1,43 @@
 ---
-import BasicLayout from "../layouts/BasicLayout.astro";
 import { Icon } from "astro-icon/components";
-
-const manga = [
-  {
-    img: "/illustrations/horimiya.webp",
-    alt: "Horimiya",
-    title: "Horimiya",
-    link: "https://mangadex.org/title/a25e46ec-30f7-4db6-89df-cacbc1d9a900/horimiya",
-  },
-  {
-    img: "/illustrations/1000yen.webp",
-    alt: "I Sold My Life for 10,000 Yen per Year.",
-    title: "I Sold My Life for 10,000 Yen per Year.",
-    link: "https://mangadex.org/title/9e03b2ca-5191-44a6-88b6-c0cd49d06b51/i-sold-my-life-for-10-000-yen-per-year?tab=art",
-  },
-  {
-    img: "/illustrations/this-witch-of-mine.webp",
-    alt: "This Witch of Mine",
-    title: "This Witch of Mine",
-    link: "https://mangadex.org/title/23a2a55e-aa51-4c4b-8f8e-dd91b4b654e8/this-witch-of-mine",
-  },
-  {
-    img: "/illustrations/tokyo-ghoul.webp",
-    alt: "Tokyo Ghoul",
-    title: "Tokyo Ghoul",
-    link: "https://mangadex.org/title/6a1d1cb1-ecd5-40d9-89ff-9d88e40b136b/tokyo-ghoul",
-  },
-  {
-    img: "/illustrations/the-climber.webp",
-    alt: "Kokou no Hito",
-    title: "Kokou no Hito",
-    link: "https://mangadex.org/title/bb8310e4-6050-4a43-984e-f7bbdfce23b1/kokou-no-hito",
-  },
-];
-
-const movies = [
-  {
-    img: "/illustrations/parasite.webp",
-    alt: "Parasite",
-    title: "Parasite",
-    link: "https://www.imdb.com/title/tt6751668/",
-  },
-  {
-    img: "/illustrations/dead-poet.webp",
-    alt: "Dead  Poets Society",
-    title: "Dead  Poets Society",
-    link: "https://www.imdb.com/title/tt0097165/",
-  },
-  {
-    img: "/illustrations/lalala.webp",
-    alt: "La La Land",
-    title: "La La Land",
-    link: "https://www.imdb.com/title/tt3783958/",
-  },
-  {
-    img: "/illustrations/lord-of-the-rings.webp",
-    alt: "Lord of the Rings: The Fellowship of the Ring",
-    title: "Lord of the Rings: The Fellowship of the Ring",
-    link: "https://www.imdb.com/title/tt0120737/",
-  },
-  {
-    img: "/illustrations/interstellar.webp",
-    alt: "Interstellar",
-    title: "Interstellar",
-    link: "https://www.imdb.com/title/tt0816692/",
-  },
-];
-
-const books = [
-  {
-    img: "/illustrations/murakami.webp",
-    alt: "Norwegian Wood",
-    title: "Norwegian Wood",
-    link: "https://www.goodreads.com/book/show/11297.Norwegian_Wood?ref=nav_sb_ss_1_4",
-  },
-  {
-    img: "/illustrations/danger.webp",
-    alt: "The Dangers of Smoking in Bed",
-    title: "The Dangers of Smoking in Bed",
-    link: "https://www.goodreads.com/book/show/53215250-the-dangers-of-smoking-in-bed?ref=nav_sb_ss_1_14",
-  },
-  {
-    img: "/illustrations/harry.webp",
-    alt: "Harry Potter and the Order of the Phoenix",
-    title: "Harry Potter and the Order of the Phoenix",
-    link: "https://www.goodreads.com/book/show/2.Harry_Potter_and_the_Order_of_the_Phoenix?ref=nav_sb_ss_1_9",
-  },
-  {
-    img: "/illustrations/inferno.webp",
-    alt: "Inferno",
-    title: "Inferno",
-    link: "https://www.goodreads.com/book/show/17212231-inferno?ref=nav_sb_ss_1_8",
-  },
-  {
-    img: "/illustrations/kafka.webp",
-    alt: "Letter to His Father",
-    title: "Letter to His Father",
-    link: "https://www.goodreads.com/book/show/187569.Letter_to_His_Father?from_search=true&from_srp=true&qid=OyejJ7KRb1&rank=1",
-  },
-];
+import Layout from "../layouts/Layout.astro";
+import { shelves, mediaCount } from "../lib/media";
 ---
 
-<script>
-  import { timeline, type TimelineDefinition } from "motion";
-  import { loaderAnimation } from "../lib/constants";
+<Layout
+  title="Media I have enjoyed — Gerind Tershana"
+  description={`${mediaCount} books, movies and manga Gerind Tershana keeps coming back to, from Norwegian Wood to Interstellar and Tokyo Ghoul.`}
+  page="media"
+>
+  <main id="main" class="page wrap">
+    <header class="page__head">
+      <h1 class="page__title slam">Media</h1>
+      <p class="page__lede slam" style="--i:1">Books, movies and manga I have enjoyed. Click a cover to read more about it.</p>
+    </header>
 
-  timeline(loaderAnimation as TimelineDefinition);
-</script>
-
-<BasicLayout title="Gerind Tershana - Media Collection" description="My personal collection of books, movies, manga, anime and music" page="media">
-  <a href="/" aria-label="Back to homepage" class="text-white absolute bg-neutral-900 hover:bg-neutral-800 top-4 left-4 px-4 py-2 border-1 border-solid border-neutral-600 rounded-lg">Back</a>
-
-  <div class="container mx-auto px-4 py-16 space-y-8">
-    <!-- Books Section -->
-    <section>
-      <h2 class="text-3xl font-bold text-white mb-8">Books</h2>
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-        {
-          books.map((b) => (
-            <div class="group perspective">
-              <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src={b.img} alt={b.alt} class="w-full h-full object-cover rounded-lg" loading="lazy" decoding="async" width="320" height="384" />
-
-                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center">
-                  <span class="text-white text-lg font-semibold mb-2 px-4">{b.title}</span>
-                  <a href={b.link} target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 flex items-center">
-                    <Icon name="bx:link" class="h-5 w-5 mr-1" />
-                    Read More
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- Movies Section -->
-    <section>
-      <h2 class="text-3xl font-bold text-white mb-8">Movies</h2>
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-        {
-          movies.map((m) => (
-            <div class="group perspective">
-              <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src={m.img} alt={m.alt} class="w-full h-full object-cover rounded-lg" loading="lazy" decoding="async" width="320" height="384" />
-
-                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center">
-                  <span class="text-white text-lg font-semibold mb-2 px-4">{m.title}</span>
-                  <a href={m.link} target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 flex items-center">
-                    <Icon name="bx:link" class="h-5 w-5 mr-1" />
-                    Read More
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- Manga Section -->
-    <section>
-      <h2 class="text-3xl font-bold text-white mb-8">Manga</h2>
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-        {
-          manga.map((m) => (
-            <div class="group perspective">
-              <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src={m.img} alt={m.alt} class="w-full h-full object-cover rounded-lg" loading="lazy" decoding="async" width="320" height="384" />
-
-                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center">
-                  <span class="text-white text-lg font-semibold mb-2 px-4">{m.title}</span>
-                  <a href={m.link} target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 flex items-center">
-                    <Icon name="bx:link" class="h-5 w-5 mr-1" />
-                    Read More
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- Anime Section -->
-    <section>
-      <h2 class="text-3xl font-bold text-white mb-8">Anime</h2>
-      <!-- <div class="grid grid-cols-5 gap-6">
-        {
-          [1, 2, 3, 4, 5].map(() => (
-            <div class="group perspective">
-              <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f" alt="Anime" class="w-full h-72 object-cover rounded-lg" />
-
-                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                  <span class="text-white text-lg font-semibold">Anime Title</span>
-                </div>
-              </div>
-            </div>
-          ))
-        }
-      </div> -->
-      <div class="flex items-center justify-center p-8 rounded-lg">
-        <p class="text-2xl text-gray-500 font-semibold">Coming Soon</p>
-      </div>
-    </section>
-
-    <!-- Music Section -->
-    <section>
-      <h2 class="text-3xl font-bold text-white mb-8">Music</h2>
-      <!-- <div class="grid grid-cols-5 gap-6">
-        {
-          [1, 2, 3, 4, 5].map(() => (
-            <div class="group perspective">
-              <div class="relative transform transition-all duration-300 group-hover:rotate-y-12 group-hover:scale-105 group-hover:shadow-xl">
-                <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea" alt="Album" class="w-full h-72 object-cover rounded-lg" />
-
-                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                  <span class="text-white text-lg font-semibold">Album Title</span>
-                </div>
-              </div>
-            </div>
-          ))
-        }
-      </div> -->
-      <div class="flex items-center justify-center p-8 rounded-lg">
-        <p class="text-2xl text-gray-500 font-semibold">Coming Soon</p>
-      </div>
-    </section>
-  </div>
-</BasicLayout>
-
-<style>
-  .perspective {
-    perspective: 1000px;
-  }
-  .rotate-y-12 {
-    transform: rotateY(12deg);
-  }
-</style>
+    {
+      shelves.map((shelf, si) => (
+        <section class="shelf" aria-labelledby={`shelf-${shelf.id}`}>
+          <h2 id={`shelf-${shelf.id}`}>{shelf.title}</h2>
+          <ul class="covers">
+            {shelf.items.map((item, ii) => (
+              <li>
+                <a class="cover" href={item.link} target="_blank" rel="noopener noreferrer">
+                  <span class="cover__img">
+                    <img src={item.img} alt="" loading={si === 0 ? "eager" : "lazy"} fetchpriority={si === 0 && ii < 2 ? "high" : undefined} decoding="async" width="320" height="384" />
+                  </span>
+                  <span class="cover__title">
+                    {item.title}
+                    <Icon name="ri:arrow-right-up-line" aria-hidden="true" style="display:inline;width:1em;height:1em;vertical-align:-0.12em" />
+                    <span class="sr-only"> ({shelf.cta}, opens in new tab)</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+    <p class="more">Anime and music shelves are coming.</p>
+  </main>
+</Layout>

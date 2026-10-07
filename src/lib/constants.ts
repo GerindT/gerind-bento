@@ -3,7 +3,14 @@ export const LINKS = {
   linkedin: "https://www.linkedin.com/in/gerindtershana/",
   instagram: "https://www.instagram.com/gerindtershana/",
   telegram: "https://t.me/GerindT",
+  email: "gerindt@gmail.com",
   gmail: "mailto:gerindt@gmail.com",
+  email2: "gerindt@outlook.com",
+  outlook: "mailto:gerindt@outlook.com",
 };
 
-export const loaderAnimation = [".loader", { opacity: [1, 0], pointerEvents: "none" }, { easing: "ease-out" }];
+export const SITE = {
+  name: "Gerind Tershana",
+  url: "https://gerindtershana.netlify.app",
+  tagline: "Tech lead, system architect and software engineer building scalable web applications and high-concurrency APIs.",
+};

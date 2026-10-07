@@ -1,56 +1,62 @@
 ---
 import "../style.css";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import Shortcuts from "../components/Shortcuts.astro";
+import { LINKS, SITE } from "../lib/constants";
+
 interface Props {
   title: string;
   description: string;
-  page?: "media" | "blog";
-  slug?: string | undefined;
-  frontmatter?: {
-    file: string;
-    url: string | undefined;
-  } & {
-    title: string;
-    description: string;
-    pubDate: string;
-    minutesRead: string;
-  };
+  /** Marks the current nav entry. */
+  page?: "home" | "projects" | "blog" | "media" | "photos";
+  type?: "website" | "article";
+  publishedTime?: string;
+  /** Absolute path (or URL) of the social preview image. */
+  image?: string;
+  noindex?: boolean;
+  /** Extra JSON-LD nodes for this page. */
+  jsonLd?: Record<string, unknown>[];
+  /** Skip the load wipe (used by the 404 page). */
+  noWipe?: boolean;
 }
 
-const { title, description, page, slug, frontmatter } = Astro.props;
-const siteUrl = Astro.site ?? Astro.url.origin;
+const { title, description, page, type = "website", publishedTime, image = "/og.png", noindex = false, jsonLd = [], noWipe = false } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL(SITE.url);
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
-const image = new URL("/overview.PNG", siteUrl).toString();
-const schema = [
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "Gerind Tershana",
-    url: "https://gerindtershana.netlify.app",
-    inLanguage: "en",
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Gerind Tershana",
-    url: "https://gerindtershana.netlify.app",
-    sameAs: ["https://www.linkedin.com/in/gerindtershana", "https://github.com/Gerindt"],
-    image: "https://gerindtershana.netlify.app/overview.PNG",
-    jobTitle: "Software Developer",
-    worksFor: {
-      "@type": "Organization",
-      name: "Detag.al",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Albania",
-        addressCountry: "AL",
-      },
-    },
-    nationality: {
-      "@type": "Country",
-      name: "Albania",
-    },
-  },
-];
+const imageUrl = new URL(image, siteUrl).toString();
+
+const person = {
+  "@type": "Person",
+  "@id": `${SITE.url}/#person`,
+  name: SITE.name,
+  url: SITE.url,
+  image: new URL("/og.png", siteUrl).toString(),
+  jobTitle: "Tech Lead & System Architect",
+  description: SITE.tagline,
+  email: [LINKS.email, LINKS.email2],
+  sameAs: [LINKS.linkedin, LINKS.github, LINKS.instagram, LINKS.telegram],
+  knowsAbout: ["Web development", "React", "Vue", "Nuxt", "Node.js", "Go", "Laravel", "Python", "APIs", "CI/CD"],
+  worksFor: { "@type": "Organization", name: "Innovation4Albania" },
+  alumniOf: { "@type": "CollegeOrUniversity", name: "University of New York Tirana" },
+  knowsLanguage: ["sq", "en", "de"],
+  address: { "@type": "PostalAddress", addressLocality: "Tirana", addressCountry: "AL" },
+  nationality: { "@type": "Country", name: "Albania" },
+};
+const website = {
+  "@type": "WebSite",
+  "@id": `${SITE.url}/#website`,
+  name: SITE.name,
+  url: SITE.url,
+  inLanguage: "en",
+  publisher: { "@id": `${SITE.url}/#person` },
+};
+
+const graph = {
+  "@context": "https://schema.org",
+  "@graph": [website, person, ...jsonLd],
+};
 ---
 
 <!doctype html>
@@ -58,74 +64,102 @@ const schema = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="theme-color" content="#0a0a0d" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Blog`} href="/rss.xml" />
+    <link rel="preload" href="/fonts/CabinetGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content={SITE.name} />
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large"} />
+    <meta name="google-site-verification" content="Z7KRZM4pvjJO5VV2qVFNvmEHkHAfZd8ZlSgX1LGgN_U" />
+    <meta name="google-site-verification" content="AQbVxrmT5AemOlTagqMrqdj1yTowivfYgadynXXHvZU" />
     <link rel="canonical" href={canonicalUrl} />
-    <!-- Basic OG tags for sharing your website's content on platforms like Facebook and LinkedIn -->
+
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={image} />
-    <meta property="og:image:alt" content={title} />
-    <meta property="og:site_name" content="Gerind Tershana" />
-    <meta name="twitter:site" content="@gerindtershana" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE.name} — ${SITE.tagline}`} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {type === "article" && <meta property="article:author" content={SITE.name} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image" content={imageUrl} />
 
-    <meta name="google-site-verification" content="AQbVxrmT5AemOlTagqMrqdj1yTowivfYgadynXXHvZU" />
-
-    <link rel="preconnect" href="https://cdn.fontshare.com" />
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <!-- Apply the saved accent before first paint, so there is no colour flash. -->
+    <script is:inline>
+      try {
+        var t = (localStorage.getItem("theme") || "").replace("-theme", "");
+        if (t && t !== "default") document.documentElement.dataset.theme = t;
+        if (localStorage.getItem("mode") === "light") document.documentElement.dataset.mode = "light";
+      } catch (e) {}
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
   </head>
-  <body class="bg-darkslate-700 flex flex-col justify-center items-center">
-    <slot name="loader" />
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {!noWipe && <div class="wipe" aria-hidden="true" />}
+    <SiteHeader current={page} />
     <slot />
+    <SiteFooter />
+    <Shortcuts />
+    <div class="wipe-in" aria-hidden="true"></div>
+    <script>
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (!reduce) {
+        // Click "shards": three slanted accent slashes burst from the pointer.
+        document.addEventListener("pointerdown", (e) => {
+          for (let i = 0; i < 3; i++) {
+            const shard = document.createElement("span");
+            shard.className = "shard";
+            shard.style.left = `${e.clientX}px`;
+            shard.style.top = `${e.clientY}px`;
+            document.body.appendChild(shard);
+            const angle = -60 + i * 60 + (Math.random() * 20 - 10);
+            const dist = 26 + Math.random() * 18;
+            const dx = Math.cos((angle * Math.PI) / 180) * dist;
+            const dy = Math.sin((angle * Math.PI) / 180) * dist;
+            shard
+              .animate(
+                [
+                  { transform: `translate(-50%, -50%) rotate(${angle}deg) scaleX(0.4)`, opacity: 1 },
+                  { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${angle}deg) scaleX(1)`, opacity: 0 },
+                ],
+                { duration: 450, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }
+              )
+              .finished.then(() => shard.remove())
+              .catch(() => shard.remove());
+          }
+        });
+
+        // Page transition: wipe in before leaving for another page.
+        document.addEventListener("click", (e) => {
+          const link = (e.target as Element).closest?.("a") as HTMLAnchorElement | null;
+          if (!link || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          if (link.target || link.hasAttribute("download") || link.origin !== location.origin) return;
+          if (link.pathname === location.pathname && link.search === location.search) return;
+          if (/\.(pdf|xml|zip)$/i.test(link.pathname)) return;
+          e.preventDefault();
+          (window as any).sfx?.confirm();
+          document.body.classList.add("is-leaving");
+          setTimeout(() => location.assign(link.href), 320);
+        });
+        window.addEventListener("pageshow", () => document.body.classList.remove("is-leaving"));
+      }
+    </script>
   </body>
 </html>
-
-<style is:global>
-  @font-face {
-    font-family: "CabinetGrotesk";
-    src: url("/fonts/CabinetGrotesk-Variable.ttf") format("truetype-variations");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-    font-weight: 100 1000;
-  }
-  @font-face {
-    font-family: "Satoshi";
-    src: url("/fonts/Satoshi-Variable.ttf") format("truetype-variations");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-    font-weight: 100 1000;
-  }
-
-  body {
-    margin: 0;
-    font-family: "Satoshi", sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "Cabinet Grotesk", sans-serif;
-  }
-  p {
-    font-family: "Satoshi";
-  }
-
-  b {
-    font-weight: 700 !important;
-  }
-</style>

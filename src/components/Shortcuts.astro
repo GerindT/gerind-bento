@@ -1,0 +1,88 @@
+---
+import { hasPhotos } from "../lib/photos";
+
+const rows = [
+  { keys: ["g", "h"], label: "Go to home" },
+  { keys: ["g", "p"], label: "Go to projects" },
+  { keys: ["g", "b"], label: "Go to blog" },
+  { keys: ["g", "m"], label: "Go to media" },
+  ...(hasPhotos ? [{ keys: ["g", "f"], label: "Go to photos" }] : []),
+  { keys: ["g", "c"], label: "Go to contact" },
+  { keys: ["t"], label: "Next accent colour" },
+  { keys: ["d"], label: "Toggle dark / light" },
+  { keys: ["s"], label: "Toggle menu sound" },
+  { keys: ["?"], label: "Show this list" },
+];
+---
+
+<dialog class="keys" id="keys" aria-labelledby="keys-title">
+  <div class="keys__inner">
+    <h2 id="keys-title">Shortcuts</h2>
+    <dl>
+      {
+        rows.map((r) => (
+          <div>
+            <dt>
+              {r.keys.map((k) => (
+                <kbd>{k}</kbd>
+              ))}
+            </dt>
+            <dd>{r.label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <div class="keys__foot">
+      <form method="dialog"><button class="btn btn--primary" autofocus>Got it</button></form>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById("keys") as HTMLDialogElement | null;
+  const routes: Record<string, string> = { h: "/", p: "/projects", b: "/blog", m: "/media", f: "/photos", c: "/#contact" };
+  let armed = false;
+  let timer: number | undefined;
+
+  const go = (href: string) => {
+    const a = document.createElement("a");
+    a.href = href;
+    document.body.appendChild(a);
+    a.click(); // goes through the page-transition handler
+    a.remove();
+  };
+
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const t = e.target as HTMLElement;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (dialog?.open) return;
+
+    const key = e.key.toLowerCase();
+
+    if (armed) {
+      armed = false;
+      clearTimeout(timer);
+      if (routes[key]) {
+        e.preventDefault();
+        go(routes[key]);
+        return;
+      }
+    }
+
+    if (key === "g") {
+      armed = true;
+      timer = window.setTimeout(() => (armed = false), 1200);
+    } else if (e.key === "?") {
+      e.preventDefault();
+      dialog?.showModal();
+    } else if (key === "t") document.dispatchEvent(new CustomEvent("site:cycle-theme"));
+    else if (key === "d") document.dispatchEvent(new CustomEvent("site:toggle-mode"));
+    else if (key === "s") document.dispatchEvent(new CustomEvent("site:toggle-sound"));
+  });
+
+  document.querySelectorAll("[data-open-keys]").forEach((b) => b.addEventListener("click", () => dialog?.showModal()));
+  dialog?.addEventListener("click", (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+</script>

@@ -1,69 +1,77 @@
-# Bento Portofolio
+# Gerind Tershana — Portfolio
 
-A modern, minimalist portfolio and blog site built to showcase my projects and share my journey in tech.
+Personal portfolio and blog of Gerind Tershana, tech lead, system architect and software engineer in Tirana, Albania.
 
-![Portfolio Banner](./public/overview.PNG)
+Live: https://gerindtershana.netlify.app
 
-## 👋 Who Am I
+![Portfolio preview](./public/og.png)
 
-Hey! I'm Gerind Tershana, a passionate developer who loves creating on the web. I blend technical expertise with creative problem-solving to build engaging digital experiences.
+## What's in it
 
-## 🛠️ Tech Stack
+- **Home:** hero, keyboard-driven menu, selected work, profile, career timeline, a spinning globe of visited countries and a contact card.
+- **Projects:** every project with its status and stack.
+- **Blog:** markdown posts with an RSS feed at `/rss.xml`.
+- **Media:** books, movies and manga I keep coming back to.
+- **Photos:** a photography gallery. It only appears once there are photos in `src/assets/photos/`.
+- **Extras:** accent colour picker, dark and light mode, optional menu sound, keyboard shortcuts (press `?`), and a hidden mascot swap on the hero.
 
-- [Astro](https://astro.build) - Core framework
-- Markdown for content
-- Modern CSS & Animations
-- Fully Responsive Design
-- SEO Optimized
+The design is a Persona 5-inspired "calling card": ink black, one accent colour, slanted paper-white cut-outs. It is original work and does not reuse any game art or logos.
 
-## 🚀 Quick Start
+## Stack
 
-Get this site running locally in just a few steps:
+- [Astro](https://astro.build) 4, static output, deployed on Netlify
+- UnoCSS reset plus hand-written CSS in `src/style.css`
+- Solid (globe) and d3 for the map
+- Markdown content collections for the blog
+- Self-hosted Cabinet Grotesk and Satoshi (woff2)
 
-### Clone the repository
+## Run it locally
 
+```sh
 git clone https://github.com/GerindT/gerind-bento.git
-
-### Navigate to project directory
-
 cd gerind-bento
-
-### Install dependencies
-
-npm install
-
-### or
-
 pnpm install
-
-### Start development server
-
-npm run dev
-
-### or
-
-pnpm run dev
-
-### Site will be available at http://localhost:4321
-
-## 📁 Directory Structure
-
-```bash
-gerind-bento/
-├── src/
-│   ├── components/
-│   ├── content/
-│   │   └── blog/
-│   ├── layouts/
-│   └── pages/
-├── public/
-├── astro.config.mjs
-└── package.json
-
+pnpm dev        # http://localhost:4321
+pnpm build      # static site in dist/
+pnpm preview    # serve the build
 ```
 
-## 🎉 Enjoy
+## Where to change things
 
-![GIF](./public/the-witcher.gif)
+| To change | Edit |
+| --- | --- |
+| Projects | `src/lib/projects.ts` |
+| Career, education, languages | `src/lib/career.ts` |
+| Books, movies, manga | `src/lib/media.ts` |
+| Countries on the globe | `src/lib/places.ts` |
+| Links, name and site URL | `src/lib/constants.ts` |
+| Blog posts | add a `.md` file to `src/content/blog/` (needs `title`, `description`, `pubDate: YYYY-MM-DD`) |
+| Photos | drop images in `src/assets/photos/` and describe them in `src/lib/photos.ts` |
+| CV PDFs | replace `public/Gerind_Tershana_EN.pdf` and `public/Gerind_Tershana_AL.pdf` |
+| Share image | regenerate `public/og.png` (1200×630) after big hero changes |
+| Colours and theme | CSS variables at the top of `src/style.css` |
 
-> PS: I was inspired by this wonderful portofolio: [here](https://github.com/Ladvace/astro-bento-portfolio)
+## Project layout
+
+```
+src/
+  assets/photos/     photography (optional)
+  components/        header, footer, poster card, theme picker, globe
+  content/blog/      markdown posts
+  layouts/           BasicLayout (head, SEO, structured data) and Layout
+  lib/               data and helpers
+  pages/             index, projects, media, photos, blog, 404, rss.xml
+public/              fonts, CVs, gifs, illustrations, icons, _headers, _redirects
+```
+
+## Deploy
+
+Netlify builds with `pnpm build` and publishes `dist/`. Caching rules live in `public/_headers` and redirects in `public/_redirects`.
+
+## Credits
+
+Started from [astro-bento-portfolio](https://github.com/Ladvace/astro-bento-portfolio) by Ladvace, then rebuilt from the ground up.
+
+## Obligatory GIF
+
+![Toss a coin to your Witcher](./public/gifs/witcher.gif)

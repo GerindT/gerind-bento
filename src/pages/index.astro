@@ -1,67 +1,364 @@
 ---
+import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
-import Card from "../components/Card/index.astro";
-import IntroCard from "../components/IntroCard.astro";
-import ContactsCard from "../components/ContactsCard.astro";
-import ThemeChangeCard from "../components/ThemeChangeCard.astro";
-import TimeZone from "../components/TimeZoneCard.astro";
-import AboutMe from "../components/AboutMe.astro";
-import Now from "../components/Now.astro";
+import Poster from "../components/Poster.astro";
 import Globe from "../components/Globe";
-import WorksCard from "../components/WorksCard.astro";
-import CVsCard from "../components/CVsCard.astro";
+import { LINKS } from "../lib/constants";
+import { allProjects, featuredProjects, liveCount } from "../lib/projects";
+import { mediaCount } from "../lib/media";
+import { visitedCountries } from "../lib/places";
+import { formatTimeTo12H } from "../lib/helpers";
+import { jobs, education, languages } from "../lib/career";
+import { Image } from "astro:assets";
+import { photos, hasPhotos } from "../lib/photos";
+
+const posts = await getCollection("blog");
+
+const menu = [
+  { href: "/projects", title: "Projects", desc: "Everything I've built, from client platforms to side experiments.", meta: `${allProjects.length} builds · ${liveCount} live` },
+  { href: "/blog", title: "Blog", desc: "Notes on programming, web development and the things I find along the way.", meta: `${posts.length} ${posts.length === 1 ? "post" : "posts"}` },
+  { href: "/media", title: "Media", desc: "The books, movies and manga I keep coming back to.", meta: `${mediaCount} favourites` },
+  ...(hasPhotos ? [{ href: "/photos", title: "Photos", desc: "Photography is my newest hobby. Frames from walks, trips and rides.", meta: `${photos.length} ${photos.length === 1 ? "photo" : "photos"}` }] : []),
+  { href: "#contact", title: "CV", desc: "Grab my CV as a PDF, in English or in Albanian.", meta: "PDF · EN / SQ" },
+  { href: "#contact", title: "Contact", desc: `Open to freelance and full-time work. Write to ${LINKS.email} or ${LINKS.email2}.`, meta: "Freelance · Full-time" },
+];
+
+const skills = [
+  { name: "React", icon: "logos:react" },
+  { name: "Vue", icon: "logos:vue" },
+  { name: "Node.js", icon: "logos:nodejs-icon" },
+  { name: "Go", icon: "logos:go" },
+  { name: "Laravel", icon: "logos:laravel" },
+  { name: "JavaScript", icon: "logos:javascript" },
+  { name: "Python", icon: "logos:python" },
+];
+
+const gifs = [
+  { src: "/Gerind_Tershana.jpg", alt: "Portrait of Gerind Tershana", mascot: false },
+  { src: "/gif_me.gif", alt: "Animated pixel-art white cat", mascot: true },
+  { src: "/gif_psy.gif", alt: "Animated pixel-art Psyduck", mascot: true },
+  { src: "/gif_tot.gif", alt: "Animated pixel-art Totoro sleeping with a child", mascot: true },
+  { src: "/gif_kirby.gif", alt: "Animated pixel-art Kirby holding an umbrella", mascot: true },
+];
 ---
 
-<script>
-  import { stagger, spring, timeline, type TimelineDefinition } from "motion";
-  import { loaderAnimation } from "../lib/constants";
-  const cards = document.querySelectorAll(".card");
-
-  const sequence = [
-    loaderAnimation,
-    [
-      cards,
-      { y: ["40%", "0%"], opacity: [0, 1] },
-      {
-        at: "-0.1",
-        duration: 0.4,
-        delay: stagger(0.15),
-        easing: spring({ velocity: 100, stiffness: 50, damping: 10 }),
-      },
-    ],
-  ];
-
-  timeline(sequence as TimelineDefinition);
-</script>
-
 <Layout
-  title="Gerind Tershana - Software Developer"
-  description="Software engineer focused on scalable web applications, high-concurrency APIs, and practical product delivery across frontend and backend systems."
+  title="Gerind Tershana — Software Engineer, Tech Lead & System Architect"
+  description="Gerind Tershana: software engineer, tech lead and system architect in Tirana, Albania. 5+ years building scalable web apps and high-concurrency APIs. Open to freelance and full-time work."
+  page="home"
 >
-  <main class="text-white m-auto p-2 grid gap-2 max-w-6xl overflow-hidden relative w-full sm:p-4 sm:gap-2 md:grid-cols-2 md:gap-3 md:p-6 lg:h-screen lg:grid-rows-8 lg:grid-cols-4 lg:gap-4 lg:max-h-[800px]">
-    <h1 class="sr-only">Gerind Tershana - Software Engineer Portfolio</h1>
-    <IntroCard />
-    <AboutMe />
-    <ContactsCard />
-    <TimeZone />
-    <WorksCard />
-    <CVsCard />
-    <Now />
-    <Card href="/blog" colSpan="md:col-span-1" rowSpan="md:row-span-1" title="Blog" />
+  <main id="main">
+    <section class="hero" aria-labelledby="name">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <p class="strip hero__role slam" style="--i:0">Tech Lead &amp; System Architect · Albania</p>
+          <h1 class="name" id="name">
+            <span class="name__line name__line--a slam" style="--i:1">Gerind</span>
+            <span class="name__line name__line--b slam" style="--i:2">Tershana</span>
+          </h1>
+          <p class="hero__lede slam" style="--i:3">
+            5+ years building <strong>scalable</strong> end-to-end web applications, high-concurrency APIs and reliable CI/CD-driven delivery. Got a project in mind, or just want to say hello?
+          </p>
+          <div class="hero__cta slam" style="--i:4">
+            <a class="btn btn--primary" href="/projects">
+              See projects
+              <Icon name="ri:arrow-right-line" aria-hidden="true" />
+            </a>
+            <a class="btn btn--paper" href="/Gerind_Tershana_EN.pdf" download>
+              <Icon name="ri:download-2-line" aria-hidden="true" />
+              Download CV
+            </a>
+          </div>
+          <p class="avail slam" style="--i:5">
+            <span class="pulse" aria-hidden="true"></span>
+            Open to freelance and full-time work
+          </p>
+        </div>
 
-    <Card colSpan="md:col-span-1" rowSpan="md:row-span-1" title="Media I have enjoyed" href="media" colorText="text-neutral-900">
-      <div class="h-full w-full absolute inset-0 -z-10">
-        <Globe client:media="(min-width: 768px)" />
-        <Globe client:media="(max-width: 768px)" isStatic={true} />
+        <figure class="portrait slam" style="--i:3">
+          <div class="portrait__dots halftone" aria-hidden="true"></div>
+          <div class="portrait__frame">
+            <img id="portrait" src={gifs[0].src} alt={gifs[0].alt} width="200" height="200" loading="eager" fetchpriority="high" decoding="async" />
+          </div>
+          <button type="button" class="btn btn--ghost portrait__swap" id="swap">
+            <Icon name="ri:emotion-laugh-line" aria-hidden="true" />
+            Swap mascot
+          </button>
+        </figure>
       </div>
-    </Card>
-    <ThemeChangeCard />
-    <Card colSpan="md:col-span-1" rowSpan="md:row-span-1">
-      <p class="text-xs">
-        © 2024 · Crafted with ♥ using <a href="https://astro.build/" target="_blank" rel="noopener noreferrer" class="text-red-500">Astro</a> and
-        <a href="https://svelte.dev/" target="_blank" rel="noopener noreferrer" class="text-red-500">Svelte</a>
-        by Gerind.
-      </p>
-    </Card>
+    </section>
+
+    <section class="section" aria-labelledby="menu-title">
+      <div class="wrap">
+        <div class="section__head">
+          <h2 class="section-title" id="menu-title">Where to?</h2>
+        </div>
+        <div class="menu">
+          <ul class="menu__list" id="menu" role="list">
+            {
+              menu.map((item, i) => (
+                <li>
+                  <a class:list={["menu__item", { "is-active": i === 0 }]} href={item.href} data-desc={item.desc} data-meta={item.meta} data-title={item.title}>
+                    <span>{item.title}</span>
+                    <Icon name="ri:arrow-right-up-line" aria-hidden="true" />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="menu__preview" aria-live="polite">
+            <div>
+              <h3 id="preview-title">{menu[0].title}</h3>
+              <p id="preview-desc">{menu[0].desc}</p>
+            </div>
+            <span class="menu__preview-meta" id="preview-meta">{menu[0].meta}</span>
+          </div>
+        </div>
+        <p class="menu__hint">Use <kbd>↑</kbd> <kbd>↓</kbd> to move through the menu, <kbd>Enter</kbd> to jump. Press <kbd>?</kbd> for all shortcuts.</p>
+      </div>
+    </section>
+
+    <section class="section section--paper section--slashed" aria-labelledby="work-title">
+      <div class="wrap">
+        <div class="section__head">
+          <h2 class="section-title" id="work-title">Selected work</h2>
+          <a class="btn btn--primary" href="/projects">All {allProjects.length} projects</a>
+        </div>
+        <div class="posters">
+          {featuredProjects.map((p) => <Poster project={p} compact />)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="profile-title">
+      <div class="wrap">
+        <div class="section__head">
+          <h2 class="section-title" id="profile-title">Profile</h2>
+        </div>
+        <div class="profile">
+          <div class="profile__copy">
+            <p>I'm Gerind, a software engineer from Tirana, Albania.</p>
+            <p>Over five years I've designed, built and deployed web applications end to end: overhauling system architectures, writing high-concurrency APIs and automating delivery with CI/CD, with a DevOps mindset.</p>
+            <p>Outside of work I recharge by cycling, gaming and reading, which keeps me curious and brings a fresh perspective to problem-solving.</p>
+            <ul class="facts">
+              <li class="fact">
+                <span class="pulse" aria-hidden="true"></span>
+                <span>Tech Lead &amp; System Architect at Innovation4Albania since October 2026. Previously at <a href="https://www.detag.al" target="_blank" rel="noopener noreferrer">Detag</a> (Aug 2024 – Oct 2026).</span>
+              </li>
+              <li class="fact">
+                <Icon name="ri:time-line" aria-hidden="true" width="20" height="20" />
+                <span>Local time in Albania: <time id="clock">{formatTimeTo12H()}</time></span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="sr-only">Tools I use</h3>
+            <ul class="skills">
+              {
+                skills.map((s) => (
+                  <li class="skill">
+                    <Icon name={s.icon} aria-hidden="true" />
+                    {s.name}
+                  </li>
+                ))
+              }
+            </ul>
+            <dl class="sheet" style="margin-top:2rem">
+              <div><dt>Based in</dt><dd>Tirana, Albania</dd></div>
+              <div><dt>Experience</dt><dd>5+ years</dd></div>
+              <div>
+                <dt>Languages</dt>
+                <dd>{languages.map((l, i) => <><span>{l.name}</span> <small>({l.level})</small>{i < languages.length - 1 ? " · " : ""}</>)}</dd>
+              </div>
+              <div><dt>Focus</dt><dd>Backend, cloud, CI/CD</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--paper section--slashed" aria-labelledby="career-title">
+      <div class="wrap">
+        <div class="section__head">
+          <h2 class="section-title" id="career-title">Career</h2>
+          <a class="btn btn--primary" href="/Gerind_Tershana_EN.pdf" download>
+            <Icon name="ri:download-2-line" aria-hidden="true" />
+            Full CV
+          </a>
+        </div>
+        <div class="career">
+          <div>
+            <h3>Experience</h3>
+            <ol class="jobs" role="list">
+              {
+                jobs.map((j) => (
+                  <li class="job">
+                    <p class="strip job__date">{j.dates}</p>
+                    <div>
+                      <h4>
+                        {j.role} <span>{j.org}</span>
+                      </h4>
+                      {j.points.length > 0 && <ul>{j.points.map((pt) => <li>{pt}</li>)}</ul>}
+                    </div>
+                  </li>
+                ))
+              }
+            </ol>
+          </div>
+          <div>
+            <h3>Education &amp; community</h3>
+            <ul class="edu" role="list">
+              {
+                education.map((e) => (
+                  <li>
+                    <small>{e.dates}</small>
+                    <strong>{e.title}</strong>
+                    <span>{e.where}</span>
+                    {e.note && <span>{e.note}</span>}
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="world-title">
+      <div class="wrap">
+        <div class="world">
+          <div class="world__copy">
+            <h2 class="section-title" id="world-title">Off the clock</h2>
+            <p class="world__count"><b>{visitedCountries.length}</b> countries visited so far</p>
+            <p style="max-width:30rem;font-size:1.15rem">The globe turns on its own; the lit-up countries are the ones I've been to.</p>
+            <a class="btn btn--primary" href="/media">
+              Media I have enjoyed
+              <Icon name="ri:arrow-right-line" aria-hidden="true" />
+            </a>
+          </div>
+          <div class="world__globe">
+            <Globe client:visible />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {
+      hasPhotos && (
+        <section class="section" aria-labelledby="lens-title">
+          <div class="wrap">
+            <div class="section__head">
+              <h2 class="section-title" id="lens-title">Through the lens</h2>
+              <a class="btn btn--primary" href="/photos">
+                All photos
+                <Icon name="ri:arrow-right-line" aria-hidden="true" />
+              </a>
+            </div>
+            <ul class="lens__row" role="list">
+              {photos.slice(0, 4).map((p, i) => (
+                <li>
+                  <a class="frame" href="/photos" style={i % 2 ? "transform:rotate(0.9deg)" : "transform:rotate(-0.9deg)"} aria-label={`Photos page: ${p.title}`}>
+                    <span class="frame__img">
+                      <Image src={p.src} alt={p.alt} width={480} loading="lazy" />
+                    </span>
+                    <span class="frame__cap">
+                      <strong>{p.title}</strong>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )
+    }
+
+    <section class="section section--accent section--slashed" id="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div class="card">
+          <span class="card__stamp">Calling card</span>
+          <h2 id="contact-title">Let's build something <mark>great</mark> together</h2>
+          <p>Open to freelance projects and full-time roles. Have something in mind, or just want to say hello? Write to me and I'll get back to you.</p>
+          <a class="card__mail" href={LINKS.gmail}>{LINKS.email}</a>
+          <a class="card__mail card__mail--alt" href={LINKS.outlook}>{LINKS.email2}</a>
+          <div class="card__actions">
+            <a class="btn btn--primary" href="/Gerind_Tershana_EN.pdf" download>
+              <Icon name="ri:download-2-line" aria-hidden="true" />
+              CV · English
+            </a>
+            <a class="btn btn--primary" href="/Gerind_Tershana_AL.pdf" download>
+              <Icon name="ri:download-2-line" aria-hidden="true" />
+              CV · Shqip
+            </a>
+            <a class="btn" href={LINKS.linkedin} target="_blank" rel="noopener noreferrer">
+              <Icon name="ri:linkedin-box-fill" aria-hidden="true" />
+              LinkedIn
+            </a>
+            <a class="btn" href={LINKS.github} target="_blank" rel="noopener noreferrer">
+              <Icon name="ri:github-fill" aria-hidden="true" />
+              GitHub
+            </a>
+            <a class="btn" href={LINKS.telegram} target="_blank" rel="noopener noreferrer">
+              <Icon name="ri:telegram-fill" aria-hidden="true" />
+              Telegram
+            </a>
+            <a class="btn" href={LINKS.instagram} target="_blank" rel="noopener noreferrer">
+              <Icon name="ri:instagram-line" aria-hidden="true" />
+              Instagram
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <script define:vars={{ gifs }}>
+    // Easter egg: cycle the pixel mascot.
+    const portrait = document.getElementById("portrait");
+    let gifIndex = 0;
+    document.getElementById("swap")?.addEventListener("click", () => {
+      gifIndex = (gifIndex + 1) % gifs.length;
+      portrait.src = gifs[gifIndex].src;
+      portrait.alt = gifs[gifIndex].alt;
+      portrait.classList.toggle("is-mascot", gifs[gifIndex].mascot);
+    });
+
+    // Menu: hover/focus drives the preview, arrow keys move through it.
+    const items = Array.from(document.querySelectorAll(".menu__item"));
+    const title = document.getElementById("preview-title");
+    const desc = document.getElementById("preview-desc");
+    const meta = document.getElementById("preview-meta");
+
+    const activate = (el) => {
+      items.forEach((i) => i.classList.toggle("is-active", i === el));
+      title.textContent = el.dataset.title;
+      desc.textContent = el.dataset.desc;
+      meta.textContent = el.dataset.meta;
+    };
+    items.forEach((el) => {
+      el.addEventListener("mouseenter", () => { if (!el.classList.contains("is-active")) window.sfx?.tick(); activate(el); });
+      el.addEventListener("focus", () => { window.sfx?.tick(); activate(el); });
+    });
+    document.getElementById("menu")?.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+      const i = items.indexOf(document.activeElement);
+      if (i < 0) return;
+      e.preventDefault();
+      const next = items[(i + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length];
+      next.focus();
+    });
+
+    // Albanian clock.
+    const clock = document.getElementById("clock");
+    const fmt = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Europe/Tirane" });
+    const tick = () => {
+      const now = new Date();
+      clock.textContent = fmt.format(now);
+      clock.setAttribute("datetime", now.toISOString());
+    };
+    tick();
+    setInterval(tick, 30000);
+  </script>
 </Layout>

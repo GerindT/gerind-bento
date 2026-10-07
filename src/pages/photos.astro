@@ -1,0 +1,113 @@
+---
+import { getImage } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import { photos, hasPhotos } from "../lib/photos";
+import { SITE } from "../lib/constants";
+
+if (!hasPhotos) return Astro.redirect("/");
+
+const items = await Promise.all(
+  photos.map(async (p) => ({
+    ...p,
+    thumb: await getImage({ src: p.src, width: 640, format: "webp" }),
+    full: await getImage({ src: p.src, width: 1800, format: "webp" }),
+  }))
+);
+
+const jsonLd = [
+  {
+    "@type": "ImageGallery",
+    "@id": `${SITE.url}/photos/#gallery`,
+    name: "Photography by Gerind Tershana",
+    url: `${SITE.url}/photos/`,
+    isPartOf: { "@id": `${SITE.url}/#website` },
+    author: { "@id": `${SITE.url}/#person` },
+    image: items.map((i) => ({
+      "@type": "ImageObject",
+      name: i.title,
+      description: i.alt,
+      contentUrl: new URL(i.full.src, SITE.url).toString(),
+      ...(i.date ? { dateCreated: i.date } : {}),
+      ...(i.place ? { contentLocation: { "@type": "Place", name: i.place } } : {}),
+      creator: { "@id": `${SITE.url}/#person` },
+    })),
+  },
+];
+---
+
+<Layout
+  title="Photography — Gerind Tershana"
+  description={`${items.length} photographs by Gerind Tershana, a developer in Tirana, Albania who has taken up photography seriously.`}
+  page="photos"
+  image={items[0].full.src}
+  jsonLd={jsonLd}
+>
+  <main id="main" class="page wrap">
+    <header class="page__head">
+      <h1 class="page__title slam">Photos</h1>
+      <p class="page__lede slam" style="--i:1">I picked up photography recently and I'm taking it seriously. Tap a frame to see it bigger.</p>
+    </header>
+
+    <ul class="frames" role="list">
+      {
+        items.map((p, i) => (
+          <li class="frame-wrap">
+            <button type="button" class="frame" data-index={i} aria-label={`Open photo: ${p.title}`}>
+              <span class="frame__img">
+                <img src={p.thumb.src} alt={p.alt} width={p.thumb.attributes.width} height={p.thumb.attributes.height} loading={i < 4 ? "eager" : "lazy"} decoding="async" />
+              </span>
+              <span class="frame__cap">
+                <strong>{p.title}</strong>
+                {(p.place || p.date) && <small>{[p.place, p.date?.slice(0, 4)].filter(Boolean).join(" · ")}</small>}
+              </span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+
+    <dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
+      <div class="lightbox__inner">
+        <img id="lb-img" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
+        <div class="lightbox__bar">
+          <p id="lb-cap"></p>
+          <div class="lightbox__btns">
+            <button type="button" class="btn btn--ghost" id="lb-prev" aria-label="Previous photo">←</button>
+            <button type="button" class="btn btn--ghost" id="lb-next" aria-label="Next photo">→</button>
+            <button type="button" class="btn btn--primary" id="lb-close">Close</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  </main>
+
+  <script define:vars={{ data: items.map((i) => ({ full: i.full.src, alt: i.alt, title: i.title, meta: [i.place, i.date?.slice(0, 4), i.camera].filter(Boolean).join(" · ") })) }}>
+    const dialog = document.getElementById("lightbox");
+    const img = document.getElementById("lb-img");
+    const cap = document.getElementById("lb-cap");
+    let current = 0;
+    const show = (i) => {
+      current = (i + data.length) % data.length;
+      const d = data[current];
+      img.src = d.full;
+      img.alt = d.alt;
+      cap.textContent = d.meta ? `${d.title} — ${d.meta}` : d.title;
+    };
+    document.querySelectorAll(".frame").forEach((b) =>
+      b.addEventListener("click", () => {
+        show(Number(b.dataset.index));
+        dialog.showModal();
+      })
+    );
+    document.getElementById("lb-prev").addEventListener("click", () => show(current - 1));
+    document.getElementById("lb-next").addEventListener("click", () => show(current + 1));
+    document.getElementById("lb-close").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") show(current - 1);
+      if (e.key === "ArrowRight") show(current + 1);
+    });
+  </script>
+</Layout>
