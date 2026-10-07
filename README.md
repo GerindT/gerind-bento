@@ -68,10 +68,6 @@ public/              fonts, CVs, gifs, illustrations, icons, _headers, _redirect
 
 Netlify builds with `pnpm build` and publishes `dist/`. Caching rules live in `public/_headers` and redirects in `public/_redirects`.
 
-## Credits
-
-Started from [astro-bento-portfolio](https://github.com/Ladvace/astro-bento-portfolio) by Ladvace, then rebuilt from the ground up.
-
 ## Obligatory GIF
 
 ![Toss a coin to your Witcher](./public/gifs/witcher.gif)
