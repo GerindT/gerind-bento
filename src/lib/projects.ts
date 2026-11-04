@@ -1,7 +1,8 @@
-export type ProjectStatus = "live" | "wip" | "concept" | "dev_only" | "private";
+export type ProjectStatus = "live" | "ui_only" | "wip" | "concept" | "dev_only" | "private";
 
 export const statusLabels: Record<ProjectStatus, string> = {
   live: "Live",
+  ui_only: "UI only",
   wip: "In progress",
   concept: "Concept",
   dev_only: "Dev only",
@@ -63,6 +64,8 @@ export type Project = {
   artBg?: string;
   github?: string;
   site?: string;
+  /** Link text for `site` when it is not the full product, e.g. "UI demo". */
+  siteLabel?: string;
   statuses: ProjectStatus[];
   stacks: TechStack[];
   /** Shown on the home page. */
@@ -214,11 +217,12 @@ const projects: Project[] = [
     alt: "Scamless welcome page",
     github: "https://github.com/GerindT/webScraping",
     site: "https://scamless-frontend.netlify.app/",
-    statuses: ["live"],
+    siteLabel: "UI demo",
+    statuses: ["ui_only"],
     stacks: ["react", "nodejs", "python"],
     featured: true,
     role: "Bachelor's thesis",
-    blurb: "Rates the credibility of Amazon products from their reviews, using web scraping and multi-modal NLP: sentiment, feature extraction and recommendations. Presented as a poster at EEML 2024.",
+    blurb: "Rates the credibility of Amazon products from their reviews, using web scraping and multi-modal NLP: sentiment, feature extraction and recommendations. Presented as a poster at EEML 2024. The demo is the front end only; the scraping backend isn't hosted.",
   },
   {
     slug: "rollbet",

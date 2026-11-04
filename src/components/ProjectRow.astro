@@ -39,7 +39,7 @@ const { project, index = 0 } = Astro.props;
       {
         project.site && (
           <a class="textlink" href={project.site} target="_blank" rel="noopener noreferrer">
-            Site
+            {project.siteLabel ?? "Site"}
             <Icon name="ri:arrow-right-up-line" aria-hidden="true" />
             <span class="sr-only"> — {project.title} (opens in new tab)</span>
           </a>
