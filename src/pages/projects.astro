@@ -1,15 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Poster from "../components/Poster.astro";
-import { allProjects, liveCount } from "../lib/projects";
+import ProjectRow from "../components/ProjectRow.astro";
+import { allProjects, liveCount, projectsByGroup } from "../lib/projects";
+import { SITE } from "../lib/constants";
 
 const jsonLd = [
   {
     "@type": "CollectionPage",
-    "@id": "https://gerindtershana.netlify.app/projects#page",
+    "@id": `${SITE.url}/projects#page`,
     name: "Projects by Gerind Tershana",
-    url: "https://gerindtershana.netlify.app/projects",
-    isPartOf: { "@id": "https://gerindtershana.netlify.app/#website" },
+    url: `${SITE.url}/projects`,
+    isPartOf: { "@id": `${SITE.url}/#website` },
     mainEntity: {
       "@type": "ItemList",
       itemListElement: allProjects.map((p, i) => ({
@@ -25,18 +27,124 @@ const jsonLd = [
 
 <Layout
   title="Projects — Gerind Tershana"
-  description={`${allProjects.length} web projects by Gerind Tershana, from client platforms to experiments, built with Vue, Nuxt, React, Go, Laravel and Node.js. ${liveCount} are live today.`}
+  description={`${allProjects.length} projects by Gerind Tershana: personal products and games, public-sector platforms at Innovation4Albania and client platforms at Detag, built with Go, Vue, Nuxt, React, Laravel and Flutter.`}
   page="projects"
   jsonLd={jsonLd}
 >
   <main id="main" class="page wrap">
     <header class="page__head">
       <h1 class="page__title slam">Projects</h1>
-      <p class="page__lede slam" style="--i:1">{allProjects.length} builds since 2021, {liveCount} of them live. Private client work is marked, since I can't always link it.</p>
+      <p class="page__lede slam" style="--i:1">{allProjects.length} builds since 2021, {liveCount} of them live. Client and government work is named but not linked.</p>
     </header>
-    <h2 class="sr-only">All projects</h2>
-    <section class="posters" aria-label="Project list">
-      {allProjects.map((p) => <Poster project={p} />)}
-    </section>
+
+    <div class="tabs" role="tablist" aria-label="Project groups" id="tabs">
+      {
+        projectsByGroup.map((g, i) => (
+          <a
+            class="tab slam"
+            style={`--i:${i + 2}`}
+            role="tab"
+            id={`tab-${g.id}`}
+            href={`#${g.id}`}
+            aria-controls={g.id}
+            aria-selected={i === 0 ? "true" : "false"}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            <span class="tab__label">{g.short}</span>
+            <span class="tab__count">{g.pictured.length + g.listed.length}</span>
+          </a>
+        ))
+      }
+    </div>
+    <p class="tabs__hint">Use <kbd>←</kbd> <kbd>→</kbd> or <kbd>Q</kbd> <kbd>E</kbd> to switch group.</p>
+
+    {
+      projectsByGroup.map((g, gi) => (
+        <section class="group" id={g.id} role="tabpanel" aria-labelledby={`tab-${g.id}`} data-panel>
+          <header class="group__head">
+            <h2 class="group__title">{g.title}</h2>
+            <p class="group__note">{g.note}</p>
+          </header>
+          {g.pictured.length > 0 && (
+            <div class="posters">
+              {g.pictured.map((p, i) => <Poster project={p} index={i} feature={p.featured} />)}
+            </div>
+          )}
+          {g.listed.length > 0 && (
+            <ul class="rows" role="list" aria-label={`${g.title}: more projects`}>
+              {g.listed.map((p, i) => <ProjectRow project={p} index={i} />)}
+            </ul>
+          )}
+        </section>
+      ))
+    }
   </main>
 </Layout>
+
+<script>
+  // Pause-menu tabs. Without JS every group stays on the page, one under another.
+  const tabs = Array.from(document.querySelectorAll<HTMLAnchorElement>('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>("[data-panel]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let current = 0;
+
+  const select = (i: number, opts: { focus?: boolean; push?: boolean } = {}) => {
+    const dir = i > current ? 1 : -1;
+    const changed = i !== current;
+    current = (i + tabs.length) % tabs.length;
+    tabs.forEach((t, k) => {
+      const on = k === current;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+    });
+    panels.forEach((p, k) => (p.hidden = k !== current));
+    const panel = panels[current];
+    // Reveal everything inside straight away: the panel itself is the entrance.
+    panel.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-in"));
+    if (changed && !reduce) {
+      panel.animate(
+        [
+          { opacity: 0, transform: `translateX(${dir * 3}rem) skewX(${dir * -6}deg)`, clipPath: dir > 0 ? "polygon(20% 0, 100% 0, 100% 100%, 0 100%)" : "polygon(0 0, 80% 0, 100% 100%, 0 100%)" },
+          { opacity: 1, transform: "none", clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
+        ],
+        { duration: 420, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }
+      );
+    }
+    if (changed) (window as any).sfx?.tick();
+    if (opts.focus) tabs[current].focus();
+    if (opts.push !== false) history.replaceState(null, "", `#${panels[current].id}`);
+  };
+
+  const fromHash = () => {
+    const i = panels.findIndex((p) => `#${p.id}` === location.hash);
+    return i < 0 ? 0 : i;
+  };
+  current = fromHash();
+  select(current, { push: false });
+
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", (e) => {
+      e.preventDefault();
+      select(i);
+    });
+    t.addEventListener("keydown", (e) => {
+      const map: Record<string, number> = { ArrowRight: current + 1, ArrowLeft: current - 1, Home: 0, End: tabs.length - 1 };
+      if (!(e.key in map)) return;
+      e.preventDefault();
+      select(map[e.key], { focus: true });
+    });
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || document.documentElement.dataset.keys === "off") return;
+    const t = e.target as HTMLElement;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (tabs.includes(t as HTMLAnchorElement)) return; // the tab's own handler moves focus too
+    if (document.querySelector("dialog[open], details[open]")) return;
+    const k = e.key.toLowerCase();
+    if (k === "q" || e.key === "ArrowLeft") select(current - 1);
+    else if (k === "e" || e.key === "ArrowRight") select(current + 1);
+  });
+
+  window.addEventListener("hashchange", () => select(fromHash(), { push: false }));
+</script>

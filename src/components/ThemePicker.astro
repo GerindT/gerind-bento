@@ -29,6 +29,11 @@ const themes = [
       <button type="button" class="seg" data-sound-id="off" aria-pressed="true">Off</button>
       <button type="button" class="seg" data-sound-id="on" aria-pressed="false">On</button>
     </div>
+    <p>Keyboard shortcuts</p>
+    <div class="theme__row">
+      <button type="button" class="seg" data-keys-id="on" aria-pressed="true">On</button>
+      <button type="button" class="seg" data-keys-id="off" aria-pressed="false">Off</button>
+    </div>
   </div>
 </details>
 
@@ -38,6 +43,7 @@ const themes = [
   const swatches = Array.from(document.querySelectorAll<HTMLButtonElement>(".swatch"));
   const modeBtns = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-mode-id]"));
   const soundBtns = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-sound-id]"));
+  const keysBtns = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-keys-id]"));
   const themeIds = swatches.map((s) => s.dataset.themeId ?? "default");
 
   const get = (key: string, fallback: string) => {
@@ -122,6 +128,20 @@ const themes = [
       applySound(b.dataset.soundId === "on");
       set("sound", sound ? "on" : "off");
       (window as any).sfx.confirm();
+    })
+  );
+
+  // ---- single-key shortcuts can be switched off (WCAG 2.1.4) ----
+  const applyKeys = (on: boolean) => {
+    if (on) delete root.dataset.keys;
+    else root.dataset.keys = "off";
+    keysBtns.forEach((b) => b.setAttribute("aria-pressed", String((b.dataset.keysId === "on") === on)));
+  };
+  applyKeys(get("keys", "on") === "on");
+  keysBtns.forEach((b) =>
+    b.addEventListener("click", () => {
+      applyKeys(b.dataset.keysId === "on");
+      set("keys", b.dataset.keysId === "on" ? "on" : "off");
     })
   );
 

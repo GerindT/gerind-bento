@@ -8,7 +8,6 @@ import { existsSync, readdirSync } from "node:fs";
 const hasPhotos = existsSync("./src/assets/photos") && readdirSync("./src/assets/photos").some((f) => /\.(jpe?g|png|webp)$/i.test(f));
 
 import solidJs from "@astrojs/solid-js";
-import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
 
 
 // https://astro.build/config
@@ -23,9 +22,6 @@ export default defineConfig({
     UnoCSS({ injectReset: true }),
     icon(),
   ],
-  markdown: {
-    remarkPlugins: [remarkReadingTime],
-  },
   output: "static",
   build: { inlineStylesheets: "always" },
 });

@@ -4,35 +4,44 @@ import { statusLabels, techIcons, type Project } from "../lib/projects";
 
 interface Props {
   project: Project;
-  /** Hide stack and links (compact variant for the home page). */
-  compact?: boolean;
+  /** Position in its list, for the reveal stagger. */
+  index?: number;
+  /** Heading level inside the page outline. */
+  level?: "h2" | "h3";
+  /** Large feature plate (spans two columns). */
+  feature?: boolean;
 }
 
-const { project, compact = false } = Astro.props;
-const href = project.site ?? project.github;
+const { project, index = 0, level = "h3", feature = false } = Astro.props;
+const Heading = level;
+const primary = project.site ?? project.github;
 ---
 
-<article class="poster">
-  <div class:list={["poster__art", { "poster__art--contain": project.contain, "poster__art--type": !project.img }]}>
+<article class:list={["poster", "reveal", { "poster--feature": feature }]} style={`--i:${index % 6}`}>
+  <div class:list={["poster__art", { "poster__art--contain": project.contain, "poster__art--type": !project.img }]} style={project.artBg ? `--art-bg:${project.artBg}` : undefined}>
     {
       project.img ? (
-        <img src={project.img} alt={project.alt} loading="lazy" decoding="async" width="480" height="600" />
+        <img src={project.img} alt={project.alt} loading="lazy" decoding="async" width="640" height="400" />
       ) : (
         <span class="poster__initial" aria-hidden="true">
-          {project.title.charAt(0)}
+          {project.title}
         </span>
       )
     }
     <span class="poster__year">{project.year}</span>
+    <span class="poster__dots halftone" aria-hidden="true"></span>
   </div>
   <div class="poster__body">
-    <h3 class="poster__title">{project.title}</h3>
+    <div class="poster__head">
+      <Heading class="poster__title">{project.title}</Heading>
+      {project.role && <p class="strip strip--accent poster__role">{project.role}</p>}
+    </div>
+    <p class="poster__blurb">{project.blurb}</p>
     <ul class="chips" aria-label="Status">
       {project.statuses.map((s) => <li class:list={["chip", { "chip--live": s === "live" }]}>{statusLabels[s]}</li>)}
     </ul>
-    {!compact && project.blurb && <p class="poster__note">{project.blurb}</p>}
     {
-      !compact && (
+      project.stacks.length > 0 && (
         <ul class="stack" aria-label="Built with">
           {project.stacks.map((s) => (
             <li>
@@ -46,7 +55,7 @@ const href = project.site ?? project.github;
     <div class="poster__links">
       {
         project.site && (
-          <a class:list={["textlink", { "textlink--stretch": compact }]} href={project.site} target="_blank" rel="noopener noreferrer">
+          <a class:list={["textlink", { "textlink--stretch": primary === project.site }]} href={project.site} target="_blank" rel="noopener noreferrer">
             Visit site
             <Icon name="ri:arrow-right-up-line" aria-hidden="true" />
             <span class="sr-only"> — {project.title} (opens in new tab)</span>
@@ -54,15 +63,15 @@ const href = project.site ?? project.github;
         )
       }
       {
-        !compact && project.github && (
-          <a class="textlink" href={project.github} target="_blank" rel="noopener noreferrer">
+        project.github && (
+          <a class:list={["textlink", { "textlink--stretch": primary === project.github && !project.site }]} href={project.github} target="_blank" rel="noopener noreferrer">
             Source
             <Icon name="ri:github-fill" aria-hidden="true" />
             <span class="sr-only"> — {project.title} on GitHub (opens in new tab)</span>
           </a>
         )
       }
-      {!project.site && !project.github && <p class="poster__note">Private — no public link.</p>}
+      {!primary && <p class="poster__private"><Icon name="ri:lock-2-line" aria-hidden="true" /> Private build, no public link</p>}
     </div>
   </div>
 </article>

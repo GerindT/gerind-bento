@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import { getImage } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { photos, hasPhotos } from "../lib/photos";
@@ -72,8 +73,8 @@ const jsonLd = [
         <div class="lightbox__bar">
           <p id="lb-cap"></p>
           <div class="lightbox__btns">
-            <button type="button" class="btn btn--ghost" id="lb-prev" aria-label="Previous photo">←</button>
-            <button type="button" class="btn btn--ghost" id="lb-next" aria-label="Next photo">→</button>
+            <button type="button" class="btn btn--ghost" id="lb-prev" aria-label="Previous photo"><Icon name="ri:arrow-left-line" aria-hidden="true" /></button>
+            <button type="button" class="btn btn--ghost" id="lb-next" aria-label="Next photo"><Icon name="ri:arrow-right-line" aria-hidden="true" /></button>
             <button type="button" class="btn btn--primary" id="lb-close">Close</button>
           </div>
         </div>

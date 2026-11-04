@@ -16,12 +16,3 @@ export function formatTimeTo12H(date: Date = new Date()): string {
     timeZone: TIME_ZONE,
   }).format(validDate);
 }
-
-export function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  });
-}

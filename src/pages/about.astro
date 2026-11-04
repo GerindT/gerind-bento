@@ -1,0 +1,162 @@
+---
+import { Icon } from "astro-icon/components";
+import Layout from "../layouts/Layout.astro";
+import Globe from "../components/Globe";
+import { visitedCountries } from "../lib/places";
+import { formatTimeTo12H } from "../lib/helpers";
+import { jobs, education, languages } from "../lib/career";
+
+const skills = [
+  { name: "Go", icon: "logos:go" },
+  { name: "Vue / Nuxt", icon: "logos:vue" },
+  { name: "React", icon: "logos:react" },
+  { name: "Node.js", icon: "logos:nodejs-icon" },
+  { name: "Laravel", icon: "logos:laravel" },
+  { name: "Python", icon: "logos:python" },
+  { name: "PostgreSQL", icon: "logos:postgresql" },
+  { name: "Kubernetes", icon: "logos:kubernetes" },
+];
+---
+
+<Layout
+  title="About — Gerind Tershana"
+  description="Gerind Tershana: Tech Lead & System Architect at Innovation4Albania, previously at Detag. Career, education, tools and the countries he has visited."
+  page="about"
+>
+  <main id="main" class="page">
+    <div class="wrap">
+      <header class="page__head">
+        <h1 class="page__title slam">About</h1>
+        <p class="page__lede slam" style="--i:1">I'm Gerind, a software engineer from Tirana, Albania.</p>
+      </header>
+
+      <section class="profile" aria-label="Profile">
+        <div class="profile__copy reveal">
+          <p>Over five years I've designed, built and deployed web applications end to end: overhauling system architectures, writing high-concurrency APIs and automating delivery with CI/CD, with a DevOps mindset.</p>
+          <p>Outside of work I recharge by cycling, gaming and reading, which keeps me curious and brings a fresh perspective to problem-solving.</p>
+          <ul class="facts">
+            <li class="fact">
+              <span class="pulse" aria-hidden="true"></span>
+              <span>{jobs[0].role} at {jobs[0].org} since {jobs[0].dates.split(" – ")[0]}. Previously at <a href="https://www.detag.al" target="_blank" rel="noopener noreferrer">Detag</a> ({jobs[1].dates}).</span>
+            </li>
+            <li class="fact">
+              <Icon name="ri:time-line" aria-hidden="true" width="20" height="20" />
+              <span>Local time in Albania: <time id="clock">{formatTimeTo12H()}</time></span>
+            </li>
+          </ul>
+        </div>
+        <div class="reveal" style="--i:1">
+          <h2 class="sr-only">Tools I use</h2>
+          <ul class="skills">
+            {
+              skills.map((s) => (
+                <li class="skill">
+                  <Icon name={s.icon} aria-hidden="true" />
+                  {s.name}
+                </li>
+              ))
+            }
+          </ul>
+          <dl class="sheet">
+            <div><dt>Based in</dt><dd>Tirana, Albania</dd></div>
+            <div><dt>Experience</dt><dd>5+ years</dd></div>
+            <div>
+              <dt>Languages</dt>
+              <dd>{languages.map((l, i) => <><span>{l.name}</span> <small>({l.level})</small>{i < languages.length - 1 ? " · " : ""}</>)}</dd>
+            </div>
+            <div><dt>Focus</dt><dd>Backend, cloud, CI/CD</dd></div>
+          </dl>
+        </div>
+      </section>
+    </div>
+
+    <section class="section section--paper section--slashed" aria-labelledby="career-title">
+      <div class="wrap">
+        <div class="section__head">
+          <h2 class="section-title reveal" id="career-title">Career</h2>
+          <a class="btn btn--primary" href="/Gerind_Tershana_EN.pdf" download>
+            <Icon name="ri:download-2-line" aria-hidden="true" />
+            Full CV
+          </a>
+        </div>
+        <ol class="jobs" role="list">
+          {
+            jobs.map((j, i) => (
+              <li class:list={["job", "reveal", { "job--alt": i % 2 === 1, "job--now": i === 0 }]}>
+                <p class="strip job__date">{j.dates}</p>
+                <div class="job__body">
+                  <h3>
+                    {j.role} <span>{j.org}</span>
+                  </h3>
+                  {j.points.length > 0 && <ul>{j.points.map((pt) => <li>{pt}</li>)}</ul>}
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        <h2 class="career__sub reveal">Education &amp; community</h2>
+        <ul class="edu" role="list">
+          {
+            education.map((e, i) => (
+              <li class="reveal" style={`--i:${i}`}>
+                <strong>{e.title}</strong>
+                <small class="strip">{e.dates}</small>
+                <span>{e.where}</span>
+                {e.note && <span>{e.note}</span>}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="world-title">
+      <div class="wrap">
+        <div class="world">
+          <div class="world__copy reveal">
+            <h2 class="section-title" id="world-title">Off the clock</h2>
+            <p class="world__count"><b>{visitedCountries.length}</b> countries visited so far</p>
+            <p class="world__note">The globe turns on its own; the lit-up countries are the ones I've been to.</p>
+            <a class="btn btn--primary" href="/media">
+              Media I have enjoyed
+              <Icon name="ri:arrow-right-line" aria-hidden="true" />
+            </a>
+          </div>
+          <div class="world__globe">
+            <Globe client:visible />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--accent section--slashed" aria-labelledby="next-title">
+      <div class="wrap next">
+        <h2 id="next-title" class="next__title reveal">Seen enough?</h2>
+        <div class="next__actions reveal" style="--i:1">
+          <a class="btn btn--paper" href="/#contact">
+            <Icon name="ri:mail-send-line" aria-hidden="true" />
+            Get in touch
+          </a>
+          <a class="btn" href="/projects">
+            See projects
+            <Icon name="ri:arrow-right-line" aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const clock = document.getElementById("clock");
+    const fmt = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Europe/Tirane" });
+    const tick = () => {
+      if (!clock) return;
+      const now = new Date();
+      clock.textContent = fmt.format(now);
+      clock.setAttribute("datetime", now.toISOString());
+    };
+    tick();
+    setInterval(tick, 30000);
+  </script>
+</Layout>

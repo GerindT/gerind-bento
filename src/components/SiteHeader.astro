@@ -2,20 +2,73 @@
 import ThemePicker from "./ThemePicker.astro";
 import { hasPhotos } from "../lib/photos";
 
+export type PageId = "home" | "projects" | "about" | "media" | "photos";
+
 interface Props {
-  current?: "home" | "projects" | "blog" | "media" | "photos";
+  current?: PageId;
 }
 const { current } = Astro.props;
 ---
 
-<header class="site-header">
-  <a class="brand" href="/" aria-label="Gerind T. — Gerind Tershana, home">Gerind T.</a>
+<header class="site-header" id="site-header">
+  <div class="site-header__left">
+    <a class="brand" href="/" aria-label="Gerind T. — Gerind Tershana, home">Gerind T.</a>
+    <p class="hud" aria-label="Date and time in Tirana">
+      <span class="hud__day" data-hud="day">&nbsp;</span>
+      <span class="hud__date" data-hud="date">&nbsp;</span>
+      <span class="hud__time"><span data-hud="time">&nbsp;</span> <small>Tirana</small></span>
+    </p>
+  </div>
   <nav class="site-nav" aria-label="Main">
     <a href="/projects" aria-current={current === "projects" ? "page" : undefined}>Projects</a>
-    <a class="nav-extra" href="/blog" aria-current={current === "blog" ? "page" : undefined}>Blog</a>
+    <a href="/about" aria-current={current === "about" ? "page" : undefined}>About</a>
     {hasPhotos && <a class="nav-extra" href="/photos" aria-current={current === "photos" ? "page" : undefined}>Photos</a>}
     <a class="nav-extra" href="/media" aria-current={current === "media" ? "page" : undefined}>Media</a>
-    <a href="/#contact">Contact</a>
+    <a class="nav-extra" href="/#contact">Contact</a>
     <ThemePicker />
   </nav>
 </header>
+
+<script>
+  // HUD: weekday, date and time in Tirana, like a pause-menu calendar.
+  const parts = (d: Date) => {
+    const opts = { timeZone: "Europe/Tirane" } as const;
+    return {
+      day: new Intl.DateTimeFormat("en-GB", { ...opts, weekday: "short" }).format(d),
+      date: new Intl.DateTimeFormat("en-GB", { ...opts, day: "2-digit", month: "2-digit" }).format(d).replace("/", "·"),
+      time: new Intl.DateTimeFormat("en-GB", { ...opts, hour: "2-digit", minute: "2-digit", hour12: false }).format(d),
+    };
+  };
+  const els = Object.fromEntries(Array.from(document.querySelectorAll<HTMLElement>("[data-hud]")).map((e) => [e.dataset.hud, e]));
+  const paint = () => {
+    const p = parts(new Date());
+    for (const k of ["day", "date", "time"] as const) if (els[k]) els[k].textContent = p[k];
+  };
+  paint();
+  setInterval(paint, 20000);
+
+  // Hide the header while scrolling down, bring it back on the way up.
+  const header = document.getElementById("site-header");
+  let last = window.scrollY;
+  let ticking = false;
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const open = (document.getElementById("theme-picker") as HTMLDetailsElement | null)?.open;
+        if (y < 160 || open) header?.classList.remove("is-hidden");
+        else if (y > last + 6) header?.classList.add("is-hidden");
+        else if (y < last - 6) header?.classList.remove("is-hidden");
+        header?.classList.toggle("is-scrolled", y > 24);
+        // only move the reference point once the scroll has gone somewhere
+        if (Math.abs(y - last) > 6) last = y;
+        ticking = false;
+      });
+    },
+    { passive: true }
+  );
+  header?.addEventListener("focusin", () => header.classList.remove("is-hidden"));
+</script>

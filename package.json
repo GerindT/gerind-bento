@@ -10,7 +10,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/rss": "^4.0.7",
     "@astrojs/sitemap": "^3.1.6",
     "@astrojs/solid-js": "^4.4.1",
     "@iconify-json/logos": "^1.2.3",
@@ -20,8 +19,6 @@
     "astro-robots-txt": "^1.0.0",
     "autoprefixer": "^10.4.20",
     "d3": "^7.9.0",
-    "mdast-util-to-string": "^4.0.0",
-    "reading-time": "^1.5.0",
     "sharp": "^0.33.4",
     "solid-js": "^1.8.21"
   },

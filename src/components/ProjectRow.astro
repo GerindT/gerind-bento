@@ -1,0 +1,59 @@
+---
+import { Icon } from "astro-icon/components";
+import { statusLabels, techIcons, type Project } from "../lib/projects";
+
+interface Props {
+  project: Project;
+  index?: number;
+}
+
+const { project, index = 0 } = Astro.props;
+---
+
+<li class="row reveal" style={`--i:${index % 6}`}>
+  <p class="row__year">{project.year}</p>
+  <div class="row__main">
+    <h3 class="row__title">
+      {project.title}
+      {project.role && <span class="strip strip--accent row__role">{project.role}</span>}
+    </h3>
+    <p class="row__blurb">{project.blurb}</p>
+    {
+      project.stacks.length > 0 && (
+        <ul class="stack" aria-label="Built with">
+          {project.stacks.map((s) => (
+            <li>
+              <Icon name={techIcons[s].icon} aria-hidden="true" />
+              {techIcons[s].label}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+  <div class="row__side">
+    <ul class="chips" aria-label="Status">
+      {project.statuses.map((s) => <li class:list={["chip", { "chip--live": s === "live" }]}>{statusLabels[s]}</li>)}
+    </ul>
+    <div class="row__links">
+      {
+        project.site && (
+          <a class="textlink" href={project.site} target="_blank" rel="noopener noreferrer">
+            Site
+            <Icon name="ri:arrow-right-up-line" aria-hidden="true" />
+            <span class="sr-only"> — {project.title} (opens in new tab)</span>
+          </a>
+        )
+      }
+      {
+        project.github && (
+          <a class="textlink" href={project.github} target="_blank" rel="noopener noreferrer">
+            Source
+            <Icon name="ri:github-fill" aria-hidden="true" />
+            <span class="sr-only"> — {project.title} on GitHub (opens in new tab)</span>
+          </a>
+        )
+      }
+    </div>
+  </div>
+</li>

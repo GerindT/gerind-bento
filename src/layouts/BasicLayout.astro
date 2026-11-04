@@ -3,13 +3,14 @@ import "../style.css";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import Shortcuts from "../components/Shortcuts.astro";
+import type { PageId } from "../components/SiteHeader.astro";
 import { LINKS, SITE } from "../lib/constants";
 
 interface Props {
   title: string;
   description: string;
   /** Marks the current nav entry. */
-  page?: "home" | "projects" | "blog" | "media" | "photos";
+  page?: PageId;
   type?: "website" | "article";
   publishedTime?: string;
   /** Absolute path (or URL) of the social preview image. */
@@ -70,7 +71,6 @@ const graph = {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Blog`} href="/rss.xml" />
     <link rel="preload" href="/fonts/CabinetGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="generator" content={Astro.generator} />
@@ -101,7 +101,13 @@ const graph = {
 
     <!-- Apply the saved accent before first paint, so there is no colour flash. -->
     <script is:inline>
+      document.documentElement.classList.add("js");
+      // Cross-document view transitions: the new page skips its own load wipe.
+      window.addEventListener("pagereveal", function (e) {
+        if (e.viewTransition) document.documentElement.classList.add("vt");
+      });
       try {
+        if (localStorage.getItem("keys") === "off") document.documentElement.dataset.keys = "off";
         var t = (localStorage.getItem("theme") || "").replace("-theme", "");
         if (t && t !== "default") document.documentElement.dataset.theme = t;
         if (localStorage.getItem("mode") === "light") document.documentElement.dataset.mode = "light";
@@ -119,6 +125,21 @@ const graph = {
     <div class="wipe-in" aria-hidden="true"></div>
     <script>
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // Browsers with cross-document view transitions animate navigation natively.
+      const nativeVT = "onpagereveal" in window;
+
+      // Scroll reveals: content is visible by default; only .js pages hide it until it enters.
+      const reveal = new IntersectionObserver(
+        (entries) => {
+          for (const en of entries) {
+            if (!en.isIntersecting) continue;
+            en.target.classList.add("is-in");
+            reveal.unobserve(en.target);
+          }
+        },
+        { rootMargin: "0px 0px -8% 0px", threshold: 0 }
+      );
+      document.querySelectorAll(".reveal").forEach((el) => reveal.observe(el));
 
       if (!reduce) {
         // Click "shards": three slanted accent slashes burst from the pointer.
@@ -153,12 +174,19 @@ const graph = {
           if (link.target || link.hasAttribute("download") || link.origin !== location.origin) return;
           if (link.pathname === location.pathname && link.search === location.search) return;
           if (/\.(pdf|xml|zip)$/i.test(link.pathname)) return;
-          e.preventDefault();
           (window as any).sfx?.confirm();
+          // The label of the clicked menu entry morphs into the next page's title.
+          const label = link.querySelector<HTMLElement>("[data-vt-title]");
+          if (label) label.style.viewTransitionName = "page-title";
+          if (nativeVT) return;
+          e.preventDefault();
           document.body.classList.add("is-leaving");
           setTimeout(() => location.assign(link.href), 320);
         });
-        window.addEventListener("pageshow", () => document.body.classList.remove("is-leaving"));
+        window.addEventListener("pageshow", () => {
+          document.body.classList.remove("is-leaving");
+          document.querySelectorAll<HTMLElement>("[data-vt-title]").forEach((el) => (el.style.viewTransitionName = ""));
+        });
       }
     </script>
   </body>

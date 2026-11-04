@@ -1,11 +1,32 @@
 ---
+import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
+
+const exits = [
+  { href: "/", title: "Home" },
+  { href: "/projects", title: "Projects" },
+  { href: "/about", title: "About" },
+  { href: "/#contact", title: "Contact" },
+];
 ---
 
 <Layout title="Page not found — Gerind Tershana" description="This page doesn't exist." noindex noWipe>
   <main id="main" class="lost">
-    <h1 class="page__title">404</h1>
-    <p class="page__lede">This page has been stolen, or never existed. Either way, it isn't here.</p>
-    <a class="btn btn--primary" href="/">Back to home</a>
+    <h1 class="page__title lost__title slam">404</h1>
+    <p class="page__lede slam" style="--i:1">This page has been stolen, or never existed. Either way, it isn't here. The blog is resting for now; everything else is one jump away.</p>
+    <nav aria-label="Where to?" class="lost__menu">
+      <ul class="menu__list" role="list">
+        {
+          exits.map((e, i) => (
+            <li class="slam" style={`--i:${i + 2}`}>
+              <a class="menu__item" href={e.href}>
+                <span data-vt-title>{e.title}</span>
+                <Icon name="ri:arrow-right-up-line" aria-hidden="true" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
   </main>
 </Layout>
