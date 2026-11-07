@@ -337,14 +337,14 @@ const projects: Project[] = [
     blurb: "Internal dashboard for projects, OKRs, risks and the calendar, with an AI assistant.",
   },
   {
-    slug: "ishmt",
-    title: "ISHMT Registry",
+    slug: "iqmt",
+    title: "IQMT",
     year: "2026",
     group: "i4a",
     alt: "",
     statuses: ["private"],
     stacks: ["nextjs", "postgresql"],
-    blurb: "Digital elevator registry.",
+    blurb: "Digital elevator registry, built for ISHMT.",
   },
   {
     slug: "etransport",
@@ -426,17 +426,6 @@ const projects: Project[] = [
     statuses: ["live", "private"],
     stacks: ["golang", "nuxt"],
     blurb: "Travel platform for Regina Group: hotels, activities, transfers and job offers, with a Go back end and a multilingual Nuxt front end.",
-  },
-  {
-    slug: "gse",
-    title: "GSE Security",
-    year: "2025",
-    group: "detag",
-    img: "/illustrations/projects/gse.webp",
-    alt: "GSE Security home page: 'Albania's premier private security partner.' on a dark photo",
-    statuses: ["private"],
-    stacks: ["react"],
-    blurb: "Website for GSE, a private security company in Albania. Generated with Lovable and delivered through Detag; not hosted yet.",
   },
 
   // ---------- friends ----------

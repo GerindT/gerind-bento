@@ -42,7 +42,7 @@ Owner-pinned visual direction: inspired by the Persona 5 video game, "stylish an
 
 ## Evidence on Hand
 
-Real project screenshots in /public/illustrations/projects (live-site captures from Nov 2026 plus store art for Vanspot and After Hours; Pasqyra, MyCredit, Regina travel and GSE captures added Nov 7 2026; Globe ERP, Tetris and the other I4A tools have no images), movie/book/manga covers in /public/illustrations, GIFs of the owner, two CV PDFs, a "Detag" logo. No testimonials, metrics or case studies exist; do not fabricate.
+Real project screenshots in /public/illustrations/projects (live-site captures from Nov 2026 plus store art for Vanspot and After Hours; Pasqyra, MyCredit and Regina travel captures added Nov 7 2026; Globe ERP, Tetris and the other I4A tools have no images), movie/book/manga covers in /public/illustrations, GIFs of the owner, two CV PDFs, a "Detag" logo. No testimonials, metrics or case studies exist; do not fabricate.
 
 ## Product Principles
 
