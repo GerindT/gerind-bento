@@ -176,6 +176,7 @@ const projects: Project[] = [
     series: "project-a-day",
     statuses: ["dev_only"],
     stacks: ["nuxt", "supabase", "postgresql"],
+    xkcd: { num: 1838, title: "Machine Learning" },
     blurb: "Head-to-head voting on AI image generations. Elo ratings update through a Postgres function and the winners climb a live leaderboard.",
   },
   {
@@ -227,6 +228,7 @@ const projects: Project[] = [
     series: "project-a-day",
     statuses: ["dev_only"],
     stacks: ["nuxt", "supabase"],
+    xkcd: { num: 949, title: "File Transfer" },
     blurb: "Self-destructing file sharing with in-browser encryption, optional passwords and automatic clean-up.",
   },
   {
@@ -239,6 +241,7 @@ const projects: Project[] = [
     site: "https://aialbania.org",
     statuses: ["live", "code_private"],
     stacks: ["vue", "nuxt"],
+    xkcd: { num: 1425, title: "Tasks" },
     blurb: "Website for AI Albania, an initiative shaping a responsible AI ecosystem in Albania.",
   },
   {
@@ -255,6 +258,7 @@ const projects: Project[] = [
     stacks: ["react", "nodejs", "python"],
     featured: true,
     role: "Bachelor's thesis",
+    xkcd: { num: 1098, title: "Star Ratings" },
     blurb: "Rates the credibility of Amazon products from their reviews, using web scraping and multi-modal NLP: sentiment, feature extraction and recommendations. Presented as a poster at EEML 2024. The demo is the front end only; the scraping backend isn't hosted.",
   },
   {
@@ -294,6 +298,7 @@ const projects: Project[] = [
     statuses: ["offline"],
     role: "Web development course",
     stacks: ["react", "php", "mysql"],
+    xkcd: { num: 2456, title: "Types of Scientific Paper" },
     blurb: "A home for AI research papers, inspired by ResearchGate and arXiv: PDF uploads, comments, favourites and moderators who verify papers. React front end, hand-written PHP API, MySQL.",
   },
   {
@@ -436,6 +441,7 @@ const projects: Project[] = [
     alt: "",
     statuses: ["internal"],
     stacks: ["laravel", "vue"],
+    xkcd: { num: 1597, title: "Git" },
     blurb: "Material logistics planning, including a warehouse module.",
   },
   {
@@ -476,6 +482,7 @@ const projects: Project[] = [
     site: "https://enri-tershana-portofolio.vercel.app",
     statuses: ["live"],
     stacks: ["nuxt"],
+    xkcd: { num: 908, title: "The Cloud" },
     blurb: "Portfolio for a DevOps engineer.",
   },
   {
@@ -488,6 +495,7 @@ const projects: Project[] = [
     site: "https://rejon-hakrama.vercel.app",
     statuses: ["live"],
     stacks: ["nuxt"],
+    xkcd: { num: 627, title: "Tech Support Cheat Sheet" },
     blurb: "Terminal-style portfolio for a technical support engineer.",
   },
   {
@@ -548,6 +556,7 @@ const projects: Project[] = [
     github: "https://github.com/GerindT/portfolio-site",
     statuses: ["dev_only"],
     stacks: ["react"],
+    xkcd: { num: 844, title: "Good Code" },
     blurb: "My first portfolio: multilingual, with switchable themes.",
   },
   {
@@ -559,6 +568,7 @@ const projects: Project[] = [
     github: "https://github.com/GerindT/color-game",
     statuses: ["dev_only"],
     stacks: [],
+    xkcd: { num: 1882, title: "Color Models" },
     blurb: "Colour-guessing game in plain JavaScript, HTML and CSS: my first time moving the DOM around.",
   },
 ];
