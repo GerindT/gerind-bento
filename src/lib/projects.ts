@@ -1,13 +1,26 @@
-export type ProjectStatus = "live" | "ui_only" | "offline" | "wip" | "concept" | "dev_only" | "private";
+export type ProjectStatus = "live" | "ui_only" | "offline" | "wip" | "concept" | "dev_only" | "code_private" | "unreleased" | "internal";
 
 export const statusLabels: Record<ProjectStatus, string> = {
   live: "Live",
-  ui_only: "UI only",
-  offline: "Offline",
+  ui_only: "Front-end demo",
+  offline: "Retired",
   wip: "In progress",
   concept: "Concept",
-  dev_only: "Dev only",
-  private: "Private",
+  dev_only: "Runs locally",
+  code_private: "Code private",
+  unreleased: "Not public yet",
+  internal: "Internal",
+};
+
+/** One-line explanations, shown as a legend on /projects and as chip tooltips. */
+export const statusHelp: Partial<Record<ProjectStatus, string>> = {
+  live: "you can use it today",
+  ui_only: "the interface is online, its backend isn't",
+  dev_only: "public code, run it on your machine",
+  internal: "a client or government system, not open to the public",
+  unreleased: "still being built",
+  code_private: "the product is public, the code isn't",
+  offline: "no longer hosted",
 };
 
 export const techIcons = {
@@ -86,6 +99,8 @@ export type Project = {
   featured?: boolean;
   /** My part in it, when it was not simply "built it". */
   role?: string;
+  /** What I did on a team project, in one factual line (company work). */
+  part?: string;
   /** One factual line: only what is confirmed. */
   blurb: string;
 };
@@ -101,7 +116,7 @@ const projects: Project[] = [
     alt: "Vanspot artwork: a camper van inside a map pin, with the line 'Vanlife maps, routes and community for Albania'",
     contain: true,
     artBg: "#7a8465",
-    statuses: ["wip", "private"],
+    statuses: ["wip", "unreleased"],
     stacks: ["flutter", "golang", "postgresql"],
     featured: true,
     blurb: "Travel app for vanlifers and motorhomes in Albania: maps, vehicle-aware routing, community spots and an AI guide.",
@@ -115,7 +130,7 @@ const projects: Project[] = [
     alt: "After Hours key art: a pixel-art janitor in a dark school corridor",
     contain: true,
     artBg: "#0c0c0c",
-    statuses: ["wip", "private"],
+    statuses: ["wip", "unreleased"],
     stacks: ["godot"],
     featured: true,
     blurb: "Portrait mobile horror dungeon crawler with a VHS look. The bell rang; the school kept you.",
@@ -220,7 +235,7 @@ const projects: Project[] = [
     img: "/illustrations/projects/ai-albania.webp",
     alt: "AI Albania site: an impact section with four headline figures and the audiences it serves",
     site: "https://aialbania.org",
-    statuses: ["live", "private"],
+    statuses: ["live", "code_private"],
     stacks: ["vue", "nuxt"],
     blurb: "Website for AI Albania, an initiative shaping a responsible AI ecosystem in Albania.",
   },
@@ -248,7 +263,7 @@ const projects: Project[] = [
     img: "/illustrations/projects/rollbet.webp",
     alt: "Rollbet logo",
     contain: true,
-    statuses: ["offline", "private"],
+    statuses: ["offline"],
     stacks: ["vue", "nodejs", "socketio", "redis"],
     featured: true,
     role: "Backend contract",
@@ -284,7 +299,7 @@ const projects: Project[] = [
     title: "LolCases",
     year: "2022",
     group: "personal",
-    statuses: ["private"],
+    statuses: ["code_private"],
     stacks: ["react", "nodejs", "socketio", "mysql"],
     alt: "",
     featured: true,
@@ -320,6 +335,7 @@ const projects: Project[] = [
     statuses: ["live"],
     stacks: ["nextjs", "postgresql", "expo"],
     featured: true,
+    part: "Technical lead and architect: shaped how the platform is structured and delivered, and worked hands-on across the web app and API with the team.",
     blurb: "National price-transparency platform: shoppers compare weekly prices of basic goods across markets, on the web and in an Expo mobile app.",
   },
   {
@@ -328,8 +344,9 @@ const projects: Project[] = [
     year: "2026",
     group: "i4a",
     alt: "",
-    statuses: ["private"],
+    statuses: ["internal"],
     stacks: ["react", "fastapi", "postgresql"],
+    part: "Architect and developer alongside the team: data model, API design and the front end.",
     blurb: "Menaxhimi i Investimeve Publike: monitoring for Albania's public investment portfolio.",
   },
   {
@@ -338,7 +355,7 @@ const projects: Project[] = [
     year: "2025",
     group: "i4a",
     alt: "",
-    statuses: ["private"],
+    statuses: ["internal"],
     stacks: ["dotnet", "react", "postgresql"],
     blurb: "Internal dashboard for projects, OKRs, risks and the calendar, with an AI assistant.",
   },
@@ -348,8 +365,9 @@ const projects: Project[] = [
     year: "2026",
     group: "i4a",
     alt: "",
-    statuses: ["private"],
+    statuses: ["internal"],
     stacks: ["nextjs", "postgresql"],
+    part: "Led development: set the architecture and built the core of the registry.",
     blurb: "Digital elevator registry, built for ISHMT.",
   },
   {
@@ -358,7 +376,7 @@ const projects: Project[] = [
     year: "2026",
     group: "i4a",
     alt: "",
-    statuses: ["private"],
+    statuses: ["internal"],
     stacks: ["wordpress", "react", "expo"],
     blurb: "MVP with a WordPress back end, a React web app and an Expo mobile app.",
   },
@@ -368,8 +386,9 @@ const projects: Project[] = [
     year: "2026",
     group: "i4a",
     alt: "",
-    statuses: ["private"],
+    statuses: ["internal"],
     stacks: ["python"],
+    part: "Designed and built it, so every new team project starts from the same proven structure.",
     blurb: "CLI that scaffolds new projects from the team's templates.",
   },
 
@@ -383,9 +402,10 @@ const projects: Project[] = [
     alt: "MyCredit on a laptop and a phone: the event dashboard with top-ups, purchases and ticket check-ins, and the cashless card in the app",
     shots: [{ src: "/illustrations/projects/mycredit-site.webp", alt: "mycred.it home page" }],
     site: "https://mycred.it/",
-    statuses: ["live", "private"],
+    statuses: ["live", "code_private"],
     stacks: ["golang", "laravel", "vue", "redis", "mysql"],
     featured: true,
+    part: "One of the lead developers: helped shape the platform's architecture and built core features such as ticketing, white-label event sites and the embeddable widget.",
     blurb: "Event management and cashless payments: ticketing, an embeddable widget and white-label sites.",
   },
   {
@@ -396,8 +416,9 @@ const projects: Project[] = [
     img: "/illustrations/projects/muse-x.webp",
     alt: "MUSE-X festival site with the headline 'Step up the beat'",
     site: "https://muse-x.al/",
-    statuses: ["live", "private"],
+    statuses: ["live", "code_private"],
     stacks: ["nuxt", "golang", "mysql"],
+    part: "Built the site on top of the MyCredit platform.",
     blurb: "Site for the MUSE-X expo-festival at the Pyramid of Tirana, running on the MyCredit platform.",
   },
   {
@@ -406,8 +427,9 @@ const projects: Project[] = [
     year: "2022",
     group: "detag",
     alt: "",
-    statuses: ["private"],
+    statuses: ["internal"],
     stacks: ["laravel", "vue"],
+    part: "Core developer across the Laravel back end and the Vue front end.",
     blurb: "ERP with product, stock and pricing modules.",
   },
   {
@@ -416,8 +438,9 @@ const projects: Project[] = [
     year: "2023",
     group: "detag",
     alt: "",
-    statuses: ["private"],
+    statuses: ["internal"],
     stacks: ["laravel", "vue"],
+    part: "Contributed to a large team codebase.",
     blurb: "Material logistics planning, including a warehouse module.",
   },
   {
@@ -429,8 +452,9 @@ const projects: Project[] = [
     alt: "Regina Group site: the Regina Taxi page, 'Premium Transportation Services', over a photo of the fleet",
     shots: [{ src: "/illustrations/projects/travel-hotels.webp", alt: "Regina Group site: the hotel collection with Regina Blu, Regina City and Regina Palm Resort" }],
     site: "https://reginagroup.al",
-    statuses: ["live", "private"],
+    statuses: ["live", "code_private"],
     stacks: ["golang", "nuxt"],
+    part: "Core developer across the Go back end and the Nuxt front end.",
     blurb: "Travel platform for Regina Group: hotels, activities, transfers and job offers, with a Go back end and a multilingual Nuxt front end.",
   },
 
@@ -556,16 +580,19 @@ export const projectsByGroup = groups.map((g) => {
   const list = all.filter((p) => !p.series);
   const sideProjects = all.filter((p) => p.series === "project-a-day");
   // Pictured or flagged-important work gets a poster; the rest a compact row.
-  const big = (p: Project) => Boolean(p.img || p.featured);
+  const big = (p: Project) => Boolean(p.img || p.featured || p.role);
   // Interleave two-column features with single posters so every grid row fills.
-  const features = list.filter((p) => p.featured);
-  const singles = list.filter((p) => big(p) && !p.featured);
+  // A feature needs a single to share its row; without one it becomes a single itself.
+  const wanted = list.filter((p) => p.featured);
+  const singlesAll = list.filter((p) => big(p) && !p.featured);
+  const features = wanted.slice(0, Math.min(2, singlesAll.length));
+  const singles = [...singlesAll, ...wanted.filter((p) => !features.includes(p))];
   const pictured: Project[] = [];
   while (features.length || singles.length) {
     if (features.length) pictured.push(features.shift()!);
     if (singles.length) pictured.push(singles.shift()!);
   }
-  return { ...g, pictured, listed: list.filter((p) => !big(p)), side: sideProjects, count: all.length };
+  return { ...g, pictured, features, listed: list.filter((p) => !big(p)), side: sideProjects, count: all.length };
 });
 
 /** Home "Selected work": hand-picked across personal and company work. The first one is the large plate. */

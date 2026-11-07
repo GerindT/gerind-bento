@@ -48,9 +48,12 @@ const Title = as;
     {it.chips.length > 0 && (
 <ul class="chips" aria-label="Status">
   {it.chips.map((c) => (
-    <li class:list={["chip", { "chip--live": c.hot }]}>{c.label}</li>
+    <li class:list={["chip", { "chip--live": c.hot }]} title={c.help}>{c.label}</li>
   ))}
 </ul>
+    )}
+    {it.part && (
+      <p class="cc__part"><strong>My part</strong> {it.part}</p>
     )}
     {it.lines.map((l) => (
 <p class="cc__line">{l}</p>
@@ -74,10 +77,16 @@ const Title = as;
   </a>
 ))}
 {it.privateNote && (
-  <p class="poster__private">
-    <Icon name="ri:lock-2-line" aria-hidden="true" /> {it.privateNote}
-  </p>
-)}
+        <p class="poster__private">
+          <Icon name="ri:lock-2-line" aria-hidden="true" /> {it.privateNote}
+        </p>
+      )}
+      {it.ask && (
+        <a class="textlink textlink--plate" href={it.ask}>
+          Ask for a walkthrough
+          <Icon name="ri:mail-send-line" aria-hidden="true" />
+        </a>
+      )}
     </div>
   </div>
 </article>

@@ -2370,6 +2370,24 @@ html.cc-open {
 .cc__role {
   font-size: 0.8rem;
 }
+.cc__part {
+  max-width: 52ch;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.cc__part strong {
+  display: inline-block;
+  margin-right: 0.5rem;
+  padding: 0.15em 0.9em 0.15em 0.55em;
+  background: var(--accent);
+  color: var(--on-accent);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.45em) 100%, 0 100%);
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 .cc__line {
   max-width: 52ch;
   font-size: 1.1rem;

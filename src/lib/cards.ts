@@ -1,4 +1,5 @@
-import { groups, statusLabels, type Project, type TechStack } from "./projects";
+import { groups, statusLabels, statusHelp, type Project, type TechStack } from "./projects";
+import { LINKS } from "./constants";
 import type { MediaItem } from "./media";
 
 /** One "calling card": the detail overlay for a project or a media item. */
@@ -18,8 +19,12 @@ export type CardItem = {
   /** Group or shelf, then year. */
   meta: string[];
   role?: string;
-  chips: { label: string; hot?: boolean }[];
+  chips: { label: string; hot?: boolean; help?: string }[];
   lines: string[];
+  /** "My part" on team projects. */
+  part?: string;
+  /** mailto for private work: ask for a walkthrough. */
+  ask?: string;
   stacks: TechStack[];
   links: { href: string; label: string; primary?: boolean; icon: string; srLabel: string }[];
   /** Shown when nothing can be linked. */
@@ -51,11 +56,13 @@ export const projectCard = (p: Project, set = p.group): CardItem => {
     artBg: p.artBg,
     meta: [group?.title ?? "", p.year],
     role: p.role,
-    chips: p.statuses.map((s) => ({ label: statusLabels[s], hot: s === "live" })),
+    chips: p.statuses.map((s) => ({ label: statusLabels[s], hot: s === "live", help: statusHelp[s] })),
     lines: [p.blurb],
     stacks: p.stacks,
     links,
-    privateNote: links.length ? undefined : p.statuses.includes("offline") ? "No longer hosted, and the code is private." : "Private build, no public link. Ask me for a walkthrough.",
+    part: p.part,
+    privateNote: links.length ? undefined : p.statuses.includes("offline") ? "No longer hosted, and the code is private." : "Private build, no public link.",
+    ask: links.length ? undefined : `mailto:${LINKS.email}?subject=${encodeURIComponent(`Walkthrough: ${p.title}`)}&body=${encodeURIComponent(`Hi Gerind,\n\nI saw ${p.title} on gerind.dev and would like a short walkthrough.\n\n`)}`,
   };
 };
 

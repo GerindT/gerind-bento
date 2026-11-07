@@ -79,7 +79,7 @@ const jsonLd = [
           </header>
           {g.pictured.length > 0 && (
             <div class="posters">
-              {g.pictured.map((p, i) => <Poster project={p} index={i} feature={p.featured} />)}
+              {g.pictured.map((p, i) => <Poster project={p} index={i} feature={g.features.includes(p)} />)}
             </div>
           )}
           {g.listed.length > 0 && (

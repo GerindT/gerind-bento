@@ -5,12 +5,15 @@ export const jobs: Job[] = [
     role: "Tech Lead & System Architect",
     org: "Innovation4Albania",
     dates: "Oct 2026 – Present",
-    points: [],
+    points: [
+      "Lead the technical direction and system architecture of public-sector platforms, from data model to deployment.",
+      "Shipped Pasqyra e Çmimeve, the national price-transparency site and app, and work on IQMT, MIP and the team's project generator.",
+    ],
   },
   {
     role: "Software Developer",
     org: "Detag",
-    dates: "Aug 2024 – Oct 2026",
+    dates: "Aug 2024 – Nov 2026",
     place: "Tirana",
     points: [
       "Architected and maintained high-concurrency web platforms using Go, Node.js and Laravel.",
