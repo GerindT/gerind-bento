@@ -23,5 +23,7 @@ export default defineConfig({
     icon(),
   ],
   output: "static",
+  // URLs without a trailing slash (/projects), matching the links and Cloudflare's drop-trailing-slash
+  trailingSlash: "never",
   build: { inlineStylesheets: "always" },
 });
