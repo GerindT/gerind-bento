@@ -668,27 +668,6 @@ html {
     font-size: min(7.5rem, 15cqi);
   }
 }
-/* the red slash the name is set over */
-.name__slash {
-  position: absolute;
-  z-index: -1;
-  left: -0.25em;
-  top: 38%;
-  width: 118%;
-  height: 0.42em;
-  background: var(--accent);
-  transform: rotate(-7deg) skewX(-20deg);
-  transform-origin: left center;
-  animation: slash-in 0.6s var(--ease) 0.12s both;
-}
-@keyframes slash-in {
-  from {
-    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  }
-  to {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
-}
 .name__line {
   display: inline-block;
   padding: 0.04em 0.28em 0.08em 0.12em;

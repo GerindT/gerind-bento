@@ -33,14 +33,19 @@ const person = {
   "@id": `${SITE.url}/#person`,
   name: SITE.name,
   url: SITE.url,
-  image: new URL("/og.png", siteUrl).toString(),
+  image: new URL("/Gerind_Tershana.webp", siteUrl).toString(),
   jobTitle: "Tech Lead & System Architect",
   description: SITE.tagline,
   email: [LINKS.email, LINKS.email2],
   sameAs: [LINKS.linkedin, LINKS.github, LINKS.instagram, LINKS.telegram],
-  knowsAbout: ["Web development", "React", "Vue", "Nuxt", "Node.js", "Go", "Laravel", "Python", "APIs", "CI/CD"],
+  knowsAbout: ["System architecture", "Backend development", "Go", "Node.js", "Laravel", "Vue", "Nuxt", "React", "PostgreSQL", "MySQL", "Docker", "Kubernetes", "CI/CD", "DevOps", "High-concurrency APIs"],
   worksFor: { "@type": "Organization", name: "Innovation4Albania" },
-  alumniOf: { "@type": "CollegeOrUniversity", name: "University of New York Tirana" },
+  alumniOf: [
+    { "@type": "CollegeOrUniversity", name: "University of New York Tirana" },
+    { "@type": "HighSchool", name: "Hermann Gmeiner" },
+  ],
+  award: ["Valedictorian, B.Sc. Computer Science, University of New York Tirana (2024)"],
+  seeks: { "@type": "Demand", description: "Freelance projects and part-time roles" },
   knowsLanguage: ["sq", "en", "de"],
   address: { "@type": "PostalAddress", addressLocality: "Tirana", addressCountry: "AL" },
   nationality: { "@type": "Country", name: "Albania" },
@@ -71,6 +76,7 @@ const graph = {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="Summary for AI assistants" />
     <link rel="preload" href="/fonts/CabinetGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="generator" content={Astro.generator} />

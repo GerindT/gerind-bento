@@ -13,6 +13,18 @@ import { photos, hasPhotos } from "../lib/photos";
 const now = jobs[0];
 const selected = featuredProjects.slice(0, 6);
 
+// The home page is Gerind's profile page: tell search engines who it is about.
+const profileLd = [
+  {
+    "@type": "ProfilePage",
+    "@id": "https://gerind.dev/#profile",
+    url: "https://gerind.dev/",
+    name: "Gerind Tershana",
+    mainEntity: { "@id": "https://gerind.dev/#person" },
+    isPartOf: { "@id": "https://gerind.dev/#website" },
+  },
+];
+
 type MenuItem = { href: string; title: string; desc: string; meta: string; thumb?: string; thumbPos?: string; covers?: string[]; icon?: string; download?: boolean; alt?: { href: string; label: string } };
 
 const menu: MenuItem[] = [
@@ -21,7 +33,7 @@ const menu: MenuItem[] = [
   { href: "/media", title: "Media", desc: "The books, movies and manga I keep coming back to.", meta: `${mediaCount} favourites`, covers: shelves.map((s) => s.items[0].img) },
   ...(hasPhotos ? [{ href: "/photos", title: "Photos", desc: "Photography is my newest hobby. Frames from walks, trips and rides.", meta: `${photos.length} ${photos.length === 1 ? "photo" : "photos"}`, icon: "ri:camera-3-line" }] : []),
   { href: "/Gerind_Tershana_EN.pdf", title: "CV", desc: "Downloads my CV as a PDF, in English. There's an Albanian version too.", meta: "PDF · EN / SQ", icon: "ri:file-download-line", download: true, alt: { href: "/Gerind_Tershana_AL.pdf", label: "CV · Shqip" } },
-  { href: "#contact", title: "Contact", desc: `Open to freelance and full-time work. Write to ${LINKS.email}.`, meta: "Freelance · Full-time", icon: "ri:mail-send-line" },
+  { href: "#contact", title: "Contact", desc: `Open to freelance and part-time work. Write to ${LINKS.email}.`, meta: "Freelance · Part-time", icon: "ri:mail-send-line" },
 ];
 
 const gifs = [
@@ -37,8 +49,9 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
 
 <Layout
   title="Gerind Tershana — Software Engineer, Tech Lead & System Architect"
-  description="Gerind Tershana: Tech Lead & System Architect at Innovation4Albania, previously at Detag. 5+ years building scalable web apps and high-concurrency APIs in Tirana, Albania. Open to freelance and full-time work."
+  description="Gerind Tershana: Tech Lead & System Architect at Innovation4Albania, previously at Detag. 5+ years building scalable web apps and high-concurrency APIs in Tirana, Albania. Open to freelance and part-time work."
   page="home"
+  jsonLd={profileLd}
 >
   <main id="main">
     <section class="hero" aria-labelledby="name">
@@ -46,7 +59,6 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
       <div class="wrap hero__grid">
         <div class="hero__copy">
           <h1 class="name" id="name">
-            <span class="name__slash" aria-hidden="true"></span>
             <span class="name__line name__line--a slam" style="--i:0">Gerind</span>
             <span class="name__line name__line--b slam" style="--i:1">Tershana</span>
           </h1>
@@ -56,7 +68,7 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
           </p>
           <p class="avail slam" style="--i:4">
             <span class="pulse" aria-hidden="true"></span>
-            Open to freelance and full-time work
+            Open to freelance and part-time work
           </p>
         </div>
 
@@ -160,7 +172,7 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
       <div class="wrap">
         <div class="card reveal">
           <h2 id="contact-title">Let's build something <mark>great</mark> together</h2>
-          <p>Open to freelance projects and full-time roles. Have something in mind, or just want to say hello? Write to me and I'll get back to you.</p>
+          <p>Open to freelance projects and part-time roles. Have something in mind, or just want to say hello? Write to me and I'll get back to you.</p>
           <a class="card__mail" href={LINKS.gmail}>{LINKS.email}</a>
           <a class="card__mail card__mail--alt" href={LINKS.outlook}>{LINKS.email2}</a>
           <div class="card__actions">

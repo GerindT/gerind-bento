@@ -21,8 +21,16 @@ const jsonLd = [
       itemListElement: allProjects.map((p, i) => ({
         "@type": "ListItem",
         position: i + 1,
-        name: p.title,
-        ...(p.site ? { url: p.site } : {}),
+        item: {
+          "@type": "CreativeWork",
+          name: p.title,
+          description: p.blurb,
+          url: `${SITE.url}/projects?p=${p.slug}`,
+          dateCreated: p.year,
+          creator: { "@id": `${SITE.url}/#person` },
+          ...(p.site || p.github ? { sameAs: [p.site, p.github].filter(Boolean) } : {}),
+          ...(p.role ? { creditText: p.role } : {}),
+        },
       })),
     },
   },
