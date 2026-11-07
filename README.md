@@ -1,6 +1,6 @@
 # Gerind Tershana — Portfolio
 
-Personal portfolio of Gerind Tershana, tech lead, system architect and software engineer in Tirana, Albania.
+Personal portfolio of Gerind Tershana, lead system architect and software engineer in Tirana, Albania.
 
 Live: https://gerind.dev
 

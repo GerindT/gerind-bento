@@ -16,7 +16,7 @@ Primary: recruiters and employers deciding in seconds whether to contact Gerind.
 
 ## Product Purpose
 
-Personal portfolio of Gerind Tershana, software engineer in Albania (5+ years, full-stack: React, Vue, Nuxt, Node.js, Go, Laravel, Python; Tech Lead & System Architect at Innovation4Albania since Oct 2026, previously at Detag). It exists to prove what he has built, make contacting him or downloading his CV effortless, and show the person behind the work.
+Personal portfolio of Gerind Tershana, software engineer in Albania (5+ years, full-stack: React, Vue, Nuxt, Node.js, Go, Laravel, Python; Lead System Architect, previously at Detag). It exists to prove what he has built, make contacting him or downloading his CV effortless, and show the person behind the work.
 
 ## Positioning
 

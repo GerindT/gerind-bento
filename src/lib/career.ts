@@ -2,7 +2,7 @@ export type Job = { role: string; org: string; dates: string; place?: string; no
 
 export const jobs: Job[] = [
   {
-    role: "Tech Lead & System Architect",
+    role: "Lead System Architect",
     org: "Innovation4Albania",
     dates: "Oct 2026 – Present",
     points: [

@@ -58,7 +58,7 @@ export type ProjectGroup = "personal" | "i4a" | "detag" | "friends" | "early";
 
 export const groups: { id: ProjectGroup; title: string; short: string; note: string }[] = [
   { id: "personal", title: "Personal & freelance", short: "Personal", note: "Products, experiments and contracts I built on my own time or for my own clients." },
-  { id: "i4a", title: "Innovation4Albania", short: "I4A", note: "Public-sector platforms, as Tech Lead & System Architect. Linked where the platform is public." },
+  { id: "i4a", title: "Innovation4Albania", short: "I4A", note: "Public-sector platforms, as Lead System Architect. Linked where the platform is public." },
   { id: "detag", title: "Detag", short: "Detag", note: "Client platforms built as a developer at Detag. Linked only where the product is already public." },
   { id: "friends", title: "Friends' sites", short: "Friends", note: "Portfolio sites I built for friends." },
   { id: "early", title: "Early days", short: "Early days", note: "Where it started: school and bootcamp projects from 2021." },
