@@ -36,7 +36,17 @@ const url = `${SITE.url}/projects/${p.slug}`;
 const backHref = `/projects#${p.group}`;
 const hello = `${LINKS.gmail}?subject=${encodeURIComponent("Hello from gerind.dev")}`;
 
-const description = `${p.title} (${p.year})${p.role ? `, ${p.role.toLowerCase()}` : ""} by Gerind Tershana: ${p.blurb}`.slice(0, 300);
+// Search-friendly title and a description that fits in a result snippet (~155 characters).
+const kind = inSeries ? inSeries.title : { personal: "Personal project", i4a: "Innovation4Albania", detag: "Detag", friends: "Portfolio site", early: "Early project" }[p.group];
+const pageTitle = `${p.title} · ${kind} — Gerind Tershana`;
+const clamp = (text: string, max = 158) => {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const sentence = cut.lastIndexOf(". ");
+  if (sentence > 90) return cut.slice(0, sentence + 1);
+  return cut.slice(0, cut.lastIndexOf(" ")).replace(/[,:;]$/, "") + "…";
+};
+const description = clamp(`${p.title} (${p.year}) by Gerind Tershana: ${p.blurb}`);
 
 const jsonLd = [
   {
@@ -64,7 +74,7 @@ const jsonLd = [
 ---
 
 <Layout
-  title={`${p.title} — Gerind Tershana`}
+  title={pageTitle}
   description={description}
   page="projects"
   image={p.img ?? "/og.png"}
