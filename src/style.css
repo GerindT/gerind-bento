@@ -98,6 +98,7 @@
 /* ---------- base ---------- */
 
 html {
+  overflow-x: clip;
   color-scheme: dark;
   background: var(--ink);
   scroll-behavior: smooth;
@@ -108,6 +109,8 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  /* slanted plates and the tilted ticker must never make phones scroll sideways */
+  overflow-x: clip;
   background: var(--ink);
   color: var(--paper);
   font-family: var(--body);
@@ -365,10 +368,18 @@ html {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  padding-bottom: 1.2rem;
+  isolation: isolate;
+  transition: transform 0.35s var(--ease), box-shadow 0.3s;
+}
+/* The slanted ink plate is drawn behind the header, so the cut never clips the Style dropdown. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: var(--ink);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 0.6rem));
-  padding-bottom: 1.2rem;
-  transition: transform 0.35s var(--ease), box-shadow 0.3s;
 }
 .site-header.is-hidden {
   transform: translateY(-110%);
@@ -2395,6 +2406,128 @@ html.cc-open {
   }
 }
 
+/* ---------- project pages ---------- */
+
+.project {
+  padding-top: clamp(6.5rem, 12vw, 8rem);
+}
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.5rem;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.crumbs li + li::before {
+  content: "/";
+  margin-right: 0.5rem;
+  color: var(--accent-text);
+}
+.crumbs a {
+  color: var(--paper);
+  text-decoration: underline 2px var(--accent-text);
+  text-underline-offset: 0.25em;
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+}
+.crumbs [aria-current] span {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+}
+.project__card {
+  margin-top: 1.25rem;
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1.6rem), calc(100% - 1.6rem) 100%, 0 100%);
+}
+.project__card :focus-visible {
+  outline-color: var(--ink);
+  box-shadow: 0 0 0 5px var(--paper);
+}
+.project__pager {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 3.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--ink-2);
+  color: var(--paper);
+  text-decoration: none;
+  font-family: var(--display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.1;
+  transition: background 0.2s, color 0.2s, transform 0.3s var(--ease);
+}
+.pager small {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.pager svg {
+  flex: none;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+.pager--prev {
+  clip-path: polygon(0.8rem 0, 100% 0, 100% 100%, 0 100%);
+}
+.pager--next {
+  justify-content: flex-end;
+  text-align: right;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.8rem) 100%, 0 100%);
+}
+.pager:hover,
+.pager:focus-visible {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.pager:hover small,
+.pager:focus-visible small {
+  color: inherit;
+}
+.pager:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: -6px;
+  box-shadow: none;
+}
+.project__count {
+  font-family: var(--display);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.project__count b {
+  color: var(--accent-text);
+  font-size: 1.4em;
+}
+.project__back {
+  margin-top: 2rem;
+}
+@media (max-width: 39.99rem) {
+  .project__pager {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .project__count {
+    display: none;
+  }
+}
+
 /* ---------- motion preferences ---------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -2492,11 +2625,14 @@ html.cc-open {
 
 .jobs {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   max-width: 62rem;
 }
 .job {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 0.75rem 1.75rem;
   padding: 1.4rem 2rem 1.5rem 1.5rem;
   background: var(--ink);

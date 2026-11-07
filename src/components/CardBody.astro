@@ -1,0 +1,83 @@
+---
+import { Icon } from "astro-icon/components";
+import { techIcons } from "../lib/projects";
+import type { CardItem } from "../lib/cards";
+
+interface Props {
+  it: CardItem;
+  /** h2 inside the overlay, h1 on a project's own page. */
+  as?: "h1" | "h2";
+  /** Load the main image eagerly (project pages). */
+  eager?: boolean;
+}
+const { it, as = "h2", eager = false } = Astro.props;
+const Title = as;
+---
+
+<article class:list={["cc", { "cc--portrait": it.portrait, "cc--plain": it.images.length === 0 }]}>
+  <figure class="cc__visual">
+    <div class:list={["cc__frame", { "cc__frame--contain": it.contain }]} style={it.artBg ? `--art-bg:${it.artBg}` : undefined}>
+{it.images.length > 0 ? (
+  <img data-cc-main src={it.images[0].src} alt={it.images[0].alt} decoding="async" width="1280" height="800" loading={eager ? "eager" : undefined} fetchpriority={eager ? "high" : undefined} />
+) : (
+  <span class="cc__plate" aria-hidden="true">
+    {it.title}
+  </span>
+)}
+    </div>
+    {it.images.length > 1 && (
+<div class="cc__shots" role="group" aria-label="Screenshots">
+  {it.images.map((im, i) => (
+    <button type="button" class="cc__shot" data-cc-shot={i} data-src={im.src} data-alt={im.alt} aria-pressed={i === 0 ? "true" : "false"} aria-label={`Show screenshot ${i + 1}: ${im.alt}`}>
+<img src={im.src} alt="" loading="lazy" decoding="async" width="160" height="100" />
+    </button>
+  ))}
+</div>
+    )}
+  </figure>
+  <div class="cc__text">
+    <Title class="cc__title" id={as === "h2" ? "callcard-title" : undefined} tabindex="-1">
+{it.title}
+    </Title>
+    <p class="cc__meta">
+{it.meta.filter(Boolean).map((m, i) => (
+  <span>{m}</span>
+))}
+    </p>
+    {it.role && <p class="strip strip--accent cc__role">{it.role}</p>}
+    {it.chips.length > 0 && (
+<ul class="chips" aria-label="Status">
+  {it.chips.map((c) => (
+    <li class:list={["chip", { "chip--live": c.hot }]}>{c.label}</li>
+  ))}
+</ul>
+    )}
+    {it.lines.map((l) => (
+<p class="cc__line">{l}</p>
+    ))}
+    {it.stacks.length > 0 && (
+<ul class="stack cc__stack" aria-label="Built with">
+  {it.stacks.map((s) => (
+    <li>
+<Icon name={techIcons[s].icon} aria-hidden="true" />
+{techIcons[s].label}
+    </li>
+  ))}
+</ul>
+    )}
+    <div class="cc__links">
+{it.links.map((l) => (
+  <a class:list={["textlink", { "textlink--plate": l.primary }]} href={l.href} target="_blank" rel="noopener noreferrer">
+    {l.label}
+    <Icon name={l.icon} aria-hidden="true" />
+    <span class="sr-only"> — {l.srLabel}</span>
+  </a>
+))}
+{it.privateNote && (
+  <p class="poster__private">
+    <Icon name="ri:lock-2-line" aria-hidden="true" /> {it.privateNote}
+  </p>
+)}
+    </div>
+  </div>
+</article>

@@ -14,7 +14,7 @@ const { project, index = 0 } = Astro.props;
   <p class="row__year">{project.year}</p>
   <div class="row__main">
     <h3 class="row__title">
-      <a class="row__open" href={`/projects?p=${project.slug}`} data-cc-open={project.slug}>
+      <a class="row__open" href={`/projects/${project.slug}`} data-cc-open={project.slug}>
         {project.title}
         <span class="sr-only"> — open the card</span>
       </a>

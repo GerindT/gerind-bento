@@ -1,7 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
-import { techIcons } from "../lib/projects";
 import type { CardItem } from "../lib/cards";
+import CardBody from "./CardBody.astro";
 
 interface Props {
   items: CardItem[];
@@ -32,81 +32,16 @@ const { items } = Astro.props;
 
 {
   items.map((it) => (
-    <template data-cc-item={it.id} data-cc-set={it.set}>
-      <article class:list={["cc", { "cc--portrait": it.portrait, "cc--plain": it.images.length === 0 }]}>
-        <figure class="cc__visual">
-          <div class:list={["cc__frame", { "cc__frame--contain": it.contain }]} style={it.artBg ? `--art-bg:${it.artBg}` : undefined}>
-            {it.images.length > 0 ? (
-              <img data-cc-main src={it.images[0].src} alt={it.images[0].alt} decoding="async" width="1280" height="800" />
-            ) : (
-              <span class="cc__plate" aria-hidden="true">
-                {it.title}
-              </span>
-            )}
-          </div>
-          {it.images.length > 1 && (
-            <div class="cc__shots" role="group" aria-label="Screenshots">
-              {it.images.map((im, i) => (
-                <button type="button" class="cc__shot" data-cc-shot={i} data-src={im.src} data-alt={im.alt} aria-pressed={i === 0 ? "true" : "false"} aria-label={`Show screenshot ${i + 1}: ${im.alt}`}>
-                  <img src={im.src} alt="" loading="lazy" decoding="async" width="160" height="100" />
-                </button>
-              ))}
-            </div>
-          )}
-        </figure>
-        <div class="cc__text">
-          <h2 class="cc__title" id="callcard-title" tabindex="-1">
-            {it.title}
-          </h2>
-          <p class="cc__meta">
-            {it.meta.filter(Boolean).map((m, i) => (
-              <span>{m}</span>
-            ))}
-          </p>
-          {it.role && <p class="strip strip--accent cc__role">{it.role}</p>}
-          {it.chips.length > 0 && (
-            <ul class="chips" aria-label="Status">
-              {it.chips.map((c) => (
-                <li class:list={["chip", { "chip--live": c.hot }]}>{c.label}</li>
-              ))}
-            </ul>
-          )}
-          {it.lines.map((l) => (
-            <p class="cc__line">{l}</p>
-          ))}
-          {it.stacks.length > 0 && (
-            <ul class="stack cc__stack" aria-label="Built with">
-              {it.stacks.map((s) => (
-                <li>
-                  <Icon name={techIcons[s].icon} aria-hidden="true" />
-                  {techIcons[s].label}
-                </li>
-              ))}
-            </ul>
-          )}
-          <div class="cc__links">
-            {it.links.map((l) => (
-              <a class:list={["textlink", { "textlink--plate": l.primary }]} href={l.href} target="_blank" rel="noopener noreferrer">
-                {l.label}
-                <Icon name={l.icon} aria-hidden="true" />
-                <span class="sr-only"> — {l.srLabel}</span>
-              </a>
-            ))}
-            {it.privateNote && (
-              <p class="poster__private">
-                <Icon name="ri:lock-2-line" aria-hidden="true" /> {it.privateNote}
-              </p>
-            )}
-          </div>
-        </div>
-      </article>
+    <template data-cc-item={it.id} data-cc-set={it.set} data-cc-href={it.href}>
+      <CardBody it={it} />
     </template>
   ))
 }
 
 <script>
   // Calling card: one native <dialog>, filled from server-rendered <template>s.
-  // Each card has its own URL (?p=id), so Back closes it and links can be shared.
+  // Each card has its own URL (a project's /projects/slug page, or ?p=id for media),
+  // so Back closes it, links can be shared, and a reload lands on the real page.
   const dlg = document.getElementById("callcard") as HTMLDialogElement | null;
   const body = dlg?.querySelector<HTMLElement>("[data-cc-body]");
   const templates = new Map(Array.from(document.querySelectorAll<HTMLTemplateElement>("template[data-cc-item]")).map((t) => [t.dataset.ccItem!, t]));
@@ -121,11 +56,13 @@ const { items } = Astro.props;
     let closing = false;
 
     const setOf = (id: string) => Array.from(templates.values()).filter((t) => t.dataset.ccSet === templates.get(id)!.dataset.ccSet).map((t) => t.dataset.ccItem!);
-    const urlFor = (id: string | null) => {
-      const u = new URL(location.href);
-      if (id) u.searchParams.set("p", id);
-      else u.searchParams.delete("p");
-      return u.pathname + u.search + u.hash;
+    const here = () => location.pathname + location.search;
+    // Where the page was before a card opened; closing goes back to it.
+    let baseUrl = here();
+    const urlFor = (id: string | null) => (id ? templates.get(id)!.dataset.ccHref! : baseUrl);
+    const idForUrl = () => {
+      for (const [id, t] of templates) if (t.dataset.ccHref === here()) return id;
+      return null;
     };
 
     const render = (id: string, dir = 0) => {
@@ -171,6 +108,7 @@ const { items } = Astro.props;
       }
       render(id);
       if (opts.push) {
+        baseUrl = here();
         history.pushState({ cc: id }, "", urlFor(id));
         pushed = true;
       }
@@ -223,15 +161,20 @@ const { items } = Astro.props;
       (window as any).sfx?.tick();
     };
 
-    // Open from any [data-cc-open] link on the page.
-    document.addEventListener("click", (e) => {
-      const a = (e.target as HTMLElement).closest<HTMLElement>("[data-cc-open]");
-      if (!a || e.metaKey || e.ctrlKey || e.shiftKey || (e as MouseEvent).button !== 0) return;
-      if (!templates.has(a.dataset.ccOpen!)) return;
-      e.preventDefault();
-      trigger = a;
-      open(a.dataset.ccOpen!, { push: !dlg.open });
-    });
+    // Open from any [data-cc-open] link on the page. Capture phase, so the page-transition
+    // handler sees the click as handled and doesn't also navigate away.
+    document.addEventListener(
+      "click",
+      (e) => {
+        const a = (e.target as HTMLElement).closest<HTMLElement>("[data-cc-open]");
+        if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as MouseEvent).button !== 0) return;
+        if (!templates.has(a.dataset.ccOpen!)) return;
+        e.preventDefault();
+        trigger = a;
+        open(a.dataset.ccOpen!, { push: !dlg.open });
+      },
+      true
+    );
 
     dlg.querySelector("[data-cc-close]")?.addEventListener("click", () => close());
     dlg.querySelector("[data-cc-prev]")?.addEventListener("click", () => step(-1));
@@ -265,8 +208,8 @@ const { items } = Astro.props;
     });
 
     window.addEventListener("popstate", () => {
-      const id = new URLSearchParams(location.search).get("p");
-      if (id && templates.has(id)) {
+      const id = idForUrl();
+      if (id) {
         if (dlg.open) render(id);
         else open(id);
       } else if (dlg.open) {
@@ -274,11 +217,19 @@ const { items } = Astro.props;
       }
     });
 
-    // Deep link: /projects?p=pasqyra opens straight onto that card.
+    // Deep links: /media?p=id opens that card. Old /projects?p=slug links go to the project's page.
     const deep = new URLSearchParams(location.search).get("p");
-    if (deep && templates.has(deep)) {
-      trigger = document.querySelector<HTMLElement>(`[data-cc-open="${CSS.escape(deep)}"]`);
-      open(deep);
+    const tpl = deep ? templates.get(deep) : undefined;
+    if (deep && tpl) {
+      const href = tpl.dataset.ccHref!;
+      if (!href.includes("?")) location.replace(href);
+      else {
+        const u = new URL(location.href);
+        u.searchParams.delete("p");
+        baseUrl = u.pathname + u.search;
+        trigger = document.querySelector<HTMLElement>(`[data-cc-open="${CSS.escape(deep)}"]`);
+        open(deep);
+      }
     }
   }
 </script>

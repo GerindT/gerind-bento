@@ -15,7 +15,7 @@ interface Props {
 const { project, index = 0, level = "h3", feature = false } = Astro.props;
 const Heading = level;
 const primary = project.site ?? project.github;
-const cardHref = `/projects?p=${project.slug}`;
+const cardHref = `/projects/${project.slug}`;
 ---
 
 <article class:list={["poster", "reveal", { "poster--feature": feature }]} style={`--i:${index % 6}`}>

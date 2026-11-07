@@ -25,7 +25,7 @@ const jsonLd = [
           "@type": "CreativeWork",
           name: p.title,
           description: p.blurb,
-          url: `${SITE.url}/projects?p=${p.slug}`,
+          url: `${SITE.url}/projects/${p.slug}`,
           dateCreated: p.year,
           creator: { "@id": `${SITE.url}/#person` },
           ...(p.site || p.github ? { sameAs: [p.site, p.github].filter(Boolean) } : {}),

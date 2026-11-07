@@ -1,0 +1,145 @@
+---
+// One page per project: the calling card as a real, indexable page.
+// On the home and Projects pages the same card opens as an overlay and pushes this URL.
+import { Icon } from "astro-icon/components";
+import Layout from "../../layouts/Layout.astro";
+import CardBody from "../../components/CardBody.astro";
+import { projectCard } from "../../lib/cards";
+import { groups, projectsByGroup, series, techIcons, type Project } from "../../lib/projects";
+import { SITE } from "../../lib/constants";
+
+export function getStaticPaths() {
+  return projectsByGroup.flatMap((g) => {
+    const main = [...g.pictured, ...g.listed];
+    const lists: Project[][] = [main, ...(g.side.length ? [g.side] : [])];
+    return lists.flatMap((list) =>
+      list.map((project, i) => ({
+        params: { slug: project.slug },
+        props: { project, prev: list[(i - 1 + list.length) % list.length], next: list[(i + 1) % list.length], index: i, total: list.length },
+      }))
+    );
+  });
+}
+
+interface Props {
+  project: Project;
+  prev: Project;
+  next: Project;
+  index: number;
+  total: number;
+}
+const { project: p, prev, next, index, total } = Astro.props;
+const group = groups.find((g) => g.id === p.group)!;
+const inSeries = p.series ? series[p.series] : undefined;
+const card = projectCard(p);
+const url = `${SITE.url}/projects/${p.slug}`;
+const backHref = `/projects#${p.group}`;
+
+const description = `${p.title} (${p.year})${p.role ? `, ${p.role.toLowerCase()}` : ""} by Gerind Tershana: ${p.blurb}`.slice(0, 300);
+
+const jsonLd = [
+  {
+    "@type": "CreativeWork",
+    "@id": `${url}#work`,
+    name: p.title,
+    description: p.blurb,
+    url,
+    dateCreated: p.year,
+    creator: { "@id": `${SITE.url}/#person` },
+    keywords: p.stacks.map((s) => techIcons[s].label).join(", "),
+    ...(p.img ? { image: new URL(p.img, SITE.url).toString() } : {}),
+    ...(p.site || p.github ? { sameAs: [p.site, p.github].filter(Boolean) } : {}),
+    isPartOf: { "@id": `${SITE.url}/projects#page` },
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Projects", item: `${SITE.url}/projects` },
+      { "@type": "ListItem", position: 2, name: group.title, item: `${SITE.url}/projects#${p.group}` },
+      { "@type": "ListItem", position: 3, name: p.title, item: url },
+    ],
+  },
+];
+---
+
+<Layout
+  title={`${p.title} — Gerind Tershana`}
+  description={description}
+  page="projects"
+  image={p.img ?? "/og.png"}
+  imageAlt={p.img ? p.alt : undefined}
+  jsonLd={jsonLd}
+>
+  <main id="main" class="page wrap project">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol role="list">
+        <li><a href="/projects">Projects</a></li>
+        <li><a href={backHref}>{group.title}</a></li>
+        {inSeries && <li><span>{inSeries.title}</span></li>}
+        <li aria-current="page"><span>{p.title}</span></li>
+      </ol>
+    </nav>
+
+    <div class="project__card">
+      <CardBody it={card} as="h1" eager />
+    </div>
+
+    {
+      total > 1 && (
+        <nav class="project__pager" aria-label={`More from ${inSeries?.title ?? group.title}`}>
+          <a class="pager pager--prev" href={`/projects/${prev.slug}`} rel="prev">
+            <Icon name="ri:arrow-left-line" aria-hidden="true" />
+            <span>
+              <small>Previous</small>
+              {prev.title}
+            </span>
+          </a>
+          <p class="project__count">
+            <b>{index + 1}</b> / {total}
+          </p>
+          <a class="pager pager--next" href={`/projects/${next.slug}`} rel="next">
+            <span>
+              <small>Next</small>
+              {next.title}
+            </span>
+            <Icon name="ri:arrow-right-line" aria-hidden="true" />
+          </a>
+        </nav>
+      )
+    }
+
+    <p class="project__back">
+      <a class="btn btn--primary" href={backHref}>
+        <Icon name="ri:arrow-left-line" aria-hidden="true" />
+        All {group.short} projects
+      </a>
+    </p>
+  </main>
+</Layout>
+
+<script>
+  // Screenshot strip: the thumbnails swap the main image.
+  const main = document.querySelector<HTMLImageElement>("[data-cc-main]");
+  document.querySelectorAll<HTMLButtonElement>("[data-cc-shot]").forEach((b, _, all) =>
+    b.addEventListener("click", () => {
+      if (!main) return;
+      main.src = b.dataset.src!;
+      main.alt = b.dataset.alt!;
+      all.forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    })
+  );
+  // ←/→ walk the group, like the overlay.
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+    const t = e.target as HTMLElement;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (document.querySelector("dialog[open], details[open]")) return;
+    const keysOn = document.documentElement.dataset.keys !== "off";
+    const dir = e.key === "ArrowRight" || (keysOn && e.key.toLowerCase() === "e") ? "next" : e.key === "ArrowLeft" || (keysOn && e.key.toLowerCase() === "q") ? "prev" : null;
+    const link = dir && document.querySelector<HTMLAnchorElement>(`.pager--${dir}`);
+    if (link) {
+      e.preventDefault();
+      link.click();
+    }
+  });
+</script>

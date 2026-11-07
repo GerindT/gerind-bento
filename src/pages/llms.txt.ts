@@ -12,10 +12,10 @@ export const GET: APIRoute = () => {
     .map((g) => {
       const all = [...g.pictured, ...g.listed];
       const lines = all.map(
-        (p) => `- [${p.title}](${SITE.url}/projects?p=${p.slug}) (${p.year}${p.role ? `, ${p.role}` : ""}; ${p.statuses.map((s) => statusLabels[s]).join(", ")}): ${p.blurb}${link(p) ? ` (${link(p)})` : ""}`
+        (p) => `- [${p.title}](${SITE.url}/projects/${p.slug}) (${p.year}${p.role ? `, ${p.role}` : ""}; ${p.statuses.map((s) => statusLabels[s]).join(", ")}): ${p.blurb}${link(p) ? ` (${link(p)})` : ""}`
       );
       const side = g.side.length
-        ? [`\n### ${series["project-a-day"].title}\n\n${series["project-a-day"].note}\n`, ...g.side.map((p) => `- [${p.title}](${SITE.url}/projects?p=${p.slug}) (${p.year}): ${p.blurb}${link(p) ? ` (${link(p)})` : ""}`)]
+        ? [`\n### ${series["project-a-day"].title}\n\n${series["project-a-day"].note}\n`, ...g.side.map((p) => `- [${p.title}](${SITE.url}/projects/${p.slug}) (${p.year}): ${p.blurb}${link(p) ? ` (${link(p)})` : ""}`)]
         : [];
       return `## Projects: ${g.title}\n\n${g.note}\n\n${[...lines, ...side].join("\n")}`;
     })

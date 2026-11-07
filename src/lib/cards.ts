@@ -4,6 +4,8 @@ import type { MediaItem } from "./media";
 /** One "calling card": the detail overlay for a project or a media item. */
 export type CardItem = {
   id: string;
+  /** The card's own URL: a project's page, or /media?p=id. */
+  href: string;
   /** Items in the same set are stepped through with ←/→ inside the card. */
   set: string;
   title: string;
@@ -41,6 +43,7 @@ export const projectCard = (p: Project, set = p.group): CardItem => {
     links.push({ href: p.github, label: "Source", primary: !p.site, icon: "ri:github-fill", srLabel: `${p.title} on GitHub (opens in new tab)` });
   return {
     id: p.slug,
+    href: `/projects/${p.slug}`,
     set,
     title: p.title,
     images: [...(p.img ? [{ src: p.img, alt: p.alt }] : []), ...(p.shots ?? [])],
@@ -61,6 +64,7 @@ export const mediaCard = (item: MediaItem, shelf: { id: string; title: string; c
   const where = shelf.cta.replace(/^on /, "");
   return {
     id: slugify(item.title),
+    href: `/media?p=${slugify(item.title)}`,
     set: shelf.id,
     title: item.title,
     images: [{ src: item.img, alt: `Cover of ${item.title}` }],
