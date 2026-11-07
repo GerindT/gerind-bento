@@ -339,6 +339,17 @@ const projects: Project[] = [
     blurb: "National price-transparency platform: shoppers compare weekly prices of basic goods across markets, on the web and in an Expo mobile app.",
   },
   {
+    slug: "hap-nje-dere",
+    title: "Hap një derë",
+    year: "2026",
+    group: "i4a",
+    alt: "",
+    statuses: ["wip", "unreleased"],
+    stacks: ["react", "nodejs", "postgresql"],
+    part: "Product owner and lead developer: turned the programme's rules into roles, flows and a working product, from the data model to the citizen and staff experience.",
+    blurb: "National platform for the rent-subsidy programme: citizens browse homes and apply online, landlords offer houses, and staff review every application in one audited dashboard.",
+  },
+  {
     slug: "mip",
     title: "MIP",
     year: "2026",
@@ -349,16 +360,7 @@ const projects: Project[] = [
     part: "Architect and developer alongside the team: data model, API design and the front end.",
     blurb: "Menaxhimi i Investimeve Publike: monitoring for Albania's public investment portfolio.",
   },
-  {
-    slug: "i4a-dashboard",
-    title: "I4A Dashboard",
-    year: "2025",
-    group: "i4a",
-    alt: "",
-    statuses: ["internal"],
-    stacks: ["dotnet", "react", "postgresql"],
-    blurb: "Internal dashboard for projects, OKRs, risks and the calendar, with an AI assistant.",
-  },
+
   {
     slug: "iqmt",
     title: "IQMT",
@@ -370,16 +372,7 @@ const projects: Project[] = [
     part: "Led development: set the architecture and built the core of the registry.",
     blurb: "Digital elevator registry, built for ISHMT.",
   },
-  {
-    slug: "etransport",
-    title: "eTransport",
-    year: "2026",
-    group: "i4a",
-    alt: "",
-    statuses: ["internal"],
-    stacks: ["wordpress", "react", "expo"],
-    blurb: "MVP with a WordPress back end, a React web app and an Expo mobile app.",
-  },
+
   {
     slug: "i4a-generator",
     title: "i4a-generator",
@@ -440,7 +433,6 @@ const projects: Project[] = [
     alt: "",
     statuses: ["internal"],
     stacks: ["laravel", "vue"],
-    part: "Contributed to a large team codebase.",
     blurb: "Material logistics planning, including a warehouse module.",
   },
   {

@@ -7,7 +7,7 @@ export const jobs: Job[] = [
     dates: "Oct 2026 – Present",
     points: [
       "Lead the technical direction and system architecture of public-sector platforms, from data model to deployment.",
-      "Shipped Pasqyra e Çmimeve, the national price-transparency site and app, and work on IQMT, MIP and the team's project generator.",
+      "Shipped Pasqyra e Çmimeve, the national price-transparency site and app, and work on Hap një derë, IQMT, MIP and the team's project generator.",
     ],
   },
   {
