@@ -38,6 +38,8 @@
   --slant: -7deg;
   --gutter: clamp(1rem, 4vw, 3rem);
   --max: 76rem;
+  /* set from the header script; the fallback matches a desktop header */
+  --header-h: 4.6rem;
 }
 
 :root[data-theme="yellow"] {
@@ -117,7 +119,6 @@ body {
   font-size: 1.0625rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 h1,
@@ -177,6 +178,8 @@ img {
 .textlink--plate:focus-visible,
 .callcard__btn:focus-visible,
 .cc__shot:focus-visible,
+.nav-menu:focus-visible,
+.card__mail--main:focus-visible,
 .swatch:focus-visible {
   outline: 3px solid currentColor;
   outline-offset: -6px;
@@ -384,6 +387,10 @@ html {
 .site-header.is-hidden {
   transform: translateY(-110%);
 }
+/* focus arrived while it was slid away: show it at once */
+.site-header.is-snapping {
+  transition: none;
+}
 .site-header::after {
   content: "";
   position: absolute;
@@ -431,6 +438,9 @@ html {
   background: var(--paper);
   color: var(--ink);
   font-size: 1.05rem;
+  /* "7 NOV" and "17 MAY" take the same room, so nothing beside it shifts */
+  min-width: 4.1em;
+  justify-content: center;
 }
 .hud__time {
   color: var(--paper);
@@ -479,6 +489,7 @@ html {
   gap: 0.25rem;
 }
 .site-nav a,
+.nav-menu,
 .theme > summary {
   font-family: var(--display);
   font-weight: 800;
@@ -499,8 +510,10 @@ html {
   transition: background 0.2s, color 0.2s;
 }
 .site-nav a:hover,
+.nav-menu:hover,
 .theme > summary:hover,
-.site-nav a[aria-current="page"] {
+.site-nav a[aria-current="page"],
+.nav-menu[aria-expanded="true"] {
   background: var(--accent);
   color: var(--on-accent);
 }
@@ -510,6 +523,8 @@ html {
 }
 .theme > summary {
   list-style: none;
+  min-width: 2.75rem;
+  justify-content: center;
 }
 .theme > summary::-webkit-details-marker {
   display: none;
@@ -533,7 +548,9 @@ html {
   padding: 0.9rem 1rem 1rem;
   display: grid;
   gap: 0.6rem;
-  min-width: 13.5rem;
+  width: max-content;
+  max-width: calc(100vw - 2 * var(--gutter));
+  box-sizing: border-box;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0.8rem 100%, 0 calc(100% - 0.8rem));
 }
 .theme__panel p {
@@ -545,11 +562,12 @@ html {
 }
 .theme__swatches {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 .swatch {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border: 3px solid var(--ink);
   background: var(--c);
   cursor: pointer;
@@ -592,10 +610,35 @@ html {
     letter-spacing: 0.03em;
   }
 }
-@media (max-width: 30rem) {
-  /* small phones: Projects, Contact and Style stay; About is in the footer and the home menu */
+@media (max-width: 40rem) {
+  /* phones: About, Media and Photos move into the Menu sheet */
   .site-nav .nav-mid {
     display: none;
+  }
+}
+@media (max-width: 30rem) {
+  /* small phones: Contact, CV, Menu and Style stay; Projects is first in the Menu sheet */
+  .site-nav .nav-pro,
+  .nav-cv__label {
+    display: none;
+  }
+  .site-header {
+    gap: 0.5rem;
+  }
+  .brand {
+    font-size: 1rem;
+    padding-inline: 0.5em 0.9em;
+  }
+  .site-nav a {
+    padding-inline: 0.5rem;
+    letter-spacing: 0.02em;
+  }
+  /* the icon controls are exact 44px squares */
+  .site-nav a.nav-cv,
+  .nav-menu,
+  .theme > summary {
+    width: 2.75rem;
+    padding-inline: 0;
   }
 }
 
@@ -1937,7 +1980,9 @@ html {
 .site-footer__nav .linkbtn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 2.75rem;
+  min-width: 2.75rem;
 }
 .site-footer a:hover {
   color: var(--accent-text);
@@ -2134,7 +2179,13 @@ html.cc-open {
     radial-gradient(circle, rgb(255 255 255 / 0.07) 1.3px, transparent 1.9px) 0 0 / 11px 11px,
     rgb(5 5 8 / 0.86);
 }
+.callcard[open] {
+  display: flex;
+  flex-direction: column;
+}
 .callcard__bar {
+  order: -1;
+  flex: none;
   position: sticky;
   top: 0;
   z-index: 2;
@@ -2159,6 +2210,16 @@ html.cc-open {
 .callcard__count b {
   color: var(--accent-text);
   font-size: 1.6em;
+}
+.callcard__set {
+  margin-right: 0.45rem;
+  font-size: 0.85em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.callcard__set:empty {
+  display: none;
 }
 .callcard__nav {
   display: flex;
@@ -2412,15 +2473,61 @@ html.cc-open {
   color: var(--paper);
 }
 @media (max-width: 55.99rem) {
-  /* phones and small tablets: a full-height sheet */
+  /* phones and small tablets: a full-height sheet whose controls sit at the bottom, in thumb reach */
   .callcard {
     width: 100vw;
     max-height: 100svh;
     height: 100svh;
     margin: 0;
+    overflow: hidden;
+  }
+  .callcard__scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    /* vertical pans scroll; sideways swipes step the card (CallingCard.astro) */
+    touch-action: pan-y pinch-zoom;
+    scrollbar-color: var(--accent) transparent;
+  }
+  .callcard__bar {
+    order: 1;
+    position: static;
+    padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom)) var(--cc-pad);
+  }
+  .callcard__nav {
+    gap: 0.35rem;
+  }
+  .callcard__btn {
+    width: 3.4rem;
+    height: 3rem;
+  }
+  .callcard__btn--prev {
+    order: 1;
+  }
+  .callcard__btn--close {
+    order: 2;
+  }
+  .callcard__btn--next {
+    order: 3;
+  }
+  .callcard__body {
+    padding-top: 1.25rem;
+  }
+  /* keep the picture short, so the title and the main link show up quickly */
+  .cc {
+    gap: 1.25rem;
+  }
+  .cc__frame {
+    max-height: 32svh;
+    width: 100%;
   }
   .cc--portrait .cc__frame {
-    width: min(15rem, 70%);
+    width: min(9.5rem, 45%);
+    max-height: none;
+  }
+  .cc__shot {
+    width: 5.5rem;
   }
 }
 
@@ -2889,7 +2996,7 @@ html.cc-open {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 0.8rem;
-  min-height: 2.5rem;
+  min-height: 2.75rem;
   padding: 0.4rem 0.6rem;
   border: 2px solid var(--ink);
   background: transparent;
@@ -3016,10 +3123,11 @@ html.cc-open {
 }
 
 .card__mail--alt {
-  display: block;
-  width: fit-content;
-  margin-top: 0.4rem;
-  font-size: clamp(1.1rem, 3.4vw, 1.5rem);
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0;
+  font-size: clamp(1.05rem, 3.2vw, 1.35rem);
+  text-decoration-thickness: 2px;
 }
 
 /* ---------- about ---------- */
@@ -3182,4 +3290,369 @@ html.cc-open {
     width: 1.4rem;
     height: 1.4rem;
   }
+}
+
+/* ---------- header: CV link and the phone menu ---------- */
+
+.site-nav a.nav-cv {
+  gap: 0.35rem;
+}
+.nav-cv svg,
+.nav-menu svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+}
+.nav-menu {
+  display: none;
+  border: 0;
+  min-width: 2.75rem;
+  justify-content: center;
+}
+.nav-menu__close,
+.nav-menu[aria-expanded="true"] .nav-menu__open {
+  display: none;
+}
+.nav-menu[aria-expanded="true"] .nav-menu__close {
+  display: block;
+}
+@media (max-width: 40rem) {
+  .nav-menu {
+    display: inline-flex;
+  }
+  .site-nav a.nav-cv {
+    min-width: 2.75rem;
+    justify-content: center;
+  }
+}
+
+html.sheet-open {
+  overflow: hidden;
+}
+.sheet-menu {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.sheet-menu::backdrop {
+  background: var(--ink);
+}
+.sheet-menu__inner {
+  position: relative;
+  isolation: isolate;
+  min-height: 100%;
+  box-sizing: border-box;
+  display: grid;
+  align-content: start;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gutter) calc(2rem + env(safe-area-inset-bottom));
+}
+/* one slanted accent cut across the lower corner, like the pause screen */
+.sheet-menu__inner::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: 0;
+  width: 70%;
+  height: 38%;
+  background: var(--accent);
+  clip-path: polygon(62% 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 0.9;
+}
+.sheet-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.6rem;
+}
+.sheet-menu__title {
+  display: inline-block;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0.1em 0.6em 0.12em 0.35em;
+  transform: skewX(var(--slant));
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.4em) 100%, 0 100%);
+}
+.sheet-menu .callcard__btn--close {
+  width: 3.25rem;
+  height: 3rem;
+}
+.sheet-menu .callcard__btn--close:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: -6px;
+  box-shadow: none;
+}
+.sheet-menu__list {
+  gap: 0.6rem;
+}
+.sheet-menu .menu__item {
+  font-size: clamp(1.9rem, 9vw, 2.8rem);
+  padding-block: 0.75rem;
+}
+.sheet-menu .menu__item:hover,
+.sheet-menu .menu__item:focus-visible,
+.sheet-menu .menu__item.is-active {
+  transform: translateX(0.6rem) skewX(-3deg);
+}
+.sheet-menu__note {
+  margin-left: 0.5em;
+  font-size: 0.4em;
+  letter-spacing: 0.1em;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+
+/* ---------- projects: sticky tabs and the status legend ---------- */
+
+.tabs-bar {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 20;
+  padding-block: 0.6rem 0.5rem;
+  background: var(--ink);
+  /* paint the bar edge to edge without widening the layout */
+  box-shadow: 0 0 0 100vmax var(--ink);
+  clip-path: inset(0 -100vmax);
+  transition: top 0.35s var(--ease);
+}
+.header-hidden .tabs-bar {
+  top: 0;
+}
+.group {
+  scroll-margin-top: calc(var(--header-h) + 5rem);
+}
+.group__title:focus {
+  outline: none;
+}
+.group__title:focus-visible {
+  outline: 3px solid var(--accent-text);
+  outline-offset: 4px;
+  box-shadow: none;
+}
+@media (max-width: 40rem) {
+  /* one row that scrolls sideways instead of three wrapped rows */
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 4px var(--gutter);
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .tab {
+    flex: none;
+    scroll-snap-align: start;
+  }
+}
+
+.legend {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.legend > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper);
+  text-decoration: underline 2px var(--accent-text);
+  text-underline-offset: 0.3em;
+}
+@media (min-width: 40rem) {
+  .js .legend > summary {
+    display: none;
+  }
+}
+.legend__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+  margin: 0;
+}
+.legend__list > div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+.legend__list dt {
+  flex: none;
+}
+.legend__list dt .chip {
+  display: inline-block;
+  font-size: 0.68rem;
+}
+.legend__list dd {
+  margin: 0;
+}
+@media (max-width: 40rem) {
+  .legend__list {
+    display: grid;
+    gap: 0.5rem;
+    padding-block: 0.25rem 0.5rem;
+  }
+}
+
+/* ---------- contact: work-with-me facts ---------- */
+
+.terms {
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+  max-width: 40rem;
+}
+@media (min-width: 48rem) {
+  .terms {
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+.terms dt {
+  display: inline-block;
+  margin-bottom: 0.3rem;
+  padding: 0.15em 0.9em 0.15em 0.55em;
+  background: var(--ink);
+  color: var(--paper);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.45em) 100%, 0 100%);
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.terms dd {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.card p.card__mailhead {
+  margin-top: 1.75rem;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.card__mail--main {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 0.5rem;
+  padding: 0.35rem 1.6rem 0.35rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  font-size: clamp(1.15rem, 4.6vw, 2.1rem);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.9rem) 100%, 0 100%);
+  transition: background 0.2s, color 0.2s;
+}
+.card__mail--main svg {
+  flex: none;
+  width: 1em;
+  height: 1em;
+  color: var(--accent-text);
+}
+.card__mail--main:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.card__mail--main:hover svg {
+  color: inherit;
+}
+.card p.card__mailalt {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+}
+
+/* ---------- project pages: contact strip ---------- */
+
+.reach {
+  margin-top: clamp(3rem, 7vw, 5rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--accent);
+  color: var(--on-accent);
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 1.6rem) 100%, 0 100%);
+}
+.reach__title {
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+.reach__text {
+  font-size: 1.05rem;
+}
+.reach__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.reach .btn--ghost {
+  --_bg: var(--ink);
+  --_fg: var(--paper);
+}
+
+/* ---------- print ---------- */
+
+@media print {
+  .js .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .site-header,
+  .ticker-clip,
+  .wipe,
+  .wipe-in,
+  .skip-link,
+  .sheet-menu,
+  .callcard__bar {
+    display: none !important;
+  }
+  .tabs-bar {
+    position: static;
+  }
+}
+.reach .btn--paper:hover {
+  --_bg: var(--ink);
+  --_fg: var(--paper);
+}
+/* long single-word titles ("I4A-Generator") wrap inside the pager instead of spilling out */
+.pager span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }

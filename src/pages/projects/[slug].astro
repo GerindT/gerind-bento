@@ -6,7 +6,7 @@ import Layout from "../../layouts/Layout.astro";
 import CardBody from "../../components/CardBody.astro";
 import { projectCard } from "../../lib/cards";
 import { groups, projectsByGroup, series, techIcons, type Project } from "../../lib/projects";
-import { SITE } from "../../lib/constants";
+import { LINKS, SITE } from "../../lib/constants";
 
 export function getStaticPaths() {
   return projectsByGroup.flatMap((g) => {
@@ -34,6 +34,7 @@ const inSeries = p.series ? series[p.series] : undefined;
 const card = projectCard(p);
 const url = `${SITE.url}/projects/${p.slug}`;
 const backHref = `/projects#${p.group}`;
+const hello = `${LINKS.gmail}?subject=${encodeURIComponent("Hello from gerind.dev")}`;
 
 const description = `${p.title} (${p.year})${p.role ? `, ${p.role.toLowerCase()}` : ""} by Gerind Tershana: ${p.blurb}`.slice(0, 300);
 
@@ -114,6 +115,21 @@ const jsonLd = [
         All {group.short} projects
       </a>
     </p>
+
+    <section class="reach" aria-labelledby="reach-title">
+      <h2 class="reach__title" id="reach-title">Like what you see?</h2>
+      <p class="reach__text">I'm open to freelance projects and part-time roles.</p>
+      <div class="reach__actions">
+        <a class="btn btn--paper" href={hello}>
+          <Icon name="ri:mail-send-line" aria-hidden="true" />
+          Email me
+        </a>
+        <a class="btn btn--ghost" href="/Gerind_Tershana_EN.pdf" download>
+          <Icon name="ri:download-2-line" aria-hidden="true" />
+          CV<span class="sr-only"> (PDF)</span>
+        </a>
+      </div>
+    </section>
   </main>
 </Layout>
 

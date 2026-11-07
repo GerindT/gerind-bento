@@ -10,9 +10,11 @@ interface Props {
   level?: "h2" | "h3";
   /** Large feature plate (spans two columns). */
   feature?: boolean;
+  /** Load the image straight away: the first poster on a page is often the LCP. */
+  eager?: boolean;
 }
 
-const { project, index = 0, level = "h3", feature = false } = Astro.props;
+const { project, index = 0, level = "h3", feature = false, eager = false } = Astro.props;
 const Heading = level;
 const primary = project.site ?? project.github;
 const cardHref = `/projects/${project.slug}`;
@@ -22,7 +24,7 @@ const cardHref = `/projects/${project.slug}`;
   <div class:list={["poster__art", { "poster__art--contain": project.contain, "poster__art--type": !project.img }]} style={project.artBg ? `--art-bg:${project.artBg}` : undefined}>
     {
       project.img ? (
-        <img src={project.img} alt={project.alt} loading="lazy" decoding="async" width="640" height="400" style={project.imgPos ? `object-position:${project.imgPos}` : undefined} />
+        <img src={project.img} alt={project.alt} loading={eager ? "eager" : "lazy"} fetchpriority={eager ? "high" : undefined} decoding="async" width="640" height="400" style={project.imgPos ? `object-position:${project.imgPos}` : undefined} />
       ) : (
         <span class="poster__initial" aria-hidden="true">
           {project.title}
@@ -35,10 +37,7 @@ const cardHref = `/projects/${project.slug}`;
   <div class="poster__body">
     <div class="poster__head">
       <Heading class="poster__title">
-        <a class="poster__open" href={cardHref} data-cc-open={project.slug}>
-          {project.title}
-          <span class="sr-only"> — open the card</span>
-        </a>
+        <a class="poster__open" href={cardHref} data-cc-open={project.slug} aria-describedby="card-hint">{project.title}</a>
       </Heading>
       {project.role && <p class="strip strip--accent poster__role">{project.role}</p>}
     </div>

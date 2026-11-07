@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import ThemePicker from "./ThemePicker.astro";
 import { hasPhotos } from "../lib/photos";
 
@@ -8,6 +9,16 @@ interface Props {
   current?: PageId;
 }
 const { current } = Astro.props;
+
+// The phone menu: every place in the site, like the pause menu on the home page.
+const sheet = [
+  { href: "/projects", title: "Projects", id: "projects", icon: "ri:arrow-right-up-line" },
+  { href: "/about", title: "About", id: "about", icon: "ri:arrow-right-up-line" },
+  { href: "/media", title: "Media", id: "media", icon: "ri:arrow-right-up-line" },
+  ...(hasPhotos ? [{ href: "/photos", title: "Photos", id: "photos", icon: "ri:arrow-right-up-line" }] : []),
+  { href: "/Gerind_Tershana_EN.pdf", title: "CV", id: "cv", icon: "ri:download-2-line", download: true, note: "PDF" },
+  { href: "/#contact", title: "Contact", id: "contact", icon: "ri:mail-send-line" },
+];
 ---
 
 <header class="site-header" id="site-header">
@@ -20,22 +31,62 @@ const { current } = Astro.props;
     </p>
   </div>
   <nav class="site-nav" aria-label="Main">
-    <a href="/projects" aria-current={current === "projects" ? "page" : undefined}>Projects</a>
+    <a class="nav-pro" href="/projects" aria-current={current === "projects" ? "page" : undefined}>Projects</a>
     <a class="nav-mid" href="/about" aria-current={current === "about" ? "page" : undefined}>About</a>
     {hasPhotos && <a class="nav-extra" href="/photos" aria-current={current === "photos" ? "page" : undefined}>Photos</a>}
     <a class="nav-extra" href="/media" aria-current={current === "media" ? "page" : undefined}>Media</a>
     <a href="/#contact">Contact</a>
+    <a class="nav-cv" href="/Gerind_Tershana_EN.pdf" download>
+      <Icon name="ri:download-2-line" aria-hidden="true" />
+      <span class="nav-cv__label">CV</span><span class="sr-only"> (PDF)</span>
+    </a>
+    <button type="button" class="nav-menu" id="nav-menu" aria-expanded="false" aria-controls="sheet" aria-haspopup="dialog">
+      <Icon name="ri:menu-line" class="nav-menu__open" aria-hidden="true" />
+      <Icon name="ri:close-line" class="nav-menu__close" aria-hidden="true" />
+      <span class="sr-only">Menu</span>
+    </button>
     <ThemePicker />
   </nav>
 </header>
 
+<dialog class="sheet-menu" id="sheet" aria-labelledby="sheet-title">
+  <div class="sheet-menu__inner">
+    <div class="sheet-menu__head">
+      <h2 class="sheet-menu__title" id="sheet-title">Where to?</h2>
+      <button type="button" class="callcard__btn callcard__btn--close sheet-menu__close" data-sheet-close aria-label="Close menu">
+        <Icon name="ri:close-line" aria-hidden="true" />
+      </button>
+    </div>
+    <ul class="menu__list sheet-menu__list" role="list">
+      {
+        sheet.map((item, i) => (
+          <li style={`--i:${i}`}>
+            <a
+              class:list={["menu__item", { "is-active": current === item.id }]}
+              href={item.href}
+              download={item.download ? "" : undefined}
+              aria-current={current === item.id ? "page" : undefined}
+            >
+              <span data-vt-title>
+                {item.title}
+                {item.note && <small class="sheet-menu__note">{item.note}</small>}
+              </span>
+              <Icon name={item.icon} aria-hidden="true" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</dialog>
+
 <script>
-  // HUD: weekday, date and time in Tirana, like a pause-menu calendar.
+  // HUD: weekday, date and time in Tirana, like a pause-menu calendar ("SAT", "7 NOV", "14:05").
   const parts = (d: Date) => {
     const opts = { timeZone: "Europe/Tirane" } as const;
     return {
       day: new Intl.DateTimeFormat("en-GB", { ...opts, weekday: "short" }).format(d),
-      date: new Intl.DateTimeFormat("en-GB", { ...opts, day: "2-digit", month: "2-digit" }).format(d).replace("/", "·"),
+      date: new Intl.DateTimeFormat("en-GB", { ...opts, day: "numeric", month: "short" }).format(d).replace(/\.$/, ""),
       time: new Intl.DateTimeFormat("en-GB", { ...opts, hour: "2-digit", minute: "2-digit", hour12: false }).format(d),
     };
   };
@@ -47,8 +98,22 @@ const { current } = Astro.props;
   paint();
   setInterval(paint, 20000);
 
-  // Hide the header while scrolling down, bring it back on the way up.
+  const root = document.documentElement;
   const header = document.getElementById("site-header");
+
+  // Expose the header height, so sticky bars (the /projects tabs) can sit right under it.
+  if (header) {
+    const measure = () => root.style.setProperty("--header-h", `${header.offsetHeight}px`);
+    measure();
+    new ResizeObserver(measure).observe(header);
+  }
+  const setHidden = (hidden: boolean) => {
+    header?.classList.toggle("is-hidden", hidden);
+    root.classList.toggle("header-hidden", hidden);
+  };
+
+  // Hide the header while scrolling down, bring it back on the way up.
+  // It is never hidden while a keyboard user is inside it.
   let last = window.scrollY;
   let ticking = false;
   window.addEventListener(
@@ -59,9 +124,10 @@ const { current } = Astro.props;
       requestAnimationFrame(() => {
         const y = window.scrollY;
         const open = (document.getElementById("theme-picker") as HTMLDetailsElement | null)?.open;
-        if (y < 160 || open) header?.classList.remove("is-hidden");
-        else if (y > last + 6) header?.classList.add("is-hidden");
-        else if (y < last - 6) header?.classList.remove("is-hidden");
+        const keyboardInside = !!header?.querySelector(":focus-visible");
+        if (y < 160 || open || keyboardInside) setHidden(false);
+        else if (y > last + 6) setHidden(true);
+        else if (y < last - 6) setHidden(false);
         header?.classList.toggle("is-scrolled", y > 24);
         // only move the reference point once the scroll has gone somewhere
         if (Math.abs(y - last) > 6) last = y;
@@ -70,5 +136,55 @@ const { current } = Astro.props;
     },
     { passive: true }
   );
-  header?.addEventListener("focusin", () => header.classList.remove("is-hidden"));
+  // Focus can reach the header while it is slid away (Shift+Tab from the page, the skip link
+  // going back up). Bring it back at once, with no slide, so focus is never off-screen.
+  header?.addEventListener("focusin", () => {
+    if (!header.classList.contains("is-hidden")) return;
+    header.classList.add("is-snapping");
+    setHidden(false);
+    requestAnimationFrame(() => requestAnimationFrame(() => header.classList.remove("is-snapping")));
+  });
+
+  // Phone menu: a native modal dialog gives the focus trap and Esc for free.
+  const btn = document.getElementById("nav-menu") as HTMLButtonElement | null;
+  const sheet = document.getElementById("sheet") as HTMLDialogElement | null;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (btn && sheet) {
+    const openSheet = () => {
+      sheet.showModal();
+      btn.setAttribute("aria-expanded", "true");
+      root.classList.add("sheet-open");
+      (window as any).sfx?.confirm();
+      if (reduce) return;
+      sheet.animate(
+        [
+          { clipPath: "polygon(0 0, 0 0, -20% 100%, -20% 100%)", transform: "translateX(-2rem)" },
+          { clipPath: "polygon(0 0, 120% 0, 100% 100%, -20% 100%)", transform: "none" },
+        ],
+        { duration: 420, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }
+      );
+      sheet.querySelectorAll<HTMLElement>(".sheet-menu__list li").forEach((li, i) =>
+        li.animate([{ opacity: 0, transform: "translateX(-1.5rem) skewX(-8deg)" }, { opacity: 1, transform: "none" }], {
+          duration: 380,
+          delay: 60 + i * 40,
+          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+          fill: "backwards",
+        })
+      );
+    };
+    btn.addEventListener("click", () => (sheet.open ? sheet.close() : openSheet()));
+    sheet.addEventListener("close", () => {
+      btn.setAttribute("aria-expanded", "false");
+      root.classList.remove("sheet-open");
+    });
+    sheet.querySelector("[data-sheet-close]")?.addEventListener("click", () => sheet.close());
+    // Any link closes the sheet; the click carries on to navigate (or download).
+    sheet.addEventListener("click", (e) => {
+      if (e.target === sheet || (e.target as HTMLElement).closest("a")) sheet.close();
+    });
+    // Back from a page that was left with the sheet open: start closed.
+    window.addEventListener("pageshow", () => sheet.open && sheet.close());
+    // Grown to desktop width with the sheet open: the full nav is back, so close it.
+    window.matchMedia("(min-width: 40.01rem)").addEventListener("change", (m) => m.matches && sheet.open && sheet.close());
+  }
 </script>

@@ -44,6 +44,9 @@ const gifs = [
   { src: "/gif_kirby.gif", alt: "Animated pixel-art Kirby holding an umbrella", mascot: true },
 ];
 
+// The main address opens a ready-made enquiry.
+const enquiry = `${LINKS.gmail}?subject=${encodeURIComponent("Project enquiry from gerind.dev")}&body=${encodeURIComponent("Hi Gerind,\n\nWhat I'm building:\n\nTimeline:\n\nBudget range:\n\n")}`;
+
 const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", "Laravel", "Flutter", "Godot", "CI/CD", "System design"];
 ---
 
@@ -163,7 +166,7 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
           }
         </ul>
         <div class="posters posters--home">
-          {selected.map((p, i) => <Poster project={p} index={i} feature={i === 0} />)}
+          {selected.map((p, i) => <Poster project={p} index={i} feature={i === 0} eager={i === 0} />)}
         </div>
       </div>
     </section>
@@ -172,9 +175,29 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
       <div class="wrap">
         <div class="card reveal">
           <h2 id="contact-title">Let's build something <mark>great</mark> together</h2>
-          <p>Open to freelance projects and part-time roles. Have something in mind, or just want to say hello? Write to me and I'll get back to you.</p>
-          <a class="card__mail" href={LINKS.gmail}>{LINKS.email}</a>
-          <a class="card__mail card__mail--alt" href={LINKS.outlook}>{LINKS.email2}</a>
+          <p>Have something in mind, or just want to say hello? Write to me and I'll get back to you.</p>
+          <dl class="terms" aria-label="Work with me">
+            <div>
+              <dt>What I take on</dt>
+              <dd>Backend and APIs (Go, Node.js, Laravel), full-stack web apps (Vue/Nuxt, React), and CI/CD and deployment.</dd>
+            </div>
+            <div>
+              <dt>Availability</dt>
+              <dd>Open to freelance projects and part-time roles.</dd>
+            </div>
+            <div>
+              <dt>Reply time</dt>
+              <dd>I usually reply within a day or two, working from Tirana (CET, UTC+1).</dd>
+            </div>
+          </dl>
+          <p class="card__mailhead">Best way to reach me</p>
+          <a class="card__mail card__mail--main" href={enquiry}>
+            <Icon name="ri:mail-send-line" aria-hidden="true" />
+            {LINKS.email}
+          </a>
+          <p class="card__mailalt">
+            Or <a class="card__mail card__mail--alt" href={LINKS.outlook}>{LINKS.email2}</a>
+          </p>
           <div class="card__actions">
             <a class="btn btn--primary" href="/Gerind_Tershana_EN.pdf" download>
               <Icon name="ri:download-2-line" aria-hidden="true" />
@@ -195,7 +218,7 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
       </div>
     </section>
   </main>
-  <CallingCard items={selected.map((p) => projectCard(p, "home"))} />
+  <CallingCard items={selected.map((p) => projectCard(p, "home", "Selected"))} />
 
   <script define:vars={{ gifs }}>
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -238,7 +261,7 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
     }
 
     // Menu: hover/focus drives the preview plate, which cuts in like a pause menu.
-    const items = Array.from(document.querySelectorAll(".menu__item"));
+    const items = Array.from(document.querySelectorAll("#menu .menu__item"));
     const previews = Array.from(document.querySelectorAll("[data-preview]"));
     let active = 0;
     const activate = (i) => {
@@ -263,22 +286,15 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
       el.addEventListener("mouseenter", () => activate(i));
       el.addEventListener("focus", () => activate(i));
     });
-    // ↑/↓ drive the menu like a pause screen: from a menu item, or from anywhere on the page
-    // while the menu is on screen and nothing else has focus.
-    const menuEl = document.getElementById("menu");
-    let menuVisible = true;
-    if (menuEl) new IntersectionObserver(([en]) => (menuVisible = en.isIntersecting)).observe(menuEl);
+    // ↑/↓ drive the menu like a pause screen, once focus is on a menu item.
     document.addEventListener("keydown", (e) => {
       if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
       if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
-      const focused = document.activeElement;
-      const i = items.indexOf(focused);
-      const idle = !focused || focused === document.body || focused === document.documentElement;
-      if (i < 0 && !(idle && menuVisible && document.documentElement.dataset.keys !== "off")) return;
+      const i = items.indexOf(document.activeElement);
+      if (i < 0) return;
       if (document.querySelector("dialog[open], details[open]")) return;
       e.preventDefault();
-      const from = i < 0 ? active : i;
-      items[(from + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length].focus();
+      items[(i + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length].focus();
     });
   </script>
 </Layout>

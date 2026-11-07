@@ -9,6 +9,8 @@ export type CardItem = {
   href: string;
   /** Items in the same set are stepped through with ←/→ inside the card. */
   set: string;
+  /** Human name of the set, shown in the card counter ("Selected 3/6"). */
+  setLabel?: string;
   title: string;
   /** Main image, then extra screenshots. Empty: a typographic plate is drawn. */
   images: { src: string; alt: string }[];
@@ -39,7 +41,7 @@ export const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
-export const projectCard = (p: Project, set = p.group): CardItem => {
+export const projectCard = (p: Project, set: string = p.group, setLabel?: string): CardItem => {
   const group = groups.find((g) => g.id === p.group);
   const links: CardItem["links"] = [];
   if (p.site)
@@ -50,6 +52,7 @@ export const projectCard = (p: Project, set = p.group): CardItem => {
     id: p.slug,
     href: `/projects/${p.slug}`,
     set,
+    setLabel: setLabel ?? group?.short,
     title: p.title,
     images: [...(p.img ? [{ src: p.img, alt: p.alt }] : []), ...(p.shots ?? [])],
     contain: p.contain,
@@ -73,6 +76,7 @@ export const mediaCard = (item: MediaItem, shelf: { id: string; title: string; c
     id: slugify(item.title),
     href: `/media?p=${slugify(item.title)}`,
     set: shelf.id,
+    setLabel: shelf.title,
     title: item.title,
     images: [{ src: item.img, alt: `Cover of ${item.title}` }],
     portrait: true,

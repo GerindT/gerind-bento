@@ -4,10 +4,13 @@ import Poster from "../components/Poster.astro";
 import ProjectRow from "../components/ProjectRow.astro";
 import CallingCard from "../components/CallingCard.astro";
 import { projectCard } from "../lib/cards";
-import { allProjects, liveCount, projectsByGroup, series } from "../lib/projects";
+import { allProjects, liveCount, projectsByGroup, series, statusHelp, statusLabels, type ProjectStatus } from "../lib/projects";
 import { SITE } from "../lib/constants";
 
-const cards = projectsByGroup.flatMap((g) => [...g.pictured, ...g.listed, ...g.side].map((p) => projectCard(p, p.series ?? p.group)));
+const cards = projectsByGroup.flatMap((g) => [...g.pictured, ...g.listed, ...g.side].map((p) => projectCard(p, p.series ?? p.group, p.series ? series[p.series].title : g.short)));
+
+// The status chips, explained once under the tabs.
+const legend = (Object.entries(statusHelp) as [ProjectStatus, string][]).map(([id, help]) => ({ id, label: statusLabels[id], help }));
 
 const jsonLd = [
   {
@@ -49,6 +52,7 @@ const jsonLd = [
       <p class="page__lede slam" style="--i:1">{allProjects.length} builds since 2021, {liveCount} of them live. Client and government work is linked only where it is already public.</p>
     </header>
 
+    <div class="tabs-bar">
     <div class="tabs" role="tablist" aria-label="Project groups" id="tabs">
       {
         projectsByGroup.map((g, i) => (
@@ -68,18 +72,32 @@ const jsonLd = [
         ))
       }
     </div>
+    </div>
     <p class="tabs__hint">Use <kbd>←</kbd> <kbd>→</kbd> or <kbd>Q</kbd> <kbd>E</kbd> to switch group.</p>
+    <details class="legend" id="legend">
+      <summary>What do the labels mean?</summary>
+      <dl class="legend__list">
+        {
+          legend.map((l) => (
+            <div>
+              <dt><span class:list={["chip", { "chip--live": l.id === "live" }]}>{l.label}</span></dt>
+              <dd>{l.help}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </details>
 
     {
       projectsByGroup.map((g, gi) => (
         <section class="group" id={g.id} role="tabpanel" aria-labelledby={`tab-${g.id}`} data-panel>
           <header class="group__head">
-            <h2 class="group__title">{g.title}</h2>
+            <h2 class="group__title" tabindex="-1">{g.title}</h2>
             <p class="group__note">{g.note}</p>
           </header>
           {g.pictured.length > 0 && (
             <div class="posters">
-              {g.pictured.map((p, i) => <Poster project={p} index={i} feature={g.features.includes(p)} />)}
+              {g.pictured.map((p, i) => <Poster project={p} index={i} feature={g.features.includes(p)} eager={gi === 0 && i === 0} />)}
             </div>
           )}
           {g.listed.length > 0 && (
@@ -107,12 +125,45 @@ const jsonLd = [
 
 <script>
   // Pause-menu tabs. Without JS every group stays on the page, one under another.
+  const tablist = document.getElementById("tabs");
   const tabs = Array.from(document.querySelectorAll<HTMLAnchorElement>('[role="tab"]'));
   const panels = Array.from(document.querySelectorAll<HTMLElement>("[data-panel]"));
+  const bar = document.querySelector<HTMLElement>(".tabs-bar");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let current = 0;
 
-  const select = (i: number, opts: { focus?: boolean; push?: boolean } = {}) => {
+  // The legend is a line of text on wide screens and a disclosure on phones.
+  const legend = document.getElementById("legend") as HTMLDetailsElement | null;
+  const wide = window.matchMedia("(min-width: 40rem)");
+  const syncLegend = () => legend && (legend.open = wide.matches);
+  syncLegend();
+  wide.addEventListener("change", syncLegend);
+
+  // On phones the tabs are one scrolling row: keep the selected one in view.
+  const showTab = (tab: HTMLElement) => {
+    if (!tablist || tablist.scrollWidth <= tablist.clientWidth) return;
+    const t = tab.getBoundingClientRect();
+    const l = tablist.getBoundingClientRect();
+    const pad = 16;
+    let dx = 0;
+    if (t.left < l.left + pad) dx = t.left - l.left - pad;
+    else if (t.right > l.right - pad) dx = t.right - l.right + pad;
+    if (dx) tablist.scrollBy({ left: dx, behavior: reduce ? "auto" : "smooth" });
+  };
+
+  // If the visitor has scrolled past the top of the group, bring its top back under the tabs.
+  const scrollToPanel = (panel: HTMLElement) => {
+    const barBottom = bar ? bar.getBoundingClientRect().bottom : 0;
+    const top = panel.getBoundingClientRect().top;
+    if (top >= barBottom) return;
+    const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 0;
+    // scrolling up brings the header back, so leave room for it as well as the tabs
+    const offset = header + (bar?.offsetHeight ?? 0);
+    window.scrollTo({ top: window.scrollY + top - offset, behavior: reduce ? "auto" : "smooth" });
+  };
+
+  type How = "init" | "tabkey" | "jump" | "hash";
+  const select = (i: number, how: How = "jump") => {
     const dir = i > current ? 1 : -1;
     const changed = i !== current;
     current = (i + tabs.length) % tabs.length;
@@ -135,8 +186,14 @@ const jsonLd = [
       );
     }
     if (changed) (window as any).sfx?.tick();
-    if (opts.focus) tabs[current].focus();
-    if (opts.push !== false) history.replaceState(null, "", `#${panels[current].id}`);
+    showTab(tabs[current]);
+    if (how === "init") return;
+    if (how !== "hash") history.replaceState(null, "", `#${panel.id}`);
+    if (!changed) return;
+    scrollToPanel(panel);
+    // Arrow keys keep focus in the tablist; Q/E and clicks land on the new group's heading.
+    if (how === "tabkey") tabs[current].focus();
+    else if (how === "jump") panel.querySelector<HTMLElement>(".group__title")?.focus({ preventScroll: true });
   };
 
   const fromHash = () => {
@@ -148,18 +205,18 @@ const jsonLd = [
     return j < 0 ? 0 : j;
   };
   current = fromHash();
-  select(current, { push: false });
+  select(current, "init");
 
   tabs.forEach((t, i) => {
     t.addEventListener("click", (e) => {
       e.preventDefault();
-      select(i);
+      select(i, "jump");
     });
     t.addEventListener("keydown", (e) => {
       const map: Record<string, number> = { ArrowRight: current + 1, ArrowLeft: current - 1, Home: 0, End: tabs.length - 1 };
       if (!(e.key in map)) return;
       e.preventDefault();
-      select(map[e.key], { focus: true });
+      select(map[e.key], "tabkey");
     });
   });
 
@@ -168,11 +225,11 @@ const jsonLd = [
     const t = e.target as HTMLElement;
     if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
     if (tabs.includes(t as HTMLAnchorElement)) return; // the tab's own handler moves focus too
-    if (document.querySelector("dialog[open], details[open]")) return;
+    if (document.querySelector("dialog[open], details.theme[open]")) return;
     const k = e.key.toLowerCase();
-    if (k === "q" || e.key === "ArrowLeft") select(current - 1);
-    else if (k === "e" || e.key === "ArrowRight") select(current + 1);
+    if (k === "q" || e.key === "ArrowLeft") select(current - 1, "jump");
+    else if (k === "e" || e.key === "ArrowRight") select(current + 1, "jump");
   });
 
-  window.addEventListener("hashchange", () => select(fromHash(), { push: false }));
+  window.addEventListener("hashchange", () => select(fromHash(), "hash"));
 </script>
