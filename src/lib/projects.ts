@@ -180,7 +180,7 @@ const projects: Project[] = [
     group: "personal",
     img: "/illustrations/projects/audire.webp",
     alt: "Audire audio restoration upload screen",
-    site: "https://audire.vercel.app/",
+    site: "https://audire.gerind.dev",
     siteLabel: "UI demo",
     statuses: ["concept", "ui_only"],
     stacks: ["python", "fastapi", "vue"],
