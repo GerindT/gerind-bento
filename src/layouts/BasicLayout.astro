@@ -124,6 +124,20 @@ const graph = {
     <Shortcuts />
     <div class="wipe-in" aria-hidden="true"></div>
     <script>
+      // For anyone who opens devtools: a calling card in the console.
+      console.log(
+        "%c" +
+          [
+          "   ______   ______",
+          "  / ____/  /_  __/",
+          " / / __     / /   ",
+          "/ /_/ /    / /    ",
+          "\\____/    /_/     ",
+        ].join("\n") +
+          "\n\nGerind Tershana · Tech Lead & System Architect, Tirana\nYou opened the console, so you're my kind of visitor.\nHiring or building something? gerindt@gmail.com\nPress ? on the page for keyboard shortcuts.",
+        "color:#e4112a;font-weight:700;line-height:1.3"
+      );
+
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       // Browsers with cross-document view transitions animate navigation natively.
       const nativeVT = "onpagereveal" in window;

@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Existing: Astro 4 (static output), UnoCSS, Solid (globe, tooltip), Svelte (playground), motion, d3. Deployed on Netlify at gerindtershana.netlify.app.
+Existing: Astro 4 (static output), UnoCSS, Solid (globe, tooltip), Svelte (playground), motion, d3. Deployed on Cloudflare (Workers static assets) at gerind.dev; the old gerindtershana.netlify.app redirects there.
 
 ## Users
 
@@ -34,7 +34,7 @@ Visitors arrive from LinkedIn, GitHub, a CV or a shared link, on desktop and pho
 - CVs: English and Albanian PDFs in /public (last updated November 2024 per current copy; confirm before reuse).
 - Projects carry status (live, concept, private, dev only), year and stack. No outcome claims or metrics exist yet; do not invent them.
 - Local time and the header date block use Europe/Tirane.
-- Innovation4Albania and Detag work is shown with names, stack and a factual line, without links, except products that were already public (mycred.it, muse-x.al).
+- Innovation4Albania and Detag work is shown with names, stack and a factual line, linked only where the product is already public (pasqyraecmimeve.al, mycred.it, muse-x.al, reginagroup.al). Each project and media item opens a calling-card detail overlay (`?p=<slug>`).
 
 ## Brand Commitments
 
@@ -42,7 +42,7 @@ Owner-pinned visual direction: inspired by the Persona 5 video game, "stylish an
 
 ## Evidence on Hand
 
-Real project screenshots in /public/illustrations/projects (live-site captures from Nov 2026 plus store art for Vanspot and After Hours; client and government work has no images), movie/book/manga covers in /public/illustrations, GIFs of the owner, two CV PDFs, a "Detag" logo. No testimonials, metrics or case studies exist; do not fabricate.
+Real project screenshots in /public/illustrations/projects (live-site captures from Nov 2026 plus store art for Vanspot and After Hours; Pasqyra, MyCredit, Regina travel and GSE captures added Nov 7 2026; Globe ERP, Tetris and the other I4A tools have no images), movie/book/manga covers in /public/illustrations, GIFs of the owner, two CV PDFs, a "Detag" logo. No testimonials, metrics or case studies exist; do not fabricate.
 
 ## Product Principles
 

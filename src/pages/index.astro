@@ -2,6 +2,8 @@
 import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
 import Poster from "../components/Poster.astro";
+import CallingCard from "../components/CallingCard.astro";
+import { projectCard } from "../lib/cards";
 import { LINKS } from "../lib/constants";
 import { allProjects, featuredProjects, liveCount, projectsByGroup } from "../lib/projects";
 import { mediaCount, shelves } from "../lib/media";
@@ -9,13 +11,14 @@ import { jobs } from "../lib/career";
 import { photos, hasPhotos } from "../lib/photos";
 
 const now = jobs[0];
+const selected = featuredProjects.slice(0, 6);
 
-type MenuItem = { href: string; title: string; desc: string; meta: string; thumb?: string; icon?: string; download?: boolean; alt?: { href: string; label: string } };
+type MenuItem = { href: string; title: string; desc: string; meta: string; thumb?: string; thumbPos?: string; covers?: string[]; icon?: string; download?: boolean; alt?: { href: string; label: string } };
 
 const menu: MenuItem[] = [
   { href: "/projects", title: "Projects", desc: "Products, games and client platforms, grouped by where I built them.", meta: `${allProjects.length} builds · ${liveCount} live`, thumb: featuredProjects[0]?.img },
-  { href: "/about", title: "About", desc: `${now.role} at ${now.org}. Career, education, tools and the countries I've been to.`, meta: "5+ years", thumb: "/Gerind_Tershana.webp" },
-  { href: "/media", title: "Media", desc: "The books, movies and manga I keep coming back to.", meta: `${mediaCount} favourites`, thumb: shelves[0]?.items[0]?.img },
+  { href: "/about", title: "About", desc: `${now.role} at ${now.org}. Career, education, tools and the countries I've been to.`, meta: "5+ years", thumb: "/Gerind_Tershana.webp", thumbPos: "50% 34%" },
+  { href: "/media", title: "Media", desc: "The books, movies and manga I keep coming back to.", meta: `${mediaCount} favourites`, covers: shelves.map((s) => s.items[0].img) },
   ...(hasPhotos ? [{ href: "/photos", title: "Photos", desc: "Photography is my newest hobby. Frames from walks, trips and rides.", meta: `${photos.length} ${photos.length === 1 ? "photo" : "photos"}`, icon: "ri:camera-3-line" }] : []),
   { href: "/Gerind_Tershana_EN.pdf", title: "CV", desc: "Downloads my CV as a PDF, in English. There's an Albanian version too.", meta: "PDF · EN / SQ", icon: "ri:file-download-line", download: true, alt: { href: "/Gerind_Tershana_AL.pdf", label: "CV · Shqip" } },
   { href: "#contact", title: "Contact", desc: `Open to freelance and full-time work. Write to ${LINKS.email}.`, meta: "Freelance · Full-time", icon: "ri:mail-send-line" },
@@ -96,9 +99,15 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
             {
               menu.map((item, i) => (
                 <div class:list={["menu__preview", { "is-active": i === 0 }]} data-preview={i}>
-                  <span class="menu__ghost">{item.title}</span>
-                  <div class="menu__thumb">
-                    {item.thumb ? <img src={item.thumb} alt="" loading="lazy" decoding="async" width="320" height="200" /> : <Icon name={item.icon ?? "ri:arrow-right-up-line"} />}
+                  <span class="menu__ghost" style={`--n:${item.title.length}`}>{item.title}</span>
+                  <div class:list={["menu__thumb", { "menu__thumb--covers": item.covers }]}>
+                    {item.covers ? (
+                      item.covers.map((src) => <img src={src} alt="" loading="lazy" decoding="async" width="120" height="180" />)
+                    ) : item.thumb ? (
+                      <img src={item.thumb} alt="" loading="lazy" decoding="async" width="320" height="200" style={item.thumbPos ? `object-position:${item.thumbPos}` : undefined} />
+                    ) : (
+                      <Icon name={item.icon ?? "ri:arrow-right-up-line"} />
+                    )}
                   </div>
                   <div class="menu__text">
                     <h3>{item.title}</h3>
@@ -142,7 +151,7 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
           }
         </ul>
         <div class="posters posters--home">
-          {featuredProjects.slice(0, 6).map((p, i) => <Poster project={p} index={i} feature={i === 0} />)}
+          {selected.map((p, i) => <Poster project={p} index={i} feature={i === 0} />)}
         </div>
       </div>
     </section>
@@ -174,6 +183,7 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
       </div>
     </section>
   </main>
+  <CallingCard items={selected.map((p) => projectCard(p, "home"))} />
 
   <script define:vars={{ gifs }}>
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -2,6 +2,19 @@
 import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
 
+// A dead TV, drawn in ASCII. Decorative: the heading and lede say the same thing.
+const tv = ` .------------------------------.
+ | .--------------------------. |
+ | |        NO SIGNAL         | |
+ | |                          | |
+ | |  404 :: page not found   | |
+ | |                          | |
+ | |  . : . : . : . : . : .   | |
+ | '--------------------------' |
+ |  [o] [o]           ||||||||  |
+ '------------------------------'
+         /______________\\`;
+
 const exits = [
   { href: "/", title: "Home" },
   { href: "/projects", title: "Projects" },
@@ -12,7 +25,10 @@ const exits = [
 
 <Layout title="Page not found — Gerind Tershana" description="This page doesn't exist." noindex noWipe>
   <main id="main" class="lost">
-    <h1 class="page__title lost__title slam">404</h1>
+    <div class="lost__head">
+      <h1 class="page__title lost__title slam">404</h1>
+      <pre class="lost__tv slam" style="--i:1" aria-hidden="true">{tv}</pre>
+    </div>
     <p class="page__lede slam" style="--i:1">This page has been stolen, or never existed. Either way, it isn't here. The blog is resting for now; everything else is one jump away.</p>
     <nav aria-label="Where to?" class="lost__menu">
       <ul class="menu__list" role="list">

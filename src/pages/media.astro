@@ -1,7 +1,10 @@
 ---
-import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
 import { shelves, mediaCount } from "../lib/media";
+import CallingCard from "../components/CallingCard.astro";
+import { mediaCard, slugify } from "../lib/cards";
+
+const cards = shelves.flatMap((s) => s.items.map((it) => mediaCard(it, s)));
 ---
 
 <Layout
@@ -12,7 +15,7 @@ import { shelves, mediaCount } from "../lib/media";
   <main id="main" class="page wrap">
     <header class="page__head">
       <h1 class="page__title slam">Media</h1>
-      <p class="page__lede slam" style="--i:1">Books, movies and manga I have enjoyed. Click a cover to read more about it.</p>
+      <p class="page__lede slam" style="--i:1">Books, movies and manga I have enjoyed. Pick a cover for its card.</p>
     </header>
 
     {
@@ -22,14 +25,13 @@ import { shelves, mediaCount } from "../lib/media";
           <ul class="covers">
             {shelf.items.map((item, ii) => (
               <li>
-                <a class="cover" href={item.link} target="_blank" rel="noopener noreferrer">
+                <a class="cover" href={`/media?p=${slugify(item.title)}`} data-cc-open={slugify(item.title)}>
                   <span class="cover__img">
                     <img src={item.img} alt="" loading={si === 0 ? "eager" : "lazy"} fetchpriority={si === 0 && ii < 2 ? "high" : undefined} decoding="async" width="320" height="384" />
                   </span>
                   <span class="cover__title">
                     {item.title}
-                    <Icon name="ri:arrow-right-up-line" aria-hidden="true" style="display:inline;width:1em;height:1em;vertical-align:-0.12em" />
-                    <span class="sr-only"> ({shelf.cta}, opens in new tab)</span>
+                    <span class="cover__by">{item.by} · {item.year}</span>
                   </span>
                 </a>
               </li>
@@ -39,4 +41,5 @@ import { shelves, mediaCount } from "../lib/media";
       ))
     }
   </main>
+  <CallingCard items={cards} />
 </Layout>

@@ -11,6 +11,6 @@ export const LINKS = {
 
 export const SITE = {
   name: "Gerind Tershana",
-  url: "https://gerindtershana.netlify.app",
+  url: "https://gerind.dev",
   tagline: "Tech lead, system architect and software engineer building scalable web applications and high-concurrency APIs.",
 };

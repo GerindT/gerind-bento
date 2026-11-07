@@ -1,8 +1,9 @@
-export type ProjectStatus = "live" | "ui_only" | "wip" | "concept" | "dev_only" | "private";
+export type ProjectStatus = "live" | "ui_only" | "offline" | "wip" | "concept" | "dev_only" | "private";
 
 export const statusLabels: Record<ProjectStatus, string> = {
   live: "Live",
   ui_only: "UI only",
+  offline: "Offline",
   wip: "In progress",
   concept: "Concept",
   dev_only: "Dev only",
@@ -44,7 +45,7 @@ export type ProjectGroup = "personal" | "i4a" | "detag" | "friends" | "early";
 
 export const groups: { id: ProjectGroup; title: string; short: string; note: string }[] = [
   { id: "personal", title: "Personal & freelance", short: "Personal", note: "Products, experiments and contracts I built on my own time or for my own clients." },
-  { id: "i4a", title: "Innovation4Albania", short: "I4A", note: "Public-sector platforms, as Tech Lead & System Architect. Government work, so no public links." },
+  { id: "i4a", title: "Innovation4Albania", short: "I4A", note: "Public-sector platforms, as Tech Lead & System Architect. Linked where the platform is public." },
   { id: "detag", title: "Detag", short: "Detag", note: "Client platforms built as a developer at Detag. Linked only where the product is already public." },
   { id: "friends", title: "Friends' sites", short: "Friends", note: "Portfolio sites I built for friends." },
   { id: "early", title: "Early days", short: "Early days", note: "Where it started: school and bootcamp projects from 2021." },
@@ -68,7 +69,11 @@ export type Project = {
   siteLabel?: string;
   statuses: ProjectStatus[];
   stacks: TechStack[];
-  /** Shown on the home page. */
+  /** object-position for `img` when the top-centre crop loses the subject. */
+  imgPos?: string;
+  /** Extra screenshots for the detail card, after `img`. */
+  shots?: { src: string; alt: string }[];
+  /** Large poster in its group. */
   featured?: boolean;
   /** My part in it, when it was not simply "built it". */
   role?: string;
@@ -115,10 +120,11 @@ const projects: Project[] = [
     alt: "Pyramid × Pragma booking portal home page",
     github: "https://github.com/GerindT/pragma",
     site: "https://piramida.pragma.ltd",
-    statuses: ["live"],
+    siteLabel: "UI demo",
+    statuses: ["ui_only"],
     stacks: ["golang", "vue"],
     featured: true,
-    blurb: "Event operations for the Pyramid of Tirana: a public booking portal and a staff admin panel that runs events end to end.",
+    blurb: "Event operations for the Pyramid of Tirana: a public booking portal and a staff admin panel that runs events end to end. The booking API is offline for now, so the portal shows its UI only.",
   },
   {
     slug: "goflight",
@@ -129,7 +135,8 @@ const projects: Project[] = [
     alt: "Goflight terminal-style dashboard",
     github: "https://github.com/GerindT/GoFlight",
     site: "https://go-flight.vercel.app/",
-    statuses: ["live"],
+    siteLabel: "UI demo",
+    statuses: ["ui_only"],
     stacks: ["golang", "vue", "redis", "k8s"],
     blurb: "Terminal-style flight dashboard. A Go service aggregates flight and weather data with caching, circuit breakers and metrics.",
   },
@@ -142,7 +149,8 @@ const projects: Project[] = [
     alt: "Prompt Arena voting page titled 'Rank the Best'",
     github: "https://github.com/GerindT/prompt-arena",
     site: "https://prompt-arena-teal.vercel.app",
-    statuses: ["live"],
+    siteLabel: "UI demo",
+    statuses: ["ui_only"],
     stacks: ["nuxt", "supabase", "postgresql"],
     blurb: "Head-to-head voting on AI image generations. Elo ratings update through a Postgres function and the winners climb a live leaderboard.",
   },
@@ -166,7 +174,8 @@ const projects: Project[] = [
     img: "/illustrations/projects/audire.webp",
     alt: "Audire audio restoration upload screen",
     site: "https://audire.vercel.app/",
-    statuses: ["concept", "private"],
+    siteLabel: "UI demo",
+    statuses: ["concept", "ui_only"],
     stacks: ["python", "fastapi", "vue"],
     blurb: "Audio restoration lab that compares DSP, evolutionary, deep-learning and hybrid methods on the same recording.",
   },
@@ -179,7 +188,8 @@ const projects: Project[] = [
     alt: "Pixel Party shared pixel canvas",
     github: "https://github.com/GerindT/pixel-party",
     site: "https://pixel-party-tau.vercel.app/",
-    statuses: ["live"],
+    siteLabel: "UI demo",
+    statuses: ["ui_only"],
     stacks: ["nuxt", "supabase"],
     blurb: "Real-time collaborative pixel canvas: paint together on a shared board with live updates, ghost cursors and PNG/SVG export.",
   },
@@ -192,7 +202,8 @@ const projects: Project[] = [
     alt: "007-Drop upload screen",
     github: "https://github.com/GerindT/007-drop",
     site: "https://007-drop.vercel.app/",
-    statuses: ["live"],
+    siteLabel: "UI demo",
+    statuses: ["ui_only"],
     stacks: ["nuxt", "supabase"],
     blurb: "Self-destructing file sharing with in-browser encryption, optional passwords and automatic clean-up.",
   },
@@ -202,7 +213,7 @@ const projects: Project[] = [
     year: "2025",
     group: "personal",
     img: "/illustrations/projects/ai-albania.webp",
-    alt: "AI Albania website home page",
+    alt: "AI Albania site: an impact section with four headline figures and the audiences it serves",
     site: "https://aialbania.org",
     statuses: ["live", "private"],
     stacks: ["vue", "nuxt"],
@@ -232,8 +243,7 @@ const projects: Project[] = [
     img: "/illustrations/projects/rollbet.webp",
     alt: "Rollbet logo",
     contain: true,
-    site: "https://rollbet.gg/",
-    statuses: ["live", "private"],
+    statuses: ["offline", "private"],
     stacks: ["vue", "nodejs", "socketio", "redis"],
     featured: true,
     role: "Backend contract",
@@ -246,8 +256,7 @@ const projects: Project[] = [
     group: "personal",
     img: "/illustrations/projects/sose-al.webp",
     alt: "Sose.al landing page",
-    site: "https://sose-al.netlify.app",
-    statuses: ["concept"],
+    statuses: ["concept", "offline"],
     stacks: ["react", "nodejs", "mongodb", "python", "vectordb"],
     featured: true,
     blurb: "Hiring platform concept with AI candidate search over a vector database.",
@@ -260,8 +269,7 @@ const projects: Project[] = [
     img: "/illustrations/projects/reSearch.webp",
     alt: "reSearch interface screenshot",
     github: "https://github.com/GerindT/reSearch",
-    site: "https://re-search.netlify.app",
-    statuses: ["live"],
+    statuses: ["offline"],
     stacks: ["react", "php", "mysql"],
     blurb: "A home for AI research papers, inspired by ResearchGate and arXiv.",
   },
@@ -298,10 +306,15 @@ const projects: Project[] = [
     title: "Pasqyra e Çmimeve",
     year: "2026",
     group: "i4a",
-    alt: "",
-    statuses: ["private"],
+    img: "/illustrations/projects/pasqyra.webp",
+    imgPos: "0% 0%",
+    alt: "Pasqyra e Çmimeve home page: 'Çmime të dukshme dhe të krahasueshme për çdo konsumator' over a grocery photo, with live price counters",
+    shots: [{ src: "/illustrations/projects/pasqyra-app.webp", alt: "Three screens of the Pasqyra e Çmimeve mobile app: categories, the weekly overview and a shopping basket" }],
+    site: "https://pasqyraecmimeve.al",
+    statuses: ["live"],
     stacks: ["nextjs", "postgresql", "expo"],
-    blurb: "National price-transparency platform, with a web app and an Expo mobile app.",
+    featured: true,
+    blurb: "National price-transparency platform: shoppers compare weekly prices of basic goods across markets, on the web and in an Expo mobile app.",
   },
   {
     slug: "mip",
@@ -361,11 +374,12 @@ const projects: Project[] = [
     year: "2024",
     group: "detag",
     img: "/illustrations/projects/mycredit.webp",
-    alt: "MyCredit interface screenshot",
-    contain: true,
+    alt: "MyCredit on a laptop and a phone: the event dashboard with top-ups, purchases and ticket check-ins, and the cashless card in the app",
+    shots: [{ src: "/illustrations/projects/mycredit-site.webp", alt: "mycred.it home page" }],
     site: "https://mycred.it/",
     statuses: ["live", "private"],
     stacks: ["golang", "laravel", "vue", "redis", "mysql"],
+    featured: true,
     blurb: "Event management and cashless payments: ticketing, an embeddable widget and white-label sites.",
   },
   {
@@ -381,14 +395,14 @@ const projects: Project[] = [
     blurb: "Site for the MUSE-X expo-festival at the Pyramid of Tirana, running on the MyCredit platform.",
   },
   {
-    slug: "gobe",
-    title: "Gobe System",
+    slug: "globe-erp",
+    title: "Globe ERP system",
     year: "2022",
     group: "detag",
     alt: "",
     statuses: ["private"],
     stacks: ["laravel", "vue"],
-    blurb: "Business platform with product, stock and pricing modules.",
+    blurb: "ERP with product, stock and pricing modules.",
   },
   {
     slug: "tetris",
@@ -401,34 +415,28 @@ const projects: Project[] = [
     blurb: "Material logistics planning, including a warehouse module.",
   },
   {
-    slug: "hotel",
-    title: "Hotel platform",
+    slug: "travel",
+    title: "Travel system",
     year: "2025",
     group: "detag",
-    alt: "",
-    statuses: ["private"],
+    img: "/illustrations/projects/travel.webp",
+    alt: "Regina Group site: the Regina Taxi page, 'Premium Transportation Services', over a photo of the fleet",
+    shots: [{ src: "/illustrations/projects/travel-hotels.webp", alt: "Regina Group site: the hotel collection with Regina Blu, Regina City and Regina Palm Resort" }],
+    site: "https://reginagroup.al",
+    statuses: ["live", "private"],
     stacks: ["golang", "nuxt"],
-    blurb: "Multi-hotel platform: a Go back end and a multilingual Nuxt front end.",
-  },
-  {
-    slug: "eventmatch",
-    title: "EventMatch",
-    year: "2026",
-    group: "detag",
-    alt: "",
-    statuses: ["wip", "private"],
-    stacks: ["nuxt", "golang", "mysql", "redis"],
-    blurb: "B2B matching platform for the events industry.",
+    blurb: "Travel platform for Regina Group: hotels, activities, transfers and job offers, with a Go back end and a multilingual Nuxt front end.",
   },
   {
     slug: "gse",
     title: "GSE Security",
     year: "2025",
     group: "detag",
-    alt: "",
+    img: "/illustrations/projects/gse.webp",
+    alt: "GSE Security home page: 'Albania's premier private security partner.' on a dark photo",
     statuses: ["private"],
     stacks: ["react"],
-    blurb: "Website for GSE, a private security company in Albania.",
+    blurb: "Website for GSE, a private security company in Albania. Generated with Lovable and delivered through Detag; not hosted yet.",
   },
 
   // ---------- friends ----------
@@ -492,8 +500,7 @@ const projects: Project[] = [
     img: "/illustrations/projects/react-color.webp",
     alt: "React Colors palette gallery",
     github: "https://github.com/GerindT/react-color",
-    site: "https://react-cl.netlify.app/",
-    statuses: ["live"],
+    statuses: ["offline"],
     stacks: ["react"],
     blurb: "Palette maker: create and tweak colour palettes, saved in the browser, with Material UI transitions.",
   },
@@ -565,5 +572,7 @@ export const projectsByGroup = groups.map((g) => {
   return { ...g, pictured, listed: list.filter((p) => !big(p)) };
 });
 
-export const featuredProjects = projects.filter((p) => p.featured && p.img);
+/** Home "Selected work": hand-picked across personal and company work. The first one is the large plate. */
+const selectedSlugs = ["pasqyra", "vanspot", "pragma", "mycredit", "scamless", "after-hours"];
+export const featuredProjects = selectedSlugs.map((slug) => projects.find((p) => p.slug === slug)!).filter(Boolean);
 export const liveCount = allProjects.filter((p) => p.statuses.includes("live")).length;

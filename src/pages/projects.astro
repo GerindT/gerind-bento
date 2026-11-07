@@ -2,8 +2,12 @@
 import Layout from "../layouts/Layout.astro";
 import Poster from "../components/Poster.astro";
 import ProjectRow from "../components/ProjectRow.astro";
+import CallingCard from "../components/CallingCard.astro";
+import { projectCard } from "../lib/cards";
 import { allProjects, liveCount, projectsByGroup } from "../lib/projects";
 import { SITE } from "../lib/constants";
+
+const cards = projectsByGroup.flatMap((g) => [...g.pictured, ...g.listed].map((p) => projectCard(p)));
 
 const jsonLd = [
   {
@@ -34,7 +38,7 @@ const jsonLd = [
   <main id="main" class="page wrap">
     <header class="page__head">
       <h1 class="page__title slam">Projects</h1>
-      <p class="page__lede slam" style="--i:1">{allProjects.length} builds since 2021, {liveCount} of them live. Client and government work is named but not linked.</p>
+      <p class="page__lede slam" style="--i:1">{allProjects.length} builds since 2021, {liveCount} of them live. Client and government work is linked only where it is already public.</p>
     </header>
 
     <div class="tabs" role="tablist" aria-label="Project groups" id="tabs">
@@ -79,6 +83,7 @@ const jsonLd = [
       ))
     }
   </main>
+  <CallingCard items={cards} />
 </Layout>
 
 <script>
@@ -117,7 +122,11 @@ const jsonLd = [
 
   const fromHash = () => {
     const i = panels.findIndex((p) => `#${p.id}` === location.hash);
-    return i < 0 ? 0 : i;
+    if (i >= 0) return i;
+    // /projects?p=slug: open on the tab that holds that project
+    const slug = new URLSearchParams(location.search).get("p");
+    const j = slug ? panels.findIndex((p) => p.querySelector(`[data-cc-open="${CSS.escape(slug)}"]`)) : -1;
+    return j < 0 ? 0 : j;
   };
   current = fromHash();
   select(current, { push: false });

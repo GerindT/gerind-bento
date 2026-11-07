@@ -25,3 +25,5 @@ pnpm-debug.log*
 # local design-tool notes and the LaTeX CV source (the PDFs in public/ are what ships)
 .impeccable/
 main.tex
+
+.wrangler

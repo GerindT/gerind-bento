@@ -12,11 +12,11 @@ import solidJs from "@astrojs/solid-js";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://gerindtershana.netlify.app",
+  site: "https://gerind.dev",
   integrations: [
     sitemap({ filter: (page) => hasPhotos || !page.includes("/photos") }),
     robotsTxt({
-      sitemap: ["https://gerindtershana.netlify.app/sitemap-index.xml"],
+      sitemap: ["https://gerind.dev/sitemap-index.xml"],
     }),
     solidJs(),
     UnoCSS({ injectReset: true }),

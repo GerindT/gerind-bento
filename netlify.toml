@@ -1,0 +1,7 @@
+# The site moved to Cloudflare at https://gerind.dev. This Netlify site only
+# forwards old links there, keeping the path.
+[[redirects]]
+  from = "/*"
+  to = "https://gerind.dev/:splat"
+  status = 301
+  force = true

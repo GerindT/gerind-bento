@@ -2,7 +2,7 @@
 
 Personal portfolio of Gerind Tershana, tech lead, system architect and software engineer in Tirana, Albania.
 
-Live: https://gerindtershana.netlify.app
+Live: https://gerind.dev
 
 ![Portfolio preview](./public/og.png)
 
@@ -19,7 +19,7 @@ The design is a Persona 5-inspired "calling card": ink black, one accent colour,
 
 ## Stack
 
-- [Astro](https://astro.build) 4, static output, deployed on Netlify
+- [Astro](https://astro.build) 4, static output, served from Cloudflare Workers static assets at [gerind.dev](https://gerind.dev)
 - UnoCSS reset plus hand-written CSS in `src/style.css`
 - Solid (globe) and d3 for the map
 - Self-hosted Cabinet Grotesk and Satoshi (woff2)
@@ -63,7 +63,7 @@ public/              fonts, CVs, gifs, illustrations, icons, _headers, _redirect
 
 ## Deploy
 
-Netlify builds with `pnpm build` and publishes `dist/`. Caching rules live in `public/_headers` and redirects in `public/_redirects`.
+`pnpm run deploy` builds with Astro and uploads `dist/` to the `gerind` Worker (static assets only, see `wrangler.jsonc`; the custom domain is gerind.dev). Run `npx wrangler login` once first. Caching rules live in `public/_headers` and redirects in `public/_redirects`. The old Netlify site only redirects to gerind.dev (`netlify.toml`).
 
 ## Obligatory GIF
 
