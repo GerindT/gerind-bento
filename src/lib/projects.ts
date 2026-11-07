@@ -51,6 +51,13 @@ export const groups: { id: ProjectGroup; title: string; short: string; note: str
   { id: "early", title: "Early days", short: "Early days", note: "Where it started: school and bootcamp projects from 2021." },
 ];
 
+export const series = {
+  "project-a-day": {
+    title: "A project a day",
+    note: "A challenge I set myself: build a small, complete app in a day. They run locally and the code is public.",
+  },
+} as const;
+
 export type Project = {
   slug: string;
   title: string;
@@ -73,6 +80,8 @@ export type Project = {
   imgPos?: string;
   /** Extra screenshots for the detail card, after `img`. */
   shots?: { src: string; alt: string }[];
+  /** Small side projects shown in their own strip inside the group. */
+  series?: "project-a-day";
   /** Large poster in its group. */
   featured?: boolean;
   /** My part in it, when it was not simply "built it". */
@@ -134,6 +143,7 @@ const projects: Project[] = [
     img: "/illustrations/projects/goflight.webp",
     alt: "Goflight terminal-style dashboard",
     github: "https://github.com/GerindT/GoFlight",
+    series: "project-a-day",
     statuses: ["dev_only"],
     stacks: ["golang", "vue", "redis", "k8s"],
     blurb: "Terminal-style flight dashboard. A Go service aggregates flight and weather data with caching, circuit breakers and metrics.",
@@ -146,9 +156,8 @@ const projects: Project[] = [
     img: "/illustrations/projects/prompt-arena.webp",
     alt: "Prompt Arena voting page titled 'Rank the Best'",
     github: "https://github.com/GerindT/prompt-arena",
-    site: "https://prompt-arena-teal.vercel.app",
-    siteLabel: "UI demo",
-    statuses: ["ui_only"],
+    series: "project-a-day",
+    statuses: ["dev_only"],
     stacks: ["nuxt", "supabase", "postgresql"],
     blurb: "Head-to-head voting on AI image generations. Elo ratings update through a Postgres function and the winners climb a live leaderboard.",
   },
@@ -185,9 +194,8 @@ const projects: Project[] = [
     img: "/illustrations/projects/pixel-party.webp",
     alt: "Pixel Party shared pixel canvas",
     github: "https://github.com/GerindT/pixel-party",
-    site: "https://pixel-party-tau.vercel.app/",
-    siteLabel: "UI demo",
-    statuses: ["ui_only"],
+    series: "project-a-day",
+    statuses: ["dev_only"],
     stacks: ["nuxt", "supabase"],
     blurb: "Real-time collaborative pixel canvas: paint together on a shared board with live updates, ghost cursors and PNG/SVG export.",
   },
@@ -199,9 +207,8 @@ const projects: Project[] = [
     img: "/illustrations/projects/007-drop.webp",
     alt: "007-Drop upload screen",
     github: "https://github.com/GerindT/007-drop",
-    site: "https://007-drop.vercel.app/",
-    siteLabel: "UI demo",
-    statuses: ["ui_only"],
+    series: "project-a-day",
+    statuses: ["dev_only"],
     stacks: ["nuxt", "supabase"],
     blurb: "Self-destructing file sharing with in-browser encryption, optional passwords and automatic clean-up.",
   },
@@ -545,7 +552,9 @@ export const allProjects: Project[] = projects
 
 /** Per group, in hand-curated order (source order), with pictured work first. */
 export const projectsByGroup = groups.map((g) => {
-  const list = projects.filter((p) => p.group === g.id);
+  const all = projects.filter((p) => p.group === g.id);
+  const list = all.filter((p) => !p.series);
+  const sideProjects = all.filter((p) => p.series === "project-a-day");
   // Pictured or flagged-important work gets a poster; the rest a compact row.
   const big = (p: Project) => Boolean(p.img || p.featured);
   // Interleave two-column features with single posters so every grid row fills.
@@ -556,10 +565,10 @@ export const projectsByGroup = groups.map((g) => {
     if (features.length) pictured.push(features.shift()!);
     if (singles.length) pictured.push(singles.shift()!);
   }
-  return { ...g, pictured, listed: list.filter((p) => !big(p)) };
+  return { ...g, pictured, listed: list.filter((p) => !big(p)), side: sideProjects, count: all.length };
 });
 
 /** Home "Selected work": hand-picked across personal and company work. The first one is the large plate. */
-const selectedSlugs = ["pasqyra", "vanspot", "pragma", "mycredit", "scamless", "after-hours"];
+const selectedSlugs = ["vanspot", "after-hours", "pragma", "pasqyra", "mycredit", "scamless"];
 export const featuredProjects = selectedSlugs.map((slug) => projects.find((p) => p.slug === slug)!).filter(Boolean);
 export const liveCount = allProjects.filter((p) => p.statuses.includes("live")).length;

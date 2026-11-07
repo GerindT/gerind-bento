@@ -1593,6 +1593,42 @@ html {
   max-width: 44ch;
 }
 
+/* side projects: their own strip at the end of a group, smaller posters */
+.side {
+  margin-top: clamp(3rem, 7vw, 5rem);
+  padding-top: 2rem;
+  border-top: 3px solid var(--accent);
+}
+.side__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.75rem;
+}
+.side__title {
+  font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: 0.08em 0.7em 0.12em 0.4em;
+  transform: skewX(var(--slant));
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.4em) 100%, 0 100%);
+}
+.side__note {
+  color: var(--muted);
+  max-width: 48ch;
+}
+@media (min-width: 62rem) {
+  .posters--side {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .posters--side .poster__title {
+    font-size: 1.35rem;
+  }
+}
+
 /* compact rows for work without pictures */
 .rows {
   display: grid;

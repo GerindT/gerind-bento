@@ -144,7 +144,7 @@ const ticker = ["Open to work", "Tirana, Albania", "Go", "Vue & Nuxt", "React", 
             projectsByGroup.map((g) => (
               <li>
                 <a href={`/projects#${g.id}`}>
-                  <b>{g.pictured.length + g.listed.length}</b> {g.short}
+                  <b>{g.count}</b> {g.short}
                 </a>
               </li>
             ))

@@ -4,10 +4,10 @@ import Poster from "../components/Poster.astro";
 import ProjectRow from "../components/ProjectRow.astro";
 import CallingCard from "../components/CallingCard.astro";
 import { projectCard } from "../lib/cards";
-import { allProjects, liveCount, projectsByGroup } from "../lib/projects";
+import { allProjects, liveCount, projectsByGroup, series } from "../lib/projects";
 import { SITE } from "../lib/constants";
 
-const cards = projectsByGroup.flatMap((g) => [...g.pictured, ...g.listed].map((p) => projectCard(p)));
+const cards = projectsByGroup.flatMap((g) => [...g.pictured, ...g.listed, ...g.side].map((p) => projectCard(p, p.series ?? p.group)));
 
 const jsonLd = [
   {
@@ -55,7 +55,7 @@ const jsonLd = [
             tabindex={i === 0 ? 0 : -1}
           >
             <span class="tab__label">{g.short}</span>
-            <span class="tab__count">{g.pictured.length + g.listed.length}</span>
+            <span class="tab__count">{g.count}</span>
           </a>
         ))
       }
@@ -78,6 +78,17 @@ const jsonLd = [
             <ul class="rows" role="list" aria-label={`${g.title}: more projects`}>
               {g.listed.map((p, i) => <ProjectRow project={p} index={i} />)}
             </ul>
+          )}
+          {g.side.length > 0 && (
+            <section class="side" aria-labelledby={`side-${g.id}`}>
+              <header class="side__head">
+                <h3 class="side__title" id={`side-${g.id}`}>{series["project-a-day"].title}</h3>
+                <p class="side__note">{series["project-a-day"].note}</p>
+              </header>
+              <div class="posters posters--side">
+                {g.side.map((p, i) => <Poster project={p} index={i} />)}
+              </div>
+            </section>
           )}
         </section>
       ))
