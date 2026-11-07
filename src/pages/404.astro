@@ -15,6 +15,9 @@ const tv = ` .------------------------------.
  '------------------------------'
          /______________\\`;
 
+// While you're lost: a random developer xkcd (Randall Munroe, CC BY-NC 2.5; xkcd allows hotlinking).
+const strips = [{"num": 2200, "title": "Unreachable State", "img": "https://imgs.xkcd.com/comics/unreachable_state.png", "w": 355, "h": 465}, {"num": 979, "title": "Wisdom of the Ancients", "img": "https://imgs.xkcd.com/comics/wisdom_of_the_ancients.png", "w": 485, "h": 270}, {"num": 1172, "title": "Workflow", "img": "https://imgs.xkcd.com/comics/workflow.png", "w": 278, "h": 386}, {"num": 1319, "title": "Automation", "img": "https://imgs.xkcd.com/comics/automation.png", "w": 404, "h": 408}, {"num": 927, "title": "Standards", "img": "https://imgs.xkcd.com/comics/standards.png", "w": 500, "h": 283}];
+
 const exits = [
   { href: "/", title: "Home" },
   { href: "/projects", title: "Projects" },
@@ -45,5 +48,29 @@ const exits = [
         }
       </ul>
     </nav>
+    <figure class="lost__xkcd" data-strips={JSON.stringify(strips)}>
+      <a href={`https://xkcd.com/${strips[0].num}/`} target="_blank" rel="noopener noreferrer" data-xkcd-link>
+        <img src={strips[0].img} alt={`xkcd ${strips[0].num}: ${strips[0].title}`} width={strips[0].w} height={strips[0].h} loading="lazy" decoding="async" data-xkcd-img />
+      </a>
+      <figcaption>
+        While you're here: <span data-xkcd-title>xkcd #{strips[0].num}, {strips[0].title}</span>. By Randall Munroe, CC BY-NC 2.5.
+      </figcaption>
+    </figure>
   </main>
 </Layout>
+
+<script>
+  // Pick a different strip on each visit.
+  const fig = document.querySelector<HTMLElement>(".lost__xkcd");
+  if (fig) {
+    const strips = JSON.parse(fig.dataset.strips || "[]") as { num: number; title: string; img: string; w: number; h: number }[];
+    const s = strips[Math.floor(Math.random() * strips.length)];
+    const img = fig.querySelector<HTMLImageElement>("[data-xkcd-img]")!;
+    img.src = s.img;
+    img.width = s.w;
+    img.height = s.h;
+    img.alt = `xkcd ${s.num}: ${s.title}`;
+    fig.querySelector<HTMLAnchorElement>("[data-xkcd-link]")!.href = `https://xkcd.com/${s.num}/`;
+    fig.querySelector("[data-xkcd-title]")!.textContent = `xkcd #${s.num}, ${s.title}`;
+  }
+</script>

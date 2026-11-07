@@ -2078,6 +2078,30 @@ html {
 .cover:focus-visible .cover__img {
   transform: translateY(-6px) rotate(-1.2deg);
 }
+/* xkcd strips are wide line art on white: show them whole */
+.cover--comic .cover__img {
+  aspect-ratio: 4 / 3;
+  background: #ffffff;
+}
+.cover--comic .cover__img img {
+  object-fit: contain;
+  padding: 0.6rem;
+  box-sizing: border-box;
+}
+.shelf__credit {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.shelf__credit a {
+  color: var(--paper);
+  text-underline-offset: 0.2em;
+}
+.cc__credit {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 70%, var(--paper));
+}
 .cover__by {
   display: block;
   margin-top: 0.2rem;
@@ -2144,6 +2168,33 @@ html {
 }
 .lost .page__lede {
   max-width: 36rem;
+}
+.lost__xkcd {
+  margin: 2rem 0 0;
+  max-width: min(36rem, 100%);
+}
+.lost__xkcd a {
+  display: block;
+  background: #ffffff;
+  padding: 0.9rem;
+  transform: rotate(-1deg);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1rem), calc(100% - 1rem) 100%, 0 100%);
+}
+.lost__xkcd a:focus-visible {
+  outline: 3px solid #0a0a0d;
+  outline-offset: -6px;
+  box-shadow: none;
+}
+.lost__xkcd img {
+  width: 100%;
+  height: auto;
+  max-height: 26rem;
+  object-fit: contain;
+}
+.lost__xkcd figcaption {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 .lost__menu {
   width: min(36rem, 100%);

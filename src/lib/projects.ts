@@ -101,6 +101,8 @@ export type Project = {
   role?: string;
   /** What I did on a team project, in one factual line (company work). */
   part?: string;
+  /** A related xkcd strip, linked from the project's card. */
+  xkcd?: { num: number; title: string };
   /** One factual line: only what is confirmed. */
   blurb: string;
 };
@@ -381,6 +383,7 @@ const projects: Project[] = [
     alt: "",
     statuses: ["internal"],
     stacks: ["python"],
+    xkcd: { num: 927, title: "Standards" },
     part: "Designed and built it, so every new team project starts from the same proven structure.",
     blurb: "CLI that scaffolds new projects from the team's templates.",
   },

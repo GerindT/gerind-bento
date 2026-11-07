@@ -27,6 +27,10 @@ export type CardItem = {
   part?: string;
   /** mailto for private work: ask for a walkthrough. */
   ask?: string;
+  /** A related xkcd strip, linked from the card. */
+  aside?: { href: string; label: string };
+  /** Licence credit shown under the links (xkcd). */
+  credit?: string;
   stacks: TechStack[];
   links: { href: string; label: string; primary?: boolean; icon: string; srLabel: string }[];
   /** Shown when nothing can be linked. */
@@ -65,26 +69,32 @@ export const projectCard = (p: Project, set: string = p.group, setLabel?: string
     links,
     part: p.part,
     privateNote: links.length ? undefined : p.statuses.includes("offline") ? "No longer hosted, and the code is private." : "Private build, no public link.",
+    aside: p.xkcd ? { href: `https://xkcd.com/${p.xkcd.num}/`, label: `Relevant xkcd: ${p.xkcd.title}` } : undefined,
     ask: links.length ? undefined : `mailto:${LINKS.email}?subject=${encodeURIComponent(`Walkthrough: ${p.title}`)}&body=${encodeURIComponent(`Hi Gerind,\n\nI saw ${p.title} on gerind.dev and would like a short walkthrough.\n\n`)}`,
   };
 };
 
 export const mediaCard = (item: MediaItem, shelf: { id: string; title: string; cta: string }): CardItem => {
-  const kind = { books: "Book", movies: "Film", manga: "Manga" }[shelf.id] ?? shelf.title;
+  const kind = { books: "Book", movies: "Film", manga: "Manga", xkcd: "Comic" }[shelf.id] ?? shelf.title;
   const where = shelf.cta.replace(/^on /, "");
+  const c = item.comic;
   return {
     id: slugify(item.title),
     href: `/media?p=${slugify(item.title)}`,
     set: shelf.id,
     setLabel: shelf.title,
     title: item.title,
-    images: [{ src: item.img, alt: `Cover of ${item.title}` }],
-    portrait: true,
-    meta: [kind, item.year],
+    images: [{ src: item.img, alt: c ? `xkcd ${c.num}: ${item.title}` : `Cover of ${item.title}` }],
+    portrait: !c,
+    contain: Boolean(c),
+    artBg: c ? "#ffffff" : undefined,
+    meta: [c ? `${kind} #${c.num}` : kind, item.year],
     role: `By ${item.by}`,
     chips: [],
     lines: [],
     stacks: [],
     links: [{ href: item.link, label: `Open on ${where}`, primary: true, icon: "ri:arrow-right-up-line", srLabel: `${item.title} (opens in new tab)` }],
+    credit: c ? "xkcd by Randall Munroe, CC BY-NC 2.5" : undefined,
   };
 };
+

@@ -87,6 +87,14 @@ const Title = as;
           <Icon name="ri:mail-send-line" aria-hidden="true" />
         </a>
       )}
+      {it.aside && (
+        <a class="textlink" href={it.aside.href} target="_blank" rel="noopener noreferrer">
+          {it.aside.label}
+          <Icon name="ri:arrow-right-up-line" aria-hidden="true" />
+          <span class="sr-only"> (opens in new tab)</span>
+        </a>
+      )}
     </div>
+    {it.credit && <p class="cc__credit">{it.credit}</p>}
   </div>
 </article>

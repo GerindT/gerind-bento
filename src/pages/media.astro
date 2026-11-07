@@ -9,13 +9,13 @@ const cards = shelves.flatMap((s) => s.items.map((it) => mediaCard(it, s)));
 
 <Layout
   title="Media I have enjoyed — Gerind Tershana"
-  description={`${mediaCount} books, movies and manga Gerind Tershana keeps coming back to, from Norwegian Wood to Interstellar and Tokyo Ghoul.`}
+  description={`${mediaCount} books, films, manga and xkcd strips Gerind Tershana keeps coming back to, from Norwegian Wood to Interstellar and xkcd's "Standards".`}
   page="media"
 >
   <main id="main" class="page wrap">
     <header class="page__head">
       <h1 class="page__title slam">Media</h1>
-      <p class="page__lede slam" style="--i:1">Books, movies and manga I have enjoyed. Pick a cover for its card.</p>
+      <p class="page__lede slam" style="--i:1">Books, movies, manga and the comics every developer quotes. Pick one for its card.</p>
     </header>
 
     {
@@ -25,9 +25,9 @@ const cards = shelves.flatMap((s) => s.items.map((it) => mediaCard(it, s)));
           <ul class="covers">
             {shelf.items.map((item, ii) => (
               <li>
-                <a class="cover" href={`/media?p=${slugify(item.title)}`} data-cc-open={slugify(item.title)}>
+                <a class:list={["cover", { "cover--comic": item.comic }]} href={`/media?p=${slugify(item.title)}`} data-cc-open={slugify(item.title)}>
                   <span class="cover__img">
-                    <img src={item.img} alt="" loading={si === 0 ? "eager" : "lazy"} fetchpriority={si === 0 && ii < 2 ? "high" : undefined} decoding="async" width="320" height="384" />
+                    <img src={item.img} alt="" loading={si === 0 ? "eager" : "lazy"} fetchpriority={si === 0 && ii < 2 ? "high" : undefined} decoding="async" width={item.comic?.w ?? 320} height={item.comic?.h ?? 384} />
                   </span>
                   <span class="cover__title">
                     {item.title}
@@ -37,6 +37,12 @@ const cards = shelves.flatMap((s) => s.items.map((it) => mediaCard(it, s)));
               </li>
             ))}
           </ul>
+          {shelf.id === "xkcd" && (
+            <p class="shelf__credit">
+              Comics by Randall Munroe, <a href="https://xkcd.com" target="_blank" rel="noopener noreferrer">xkcd.com</a>, shared under{" "}
+              <a href="https://creativecommons.org/licenses/by-nc/2.5/" target="_blank" rel="noopener noreferrer">CC BY-NC 2.5</a>.
+            </p>
+          )}
         </section>
       ))
     }
