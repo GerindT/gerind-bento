@@ -17,7 +17,7 @@ type MenuItem = { href: string; title: string; desc: string; meta: string; thumb
 
 const menu: MenuItem[] = [
   { href: "/projects", title: "Projects", desc: "Products, games and client platforms, grouped by where I built them.", meta: `${allProjects.length} builds · ${liveCount} live`, thumb: featuredProjects[0]?.img },
-  { href: "/about", title: "About", desc: `${now.role} at ${now.org}. Career, education, tools and the countries I've been to.`, meta: "5+ years", thumb: "/Gerind_Tershana.webp", thumbPos: "50% 34%" },
+  { href: "/about", title: "About", desc: `${now.role} at ${now.org}. Career, education, tools and the countries I've been to.`, meta: "5+ years", thumb: "/Gerind_Tershana.webp", thumbPos: "50% 22%" },
   { href: "/media", title: "Media", desc: "The books, movies and manga I keep coming back to.", meta: `${mediaCount} favourites`, covers: shelves.map((s) => s.items[0].img) },
   ...(hasPhotos ? [{ href: "/photos", title: "Photos", desc: "Photography is my newest hobby. Frames from walks, trips and rides.", meta: `${photos.length} ${photos.length === 1 ? "photo" : "photos"}`, icon: "ri:camera-3-line" }] : []),
   { href: "/Gerind_Tershana_EN.pdf", title: "CV", desc: "Downloads my CV as a PDF, in English. There's an Albanian version too.", meta: "PDF · EN / SQ", icon: "ri:file-download-line", download: true, alt: { href: "/Gerind_Tershana_AL.pdf", label: "CV · Shqip" } },
