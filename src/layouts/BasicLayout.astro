@@ -56,7 +56,9 @@ const website = {
   "@type": "WebSite",
   "@id": `${SITE.url}/#website`,
   name: SITE.name,
-  url: SITE.url,
+  alternateName: ["Gerind T.", "gerind.dev"],
+  // Must match the home page's canonical URL exactly for Google's site name.
+  url: `${SITE.url}/`,
   inLanguage: "en",
   publisher: { "@id": `${SITE.url}/#person` },
 };
