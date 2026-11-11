@@ -3,6 +3,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "gerind",
+  "account_id": "204e38c96b8f69e4c17f9b85defcc92d",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",

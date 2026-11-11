@@ -39,7 +39,7 @@ pnpm preview    # serve the build
 
 | To change | Edit |
 | --- | --- |
-| Projects | `src/lib/projects.ts` (each one has a `group`, a one-line `blurb` and an optional `role`; screenshots go in `public/illustrations/projects/` as WebP) |
+| Projects | `src/lib/projects.ts` (each one has a `group`, a one-line `blurb`, an optional `role` and the live `site`; screenshots go in `public/illustrations/projects/` as 1280×800 WebP, with a `.webp.json` note of where each came from) |
 | Career, education, languages | `src/lib/career.ts` |
 | Books, movies, manga | `src/lib/media.ts` |
 | Countries on the globe | `src/lib/places.ts` |
@@ -63,7 +63,7 @@ public/              fonts, CVs, gifs, illustrations, icons, _headers, _redirect
 
 ## Deploy
 
-`pnpm run deploy` builds with Astro and uploads `dist/` to the `gerind` Worker (static assets only, see `wrangler.jsonc`; the custom domain is gerind.dev). Run `npx wrangler login` once first. Caching rules live in `public/_headers` and redirects in `public/_redirects`. The old Netlify site only redirects to gerind.dev (`netlify.toml`).
+`pnpm run deploy` builds with Astro and uploads `dist/` to the `gerind` Worker (static assets only, see `wrangler.jsonc`; the custom domain is gerind.dev). Run `npx wrangler login` once first. `wrangler.jsonc` pins my own Cloudflare account, so the deploy never asks which account to use when the login also has access to a client's. Caching rules live in `public/_headers` and redirects in `public/_redirects`. The old Netlify site only redirects to gerind.dev (`netlify.toml`).
 
 ## Obligatory GIF
 
