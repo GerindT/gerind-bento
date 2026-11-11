@@ -186,7 +186,7 @@ const projects: Project[] = [
     group: "personal",
     img: "/illustrations/projects/kean.webp",
     alt: "Kean Visual Creations home page with the headline 'Every shoot, edited down to the one frame'",
-    site: "https://kean-eight.vercel.app",
+    site: "https://keanvisualcreations.com",
     statuses: ["live"],
     stacks: ["astro", "cloudflare"],
     blurb: "Website for Kean, a photo and video studio in Tirana working with hospitality, food and drink brands.",
