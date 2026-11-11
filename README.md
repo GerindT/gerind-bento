@@ -1,8 +1,9 @@
-# Gerind Tershana — Portfolio
+# gerind.dev
 
-Personal portfolio of Gerind Tershana, lead system architect and software engineer in Tirana, Albania.
+My portfolio. I'm Gerind, a software engineer in Tirana. This is where I put the stuff I've built,
+what I'm reading and watching, and the places I've been.
 
-Live: https://gerind.dev
+Live at https://gerind.dev
 
 ![Portfolio preview](./public/og.png)
 
@@ -15,7 +16,7 @@ Live: https://gerind.dev
 - **Photos:** a photography gallery. It only appears once there are photos in `src/assets/photos/`.
 - **Extras:** accent colour picker, dark and light mode, optional menu sound, keyboard shortcuts (press `?`, can be switched off in Style), a mascot swap on the hero, scroll reveals and cross-document view transitions. Everything respects reduced motion.
 
-The design is a Persona 5-inspired "calling card": ink black, one accent colour, slanted paper-white cut-outs. It is original work and does not reuse any game art or logos.
+The look is inspired by Persona 5's calling cards: ink black, one accent colour, slanted paper cut-outs. I drew it all myself, no game art or logos.
 
 ## Stack
 
@@ -67,4 +68,4 @@ public/              fonts, CVs, gifs, illustrations, icons, _headers, _redirect
 
 ## Obligatory GIF
 
-![Toss a coin to your Witcher](./public/gifs/witcher.gif)
+![Toss a coin to your Witcher](./.github/witcher.gif)
