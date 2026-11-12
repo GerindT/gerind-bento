@@ -50,6 +50,9 @@ export const techIcons = {
   expo: { label: "Expo", icon: "logos:expo-icon" },
   godot: { label: "Godot", icon: "logos:godot-icon" },
   cloudflare: { label: "Cloudflare", icon: "logos:cloudflare-icon" },
+  rust: { label: "Rust", icon: "logos:rust" },
+  webassembly: { label: "WebAssembly", icon: "logos:webassembly" },
+  tauri: { label: "Tauri", icon: "logos:tauri" },
 } as const;
 
 export type TechStack = keyof typeof techIcons;
@@ -199,12 +202,11 @@ const projects: Project[] = [
     year: "2026",
     group: "personal",
     img: "/illustrations/projects/audire.webp",
-    alt: "Audire audio restoration upload screen",
+    alt: "Audire start screen: a dated lab-notebook entry with a drop zone, four method cards and handwritten margin notes",
     site: "https://audire.gerind.dev",
-    siteLabel: "UI demo",
-    statuses: ["concept", "ui_only"],
-    stacks: ["python", "fastapi", "vue"],
-    blurb: "Audio restoration lab that compares DSP, evolutionary, deep-learning and hybrid methods on the same recording.",
+    statuses: ["live", "code_private"],
+    stacks: ["rust", "webassembly", "vue", "tauri"],
+    blurb: "Cleans a noisy recording four ways (classic DSP, a genetic algorithm, a neural network and a hybrid) and lets you hear each against the original. A Rust engine runs in your browser, and as a desktop app.",
   },
   {
     slug: "pixel-party",
