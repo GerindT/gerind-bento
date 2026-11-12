@@ -2928,6 +2928,23 @@ html.cc-open {
 .edu span {
   order: 3;
 }
+.edu__link {
+  order: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+  color: var(--paper);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+.edu__link:hover,
+.edu__link:focus-visible {
+  text-decoration-color: currentColor;
+}
 
 /* ---------- click shards + page transition ---------- */
 

@@ -61,7 +61,7 @@ export const jobs: Job[] = [
   },
 ];
 
-export const education: { title: string; where: string; dates: string; note?: string }[] = [
+export const education: { title: string; where: string; dates: string; note?: string; link?: { href: string; label: string } }[] = [
   { title: "Organizing Team Member", where: "EEML Summer School · Cetinje, Montenegro", dates: "2026" },
   {
     title: "Poster Presenter",
@@ -69,7 +69,13 @@ export const education: { title: string; where: string; dates: string; note?: st
     dates: "2024",
     note: "Bachelor's thesis: user-driven product analysis via web scraping and multi-modal NLP.",
   },
-  { title: "B.Sc. Computer Science, Valedictorian", where: "University of New York Tirana", dates: "2021 – 2024" },
+  {
+    title: "B.Sc. Computer Science, Valedictorian",
+    where: "University of New York Tirana",
+    dates: "2021 – 2024",
+    note: "Thesis: sentiment analysis, feature extraction and recommendations from scraped Amazon reviews.",
+    link: { href: "/Gerind_Tershana_BSc_Thesis.pdf", label: "Read the thesis" },
+  },
   { title: "High School Diploma, Valedictorian", where: "Hermann Gmeiner · software engineering track", dates: "2017 – 2021" },
 ];
 

@@ -87,6 +87,8 @@ export type Project = {
   site?: string;
   /** Link text for `site` when it is not the full product, e.g. "UI demo". */
   siteLabel?: string;
+  /** A written paper or thesis behind the project (PDF in /public). */
+  paper?: string;
   statuses: ProjectStatus[];
   stacks: TechStack[];
   /** object-position for `img` when the top-centre crop loses the subject. */
@@ -254,6 +256,7 @@ const projects: Project[] = [
     github: "https://github.com/GerindT/webScraping",
     site: "https://scamless.gerind.dev",
     siteLabel: "UI demo",
+    paper: "/Gerind_Tershana_BSc_Thesis.pdf",
     statuses: ["ui_only"],
     stacks: ["react", "nodejs", "python"],
     featured: true,

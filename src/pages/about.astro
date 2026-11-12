@@ -104,6 +104,13 @@ const skills = [
                 <small class="strip">{e.dates}</small>
                 <span>{e.where}</span>
                 {e.note && <span>{e.note}</span>}
+                {e.link && (
+                  <a class="edu__link" href={e.link.href} target="_blank" rel="noopener">
+                    {e.link.label}
+                    <span class="sr-only"> (PDF, opens in a new tab)</span>
+                    <Icon name="ri:arrow-right-up-line" aria-hidden="true" />
+                  </a>
+                )}
               </li>
             ))
           }

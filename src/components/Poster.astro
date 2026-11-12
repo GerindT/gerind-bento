@@ -76,6 +76,15 @@ const cardHref = `/projects/${project.slug}`;
           </a>
         )
       }
+      {
+        project.paper && (
+          <a class="textlink" href={project.paper} target="_blank" rel="noopener">
+            Thesis
+            <Icon name="ri:file-pdf-2-line" aria-hidden="true" />
+            <span class="sr-only"> — {project.title}, PDF (opens in new tab)</span>
+          </a>
+        )
+      }
       {!primary && <p class="poster__private"><Icon name="ri:lock-2-line" aria-hidden="true" /> {project.statuses.includes("offline") ? "No longer hosted" : "Private build"}</p>}
     </div>
   </div>

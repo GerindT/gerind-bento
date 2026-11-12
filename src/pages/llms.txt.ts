@@ -5,8 +5,8 @@ import { groups, projectsByGroup, series, statusLabels } from "../lib/projects";
 
 // /llms.txt: a plain-text summary for AI assistants and answer engines (llmstxt.org).
 export const GET: APIRoute = () => {
-  const link = (p: { site?: string; github?: string }) =>
-    [p.site && `site: ${p.site}`, p.github && `code: ${p.github}`].filter(Boolean).join(", ");
+  const link = (p: { site?: string; github?: string; paper?: string }) =>
+    [p.site && `site: ${p.site}`, p.github && `code: ${p.github}`, p.paper && `thesis: ${SITE.url}${p.paper}`].filter(Boolean).join(", ");
 
   const projectLines = projectsByGroup
     .map((g) => {
@@ -45,7 +45,7 @@ ${jobs.map((j) => `- ${j.role}, ${j.org} (${j.dates})${j.points.length ? `: ${j.
 
 ## Education and community
 
-${education.map((e) => `- ${e.title}, ${e.where} (${e.dates})${e.note ? `. ${e.note}` : ""}`).join("\n")}
+${education.map((e) => `- ${e.title}, ${e.where} (${e.dates})${e.note ? `. ${e.note}` : ""}${e.link ? ` ${e.link.label}: ${SITE.url}${e.link.href}` : ""}`).join("\n")}
 
 Languages: ${languages.map((l) => `${l.name} (${l.level})`).join(", ")}.
 

@@ -52,6 +52,8 @@ export const projectCard = (p: Project, set: string = p.group, setLabel?: string
     links.push({ href: p.site, label: p.siteLabel ?? "Visit site", primary: true, icon: "ri:arrow-right-up-line", srLabel: `${p.title} (opens in new tab)` });
   if (p.github)
     links.push({ href: p.github, label: "Source", primary: !p.site, icon: "ri:github-fill", srLabel: `${p.title} on GitHub (opens in new tab)` });
+  if (p.paper)
+    links.push({ href: p.paper, label: "Thesis", icon: "ri:file-pdf-2-line", srLabel: `${p.title} thesis, PDF (opens in new tab)` });
   return {
     id: p.slug,
     href: `/projects/${p.slug}`,
